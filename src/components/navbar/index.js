@@ -3,26 +3,26 @@ import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom"
 import "./index.css";
 
-export default function Navbar() {
+export default function Navbar( { handleMainTl }) {
     return (
-        <Row>
-            <Col className=" d-flex justify-content-end align-items-center">
-            <ul className="w-50 p-3 d-flex justify-content-around align-items-end">
+        <Row className="justify-content-end">
+            <Col xl={8} className=" d-flex justify-content-end align-items-center">
+            <ul className="w-100 p-3 d-flex justify-content-around align-items-end">
                 <li>
-                <Link>
+                <Link onClick={handleMainTl} to="/">
                 <h6>prototype.about()</h6>
                 </Link>               
                 </li>
                 <li>
-                <Link> <h6>prototype.projects()</h6></Link>
+                <Link onMouseOver={handleMainTl} to="/"> <h6>prototype.projects()</h6></Link>
                
                 </li>
                 <li>
-                <Link> <h6>prototype.technologies()</h6></Link>
+                <Link onMouseOver={handleMainTl} to="/"> <h6>prototype.technologies()</h6></Link>
                
                 </li>
                 <li>
-                <Link> <h6>prototype.haveFun()</h6></Link>
+                <Link onMouseOver={handleMainTl} to="/"> <h6>prototype.haveFun()</h6></Link>
                
                 </li>
             </ul>
