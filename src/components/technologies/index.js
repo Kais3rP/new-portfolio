@@ -9,8 +9,8 @@ export default function Technologies({ targetRef }) {
     return (
         <Row className=" h-100 justify-content-center align-items-center">
             <Col ref={targetRef} lg={6} className="main-theme central-body">
-            HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO
-            </Col>
+            TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  
+           </Col>
         </Row>
 
 

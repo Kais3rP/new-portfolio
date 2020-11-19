@@ -8,8 +8,12 @@ export default function About() {
 
     return (
         <Row  className=" h-100 justify-content-center align-items-center">
-            <Col lg={6} className="main-theme central-body">
-            ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT 
+            <Col lg={6} className="d-flex justify-content-center align-items-center main-theme central-body">
+            {`function about(){
+                const who = "
+                My name is Cesare
+                "
+            }`}
             </Col>
         </Row>
 

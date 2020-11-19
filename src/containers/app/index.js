@@ -4,9 +4,9 @@ import { Route, Switch } from "react-router-dom";
 import Navbar from "../../components/navbar/index"
 import './index.css'
 import About from "../../components/about/index"
-import Projects from "../../components/about/index"
-import HaveFun from "../../components/about/index"
-import Technologies from "../../components/about/index"
+import Projects from "../../components/projects/index"
+import HaveFun from "../../components/havefun/index"
+import Technologies from "../../components/technologies/index"
 import * as PIXI from "pixi.js"
 import { TimelineMax } from "gsap"
 import water from "../../pics/water.jpg"
@@ -32,7 +32,7 @@ export default function App() {
   const targetRef = useRef();
   useEffect(() => {
     //Aliases
-    const size = [window.innerWidth, window.innerHeight];
+    const size = [window.innerWidth, window.innerHeight+50];
     const loader = PIXI.Loader.shared;
     const Sprite = PIXI.Sprite;
     const ratio = size[0] / size[1];
@@ -69,6 +69,13 @@ export default function App() {
 
     //Canvas resizing listener
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll)
+function handleScroll(e){
+console.log("scroll",window.scrollY)
+console.log(containerRef.current.style.top)
+containerRef.current.style.top = window.scrollY+"px";
+}
+
     function handleResize(e) {
       if (e.target.innerWidth < size[0]) {
         app.renderer.resize(e.target.innerWidth, e.target.innerWidth / ratio);
@@ -154,8 +161,7 @@ export default function App() {
     <Container className="main-theme" fluid>
       <Row id="main-row">
         <Col>
-          <div className="main-theme" id="container" ref={containerRef}></div>
-          
+          <div className="main-theme" id="container" ref={containerRef}></div>         
           <Navbar handleMainTl={handleMainTl} targetRef={targetRef} />
           <div ref={targetRef} id="dummy"></div>
           <Switch>
@@ -171,8 +177,7 @@ export default function App() {
             <Route exact path="/havefun">
               <HaveFun />
             </Route>
-            <Route exact path="/">
-            
+            <Route exact path="/">           
             </Route>
           </Switch>
         </Col>
