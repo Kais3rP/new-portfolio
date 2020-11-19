@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom"
 import "./index.css";
 
-export default function Navbar( { handleMainTl }) {
+export default function Navbar( { handleMainTl, ripple }) {
+
+useEffect(()=>{
+
+})
+
     return (
         <Row className="justify-content-end">
             <Col xl={8} className=" d-flex justify-content-end align-items-center">
@@ -14,15 +19,15 @@ export default function Navbar( { handleMainTl }) {
                 </Link>               
                 </li>
                 <li>
-                <Link onMouseOver={handleMainTl} to="/"> <h6>prototype.projects()</h6></Link>
+                <Link onClick={handleMainTl} to="/"> <h6>prototype.projects()</h6></Link>
                
                 </li>
                 <li>
-                <Link onMouseOver={handleMainTl} to="/"> <h6>prototype.technologies()</h6></Link>
+                <Link onClick={handleMainTl} to="/"> <h6>prototype.technologies()</h6></Link>
                
                 </li>
                 <li>
-                <Link onMouseOver={handleMainTl} to="/"> <h6>prototype.haveFun()</h6></Link>
+                <Link onClick={handleMainTl} to="/"> <h6>prototype.haveFun()</h6></Link>
                
                 </li>
             </ul>
