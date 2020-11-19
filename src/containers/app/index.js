@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap"
+import { Route, Switch } from "react-router-dom";
 import Navbar from "../../components/navbar/index"
-import CentralBody from "../../components/central-body/index"
 import './index.css'
+import About from "../../components/about/index"
+import Projects from "../../components/about/index"
+import HaveFun from "../../components/about/index"
+import Technologies from "../../components/about/index"
 import * as PIXI from "pixi.js"
 import { TimelineMax } from "gsap"
 import water from "../../pics/water.jpg"
@@ -17,8 +21,14 @@ export default function App() {
     transparent: true
   }))
   const [mainTl, setMainTl] = useState(null);
-  const [globalRipple, setGlobalRipple] = useState(null);
+  const [hasLoaded, setHasLoaded] = useState(false)
+  const [_rippleSprite, set_RippleSprite] = useState(null);
+  const [_waterSprite, set_waterSprite] = useState(null);
+  const [_cloudsSprite, set_cloudSprite] = useState(null);
+  const [_swanSprite, set_swanSprite] = useState(null);
+
   const containerRef = useRef();
+
   useEffect(() => {
     //Aliases
     const size = [window.innerWidth, window.innerHeight];
@@ -44,50 +54,18 @@ export default function App() {
       const rippleSprite = new Sprite(resources.ripple.texture);
       const swanSprite = new Sprite(resources.swan.texture);
       const cloudsSprite = new Sprite(resources.clouds.texture);
-      //Sprites config
-      waterSprite.anchor.set(0.5);
-      waterSprite.scale.set(1);
-      waterSprite.alpha = 0.7;
-      waterSprite.position.set(window.innerWidth / 2);
-      rippleSprite.anchor.set(0.5);
-      rippleSprite.scale.set(0.05);
-      cloudsSprite.anchor.set(0.5);
-      cloudsSprite.scale.set(1);
-      cloudsSprite.position.set(0);
-      //This makes the animation continuous
-      cloudsSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
-      //Filters creation
-      const filter = new PIXI.filters.DisplacementFilter(rippleSprite);
-      filter.scale.set(100);
-      //Create the GSAP timeline of the filter scale
-      const tl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
-        .to(rippleSprite.scale, 1.5, { x: 2, y: 2 })
-        .to(filter.scale, 1.5, { x: 2, y: 2 })
-      tl.timeScale(0.2)
-      const cloudsFilter = new PIXI.filters.DisplacementFilter(cloudsSprite, 100);
-      //Stage config
-      app.stage.filterArea = app.screen;
-      app.stage.filters = [filter, cloudsFilter];
-      app.stage.interactive = true;
-      app.stage.addChild(rippleSprite, waterSprite, cloudsSprite);
-      //Click listener
-      setMainTl(tl);
-      setGlobalRipple(rippleSprite)
-      app.stage.addListener("click", handleWaterClick)
-      function handleWaterClick(e) {
-        console.log("clicked")
-        const mousePos = e.data.getLocalPosition(app.stage)
-        rippleSprite.position.x = mousePos.x;
-        rippleSprite.position.y = mousePos.y;
-        if (tl) tl.restart()
-      }
-      //Animate 60FPS
-      app.ticker.add(() => {
-        cloudsSprite.x += 2;
-        cloudsSprite.y += 2;
-      })
-     
+      
+
+      set_RippleSprite(rippleSprite);
+      set_cloudSprite(cloudsSprite);
+      set_waterSprite(waterSprite);
+      set_swanSprite(swanSprite);
+      setHasLoaded(true);
+
+
     }
+
+
     //Canvas resizing listener
     window.addEventListener("resize", handleResize);
     function handleResize(e) {
@@ -101,21 +79,96 @@ export default function App() {
     }
   }, [])
 
+  //Water animation effect and stage Init
+  useEffect(() => {
+    /*
+    @This happens once all the assets are loaded, sprites created and saved to React state
+    */
+    if (hasLoaded) {
+      //Sprites config
+      _waterSprite.anchor.set(0.5);
+      _waterSprite.scale.set(1);
+      _waterSprite.alpha = 0.7;
+      _waterSprite.position.set(window.innerWidth / 2);
+      _cloudsSprite.anchor.set(0.5);
+      _cloudsSprite.scale.set(1);
+      _cloudsSprite.position.set(0);
+      //This makes the animation continuous
+      _cloudsSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+      const cloudsFilter = new PIXI.filters.DisplacementFilter(_cloudsSprite, 100);
+      //Stage config
+      app.stage.filterArea = app.screen;
+      app.stage.filters = [cloudsFilter];
+      app.stage.interactive = true;
+      app.stage.addChild(_rippleSprite, _waterSprite, _cloudsSprite);
+      //Animate @ 60FPS
+      app.ticker.add(() => {
+        _cloudsSprite.x += 2;
+        _cloudsSprite.y += 2;
+      })
+    }
+
+  }, [hasLoaded])
+
+  //Ripple Effect
+  useEffect(() => {
+    if (hasLoaded) {
+      _rippleSprite.anchor.set(0.5);
+      _rippleSprite.scale.set(0.05);
+      //Filters creation
+      const rippleFilter = new PIXI.filters.DisplacementFilter(_rippleSprite);
+      rippleFilter.scale.set(100);
+      //Add the filter to the previous ones
+      app.stage.filters = [...app.stage.filters, rippleFilter];
+      //Create the GSAP timeline of the filter scale
+      const tl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
+        .to(_rippleSprite.scale, 3, { x: 2, y: 2 })
+        .to(rippleFilter.scale, 3, { x: 2, y: 2 })
+      
+      setMainTl(tl);
+      //Add ripple click listener
+      app.stage.addListener("click", handleWaterClick)
+      function handleWaterClick(e) {
+        console.log("clicked")
+        const mousePos = e.data.getLocalPosition(app.stage)
+        _rippleSprite.position.x = mousePos.x;
+        _rippleSprite.position.y = mousePos.y;
+        if (tl) tl.restart()
+      }
+    }
+  }, [hasLoaded, _rippleSprite])
+
   function handleMainTl(e) {
     console.log("redrawing ripple")
-    globalRipple.position.x = e.target.pageX;
-    globalRipple.position.y = e.target.pageY;
-    setGlobalRipple(globalRipple)
+    console.log(_rippleSprite.position.x)
+    _rippleSprite.position.x = e.pageX;
+    _rippleSprite.position.y = e.pageY;
     mainTl?.restart();
 
   }
   return (
     <Container className="main-theme" fluid>
-      <Row>
+      <Row id="main-row">
         <Col>
           <div className="main-theme" id="container" ref={containerRef}></div>
           <Navbar handleMainTl={handleMainTl} ripple={ripple} />
-          <CentralBody />
+          <Switch>
+            <Route exact path="/about">
+            <About />
+            </Route>
+            <Route exact path="/projects">
+            <Projects />
+            </Route>
+            <Route exact path="/technologies">
+            <Technologies />
+            </Route>
+            <Route exact path="/havefun">
+            <HaveFun />
+            </Route>
+            <Route exact path="/">
+            </Route>
+          </Switch>
+         
         </Col>
       </Row>
     </Container>

@@ -2,6 +2,10 @@
    position:absolute;
    top:0;
    left:0;
-    z-index: 0;
-    background-color:"red";
+    z-index: 0 !important;
+   
+}
+
+#main-row {
+min-height:100vh;  
 }

@@ -11,23 +11,23 @@ useEffect(()=>{
 
     return (
         <Row className="justify-content-end">
-            <Col xl={8} className=" d-flex justify-content-end align-items-center">
+            <Col  xl={8} className=" d-flex justify-content-end align-items-center">
             <ul className="w-100 p-3 d-flex justify-content-around align-items-end">
                 <li>
-                <Link onClick={handleMainTl} to="/">
+                <Link onClick={handleMainTl} to="/about">
                 <h6>prototype.about()</h6>
                 </Link>               
                 </li>
                 <li>
-                <Link onClick={handleMainTl} to="/"> <h6>prototype.projects()</h6></Link>
+                <Link onClick={handleMainTl} to="/projects"> <h6>prototype.projects()</h6></Link>
                
                 </li>
                 <li>
-                <Link onClick={handleMainTl} to="/"> <h6>prototype.technologies()</h6></Link>
+                <Link onClick={handleMainTl} to="/technologies"> <h6>prototype.technologies()</h6></Link>
                
                 </li>
                 <li>
-                <Link onClick={handleMainTl} to="/"> <h6>prototype.haveFun()</h6></Link>
+                <Link onClick={handleMainTl} to="/havefun"> <h6>prototype.haveFun()</h6></Link>
                
                 </li>
             </ul>
