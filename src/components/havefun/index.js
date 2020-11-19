@@ -4,11 +4,11 @@ import { Link } from "react-router-dom"
 import "./index.css";
 
 
-export default function HaveFun() {
+export default function HaveFun({ targetRef}) {
 
     return (
         <Row className=" h-100 justify-content-center align-items-center">
-            <Col lg={6} className="main-theme central-body">
+            <Col ref={targetRef} lg={6} className="main-theme central-body">
             HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO
             </Col>
         </Row>

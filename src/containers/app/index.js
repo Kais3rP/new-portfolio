@@ -26,9 +26,10 @@ export default function App() {
   const [_waterSprite, set_waterSprite] = useState(null);
   const [_cloudsSprite, set_cloudSprite] = useState(null);
   const [_swanSprite, set_swanSprite] = useState(null);
+  const [currentPage, setCurrentPage] = useState(null);
 
   const containerRef = useRef();
-
+  const targetRef = useRef();
   useEffect(() => {
     //Aliases
     const size = [window.innerWidth, window.innerHeight];
@@ -54,7 +55,7 @@ export default function App() {
       const rippleSprite = new Sprite(resources.ripple.texture);
       const swanSprite = new Sprite(resources.swan.texture);
       const cloudsSprite = new Sprite(resources.clouds.texture);
-      
+
 
       set_RippleSprite(rippleSprite);
       set_cloudSprite(cloudsSprite);
@@ -124,7 +125,7 @@ export default function App() {
       const tl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
         .to(_rippleSprite.scale, 3, { x: 2, y: 2 })
         .to(rippleFilter.scale, 3, { x: 2, y: 2 })
-      
+
       setMainTl(tl);
       //Add ripple click listener
       app.stage.addListener("click", handleWaterClick)
@@ -140,35 +141,40 @@ export default function App() {
 
   function handleMainTl(e) {
     console.log("redrawing ripple")
-    console.log(_rippleSprite.position.x)
+
     _rippleSprite.position.x = e.pageX;
     _rippleSprite.position.y = e.pageY;
     mainTl?.restart();
+  }
 
+  function handleCurrentPage(ref){
+    setCurrentPage(ref);
   }
   return (
     <Container className="main-theme" fluid>
       <Row id="main-row">
         <Col>
           <div className="main-theme" id="container" ref={containerRef}></div>
-          <Navbar handleMainTl={handleMainTl} ripple={ripple} />
+          
+          <Navbar handleMainTl={handleMainTl} targetRef={targetRef} />
+          <div ref={targetRef} id="dummy"></div>
           <Switch>
             <Route exact path="/about">
-            <About />
+              <About/>
             </Route>
             <Route exact path="/projects">
-            <Projects />
+              <Projects />
             </Route>
             <Route exact path="/technologies">
-            <Technologies />
+              <Technologies  />
             </Route>
             <Route exact path="/havefun">
-            <HaveFun />
+              <HaveFun />
             </Route>
             <Route exact path="/">
+            
             </Route>
           </Switch>
-         
         </Col>
       </Row>
     </Container>

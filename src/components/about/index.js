@@ -7,9 +7,9 @@ import "./index.css";
 export default function About() {
 
     return (
-        <Row className=" h-100 justify-content-center align-items-center">
+        <Row  className=" h-100 justify-content-center align-items-center">
             <Col lg={6} className="main-theme central-body">
-            HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO
+            ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT  ABOUT 
             </Col>
         </Row>
 

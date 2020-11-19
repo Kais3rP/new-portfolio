@@ -9,3 +9,9 @@
 #main-row {
 min-height:100vh;  
 }
+
+#dummy{
+    position:absolute;
+    top:25%;
+    left:25%;
+}
