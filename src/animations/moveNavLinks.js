@@ -4,8 +4,7 @@ import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 gsap.registerPlugin(MotionPathPlugin)
 
 export default function moveLink(link, target){
-    console.log(link,target)
-    console.log(target.getBoundingClientRect().y, link.getBoundingClientRect().y)
+    console.log(target)
     gsap.to(link, {
         motionPath: {
           path: [

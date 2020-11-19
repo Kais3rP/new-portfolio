@@ -4,14 +4,14 @@ import { Link } from "react-router-dom"
 import "./index.css";
 
 
-export default function Technologies({ targetRef }) {
+
+export default function Technologies({ technologiesRef }) {
 
     return (
-        <Row className=" h-100 justify-content-center align-items-center">
-            <Col ref={targetRef} lg={6} className="main-theme central-body">
+        <> 
             TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  TECHS  
-           </Col>
-        </Row>
+           
+        </>
 
 
     )

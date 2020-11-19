@@ -4,14 +4,15 @@ import { Link } from "react-router-dom"
 import "./index.css";
 
 
-export default function HaveFun({ targetRef}) {
+
+export default function HaveFun({ havefunRef }) {
 
     return (
-        <Row className=" h-100 justify-content-center align-items-center">
-            <Col ref={targetRef} lg={6} className="main-theme central-body">
+        <>
+          
             HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN HAVE FUN 
-            </Col>
-        </Row>
+           
+        </>
 
 
     )

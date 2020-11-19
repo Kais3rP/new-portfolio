@@ -16,8 +16,25 @@ min-height:100vh;
     left:25%;
 }
 
-.central-body{
-    opacity:0.9;
-    height:400px;
+.central-body-left{  
+    opacity:0;
+    height:100%;
     z-index:10;
+    transform: translateX(-200%);
+    pointer-events: none;
     }
+.central-body-right{  
+    opacity:0;
+    height:100%;
+    z-index:10;
+    transform: translateX(200%);
+    pointer-events: none;
+    }
+#arrow-down{
+    width:10%;
+    fill:white;
+z-index:20;
+position:fixed;
+bottom:30px;
+left:45%;
+}

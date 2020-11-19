@@ -3,39 +3,56 @@ import { Container, Row, Col } from "react-bootstrap"
 import { Route, Switch } from "react-router-dom";
 import Navbar from "../../components/navbar/index"
 import './index.css'
+import Main from "../../components/main/index"
 import About from "../../components/about/index"
 import Projects from "../../components/projects/index"
 import HaveFun from "../../components/havefun/index"
 import Technologies from "../../components/technologies/index"
 import * as PIXI from "pixi.js"
-import { TimelineMax } from "gsap"
+import { gsap, TimelineMax } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 import water from "../../pics/water.jpg"
 import ripple from "../../pics/ripple.png"
 import swan from "../../pics/swan.png"
 import clouds from "../../pics/clouds.jpg"
+import MainWindowsHoc from "../mainwindow/index"
+gsap.registerPlugin(ScrollTrigger)
+
 
 export default function App() {
-  const [app, setApp] = useState(new PIXI.Application({
-    antialias: true,
-    resizeTo: window,
-    transparent: true
-  }))
-  const [mainTl, setMainTl] = useState(null);
+  const [app, setApp] = useState(null)
+  const [rippleAnimation, setRippleAnimation] = useState(null);
   const [hasLoaded, setHasLoaded] = useState(false)
   const [_rippleSprite, set_RippleSprite] = useState(null);
   const [_waterSprite, set_waterSprite] = useState(null);
-  const [_cloudsSprite, set_cloudSprite] = useState(null);
+  const [_cloudsSprite, set_cloudsSprite] = useState(null);
   const [_swanSprite, set_swanSprite] = useState(null);
-  const [currentPage, setCurrentPage] = useState(null);
+  const [appTicker, setAppTicker] = useState(null);
+  const [waterSpeed, setWaterSpeed] = useState(2);
+
 
   const containerRef = useRef();
-  const targetRef = useRef();
+  const aboutRef = useRef();
+  const projectsRef = useRef();
+  const technologiesRef = useRef();
+  const havefunRef = useRef();
+  const arrowRef = useRef();
+
+
+
   useEffect(() => {
+    console.log("loading assets effect...")
     //Aliases
-    const size = [window.innerWidth, window.innerHeight+50];
+    const size = [window.innerWidth, window.innerHeight + 50];
     const loader = PIXI.Loader.shared;
     const Sprite = PIXI.Sprite;
     const ratio = size[0] / size[1];
+    //Create the app:
+    const app = new PIXI.Application({
+      antialias: true,
+      resizeTo: window,
+      transparent: true
+    })
     //Append the stage to the ref of the container div
     containerRef.current.appendChild(app.view)
     //app Settings
@@ -48,7 +65,23 @@ export default function App() {
       .add("swan", swan)
       .add("clouds", clouds)
       .load(init)
+    //Canvas resizing listener and scrolling auto position
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll)
 
+    function handleScroll(e) {
+      console.log("scrolling...")
+      containerRef.current.style.top = window.scrollY + "px";
+    }
+
+    function handleResize(e) {
+      console.log("resizing...")
+      if (e.target.innerWidth < size[0]) {
+        app.renderer.resize(e.target.innerWidth, e.target.innerWidth / ratio);
+      }
+    }
+
+    //Function fired on load assets complete
     function init(loader, resources) {
       //Sprites creation
       const waterSprite = new Sprite(resources.water.texture);
@@ -56,39 +89,25 @@ export default function App() {
       const swanSprite = new Sprite(resources.swan.texture);
       const cloudsSprite = new Sprite(resources.clouds.texture);
 
-
+      setApp(app);
       set_RippleSprite(rippleSprite);
-      set_cloudSprite(cloudsSprite);
+      set_cloudsSprite(cloudsSprite);
       set_waterSprite(waterSprite);
       set_swanSprite(swanSprite);
       setHasLoaded(true);
 
-
-    }
-
-
-    //Canvas resizing listener
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll)
-function handleScroll(e){
-console.log("scroll",window.scrollY)
-console.log(containerRef.current.style.top)
-containerRef.current.style.top = window.scrollY+"px";
-}
-
-    function handleResize(e) {
-      if (e.target.innerWidth < size[0]) {
-        app.renderer.resize(e.target.innerWidth, e.target.innerWidth / ratio);
-      }
     }
     return () => {
-      loader.reset();
+      //loader.reset();
       window.removeEventListener("resize", handleResize)
+      window.removeEventListener("scroll", handleScroll)
     }
   }, [])
 
   //Water animation effect and stage Init
   useEffect(() => {
+    console.log("Sprites setting")
+    console.log(waterSpeed)
     /*
     @This happens once all the assets are loaded, sprites created and saved to React state
     */
@@ -110,80 +129,144 @@ containerRef.current.style.top = window.scrollY+"px";
       app.stage.interactive = true;
       app.stage.addChild(_rippleSprite, _waterSprite, _cloudsSprite);
       //Animate @ 60FPS
-      app.ticker.add(() => {
-        _cloudsSprite.x += 2;
-        _cloudsSprite.y += 2;
+      const appTicker = app.ticker.add(() => {
+
+        _cloudsSprite.x += waterSpeed;
+        _cloudsSprite.y += waterSpeed;
+
       })
+      setAppTicker(appTicker)
     }
 
   }, [hasLoaded])
 
   //Ripple Effect
   useEffect(() => {
-    if (hasLoaded) {
-      _rippleSprite.anchor.set(0.5);
-      _rippleSprite.scale.set(0.05);
-      //Filters creation
-      const rippleFilter = new PIXI.filters.DisplacementFilter(_rippleSprite);
-      rippleFilter.scale.set(100);
-      //Add the filter to the previous ones
-      app.stage.filters = [...app.stage.filters, rippleFilter];
-      //Create the GSAP timeline of the filter scale
-      const tl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
-        .to(_rippleSprite.scale, 3, { x: 2, y: 2 })
-        .to(rippleFilter.scale, 3, { x: 2, y: 2 })
 
-      setMainTl(tl);
-      //Add ripple click listener
-      app.stage.addListener("click", handleWaterClick)
-      function handleWaterClick(e) {
-        console.log("clicked")
-        const mousePos = e.data.getLocalPosition(app.stage)
-        _rippleSprite.position.x = mousePos.x;
-        _rippleSprite.position.y = mousePos.y;
-        if (tl) tl.restart()
+    let isFirstLoad = true;
+    console.log("Ripple sprite animation setting", "firstLoad:", isFirstLoad)
+    if (hasLoaded) {
+        _rippleSprite.anchor.set(0.5);
+        _rippleSprite.scale.set(0.05);
+        //Filters creation
+        const rippleFilter = new PIXI.filters.DisplacementFilter(_rippleSprite);
+        rippleFilter.scale.set(100);
+        //Add the filter to the previous ones
+        app.stage.filters = app.stage.filters || []
+        app.stage.filters = [...app.stage.filters, rippleFilter];
+        //Create the GSAP timeline of the filter scale
+        const tl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
+          .to(_rippleSprite.scale, 3, { x: 2, y: 2 })
+          .to(rippleFilter.scale, 3, { x: 2, y: 2 })
+        setRippleAnimation(tl);
+        //Add ripple click listener
+        app.stage.addListener("click", handleWaterClick)
+        function handleWaterClick(e) {
+          console.log("canvas clicked")
+          const mousePos = e.data.getLocalPosition(app.stage)
+          _rippleSprite.position.x = mousePos.x;
+          _rippleSprite.position.y = mousePos.y;
+          //Restart the ripple animation
+          if (tl) tl.restart()
+        }
+      
+      if (appTicker) appTicker.remove()
+      setAppTicker(app.ticker.add(() => {
+        _cloudsSprite.x += waterSpeed;
+        _cloudsSprite.y += waterSpeed;
+      })
+      );
+
+      return () => {
+        app.stage.removeListener("click", handleWaterClick)
       }
     }
-  }, [hasLoaded, _rippleSprite])
 
-  function handleMainTl(e) {
-    console.log("redrawing ripple")
-
-    _rippleSprite.position.x = e.pageX;
-    _rippleSprite.position.y = e.pageY;
-    mainTl?.restart();
+    
+    
+   
+  
+  }, [hasLoaded, appTicker, waterSpeed])
+//Dynamic water animation speed control
+/*  useEffect(()=>{
+    if (hasLoaded) {
+   
   }
+  },[])*/
 
-  function handleCurrentPage(ref){
-    setCurrentPage(ref);
-  }
-  return (
-    <Container className="main-theme" fluid>
-      <Row id="main-row">
-        <Col>
-          <div className="main-theme" id="container" ref={containerRef}></div>         
-          <Navbar handleMainTl={handleMainTl} targetRef={targetRef} />
-          <div ref={targetRef} id="dummy"></div>
-          <Switch>
-            <Route exact path="/about">
-              <About/>
-            </Route>
-            <Route exact path="/projects">
-              <Projects />
-            </Route>
-            <Route exact path="/technologies">
-              <Technologies  />
-            </Route>
-            <Route exact path="/havefun">
-              <HaveFun />
-            </Route>
-            <Route exact path="/">           
-            </Route>
-          </Switch>
-        </Col>
-      </Row>
-    </Container>
-  );
+//Manage Scrolling arrow animation and listeners
+useEffect(() => {
+  console.log("Arrow animation")
+  //Arrow animation:
+
+  const arrowTlDown = new TimelineMax()
+    .to(arrowRef.current, 0.5, { repeat: -1, yoyo: true, width: "8%", left: "46%", y: 10 })
+    .to(arrowRef.current, 1, {
+      ease: "linear",
+      rotate: 180,
+      scrollTrigger: { trigger: havefunRef.current, start: "bottom bottom", toggleActions: 'restart reset restart reset' }
+    })
+
+}, [])
+
+function handleRippleAnimation(e) {
+  console.log("redrawing ripple")
+
+  _rippleSprite.position.x = e.pageX;
+  _rippleSprite.position.y = e.pageY;
+  rippleAnimation?.restart();
+}
+
+/*useEffect(()=>{
+  setTimeout(()=>{setWaterSpeed(2)},2000)
+},[waterSpeed])*/
+function handleWaterSpeed() {
+  setWaterSpeed(speed => speed - 1)
+}
+console.log("Rendering main app")
+return (
+  <Container className="main-theme" fluid>
+    <Row id="main-row">
+      <Col>
+        <svg ref={arrowRef}
+          id="arrow-down"
+          data-name="Capa 1"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 560 320.01">
+          <g
+            id="Rounded_Rectangle_33_copy_4"
+            data-name="Rounded Rectangle 33 copy 4">
+            <path
+              d="M480,344.18,268.87,131.89a40.16,40.16,0,0,0-57.06,0,40.81,40.81,0,0,0,0,57.43L449.45,428.26a45.73,45.73,0,0,0,61.1,0L748.19,189.32a40.81,40.81,0,0,0,0-57.43,40.16,40.16,0,0,0-57.06,0Z"
+              transform="translate(-200 -119.99)" />
+          </g>
+        </svg>
+        <div className="main-theme" id="container" ref={containerRef}></div>
+        <Navbar handleRippleAnimation={handleRippleAnimation} targetRefs={{ aboutRef, projectsRef, technologiesRef, havefunRef }} />
+        <Main />
+        <Row>
+          <Col>
+            <button onClick={handleWaterSpeed}>INCREASE SPEED</button>
+          </Col>
+        </Row>
+
+        <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
+          <About />
+        </MainWindowsHoc>
+        <MainWindowsHoc myRef={projectsRef} direction={{ right: true }}>
+          <Projects />
+        </MainWindowsHoc>
+        <MainWindowsHoc myRef={technologiesRef} direction={{ right: false }}>
+          <Technologies />
+        </MainWindowsHoc>
+        <MainWindowsHoc myRef={havefunRef} direction={{ right: false }}>
+          <HaveFun />
+        </MainWindowsHoc>
+
+      </Col>
+    </Row>
+  </Container>
+);
 }
 
 
