@@ -1,13 +1,9 @@
-#container {
-    position: absolute;
+canvas {
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 0 !important;
-    overflow:hidden !important;
-}
-
-#main-row {
-    min-height: 100vh;
+   
 }
 
 #dummy {
