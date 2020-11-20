@@ -34,6 +34,7 @@ export default function App() {
   const [_cloudsSprite, set_cloudsSprite] = useState(null);
   const [_fishSprite, set_fishSprite] = useState(null);
   const [waterSpeed, setWaterSpeed] = useState(1);
+  const [fishTl, setFishTl] = useState(null);
 
 
   const containerRef = useRef();
@@ -206,21 +207,26 @@ export default function App() {
       _fishSprite.anchor.set(0.5);
       _fishSprite.position.set(200, 200);
       _fishSprite.scale.set(0.3)
-      const fishTl = new TimelineMax()
-                    .to(_fishSprite, {pixi: {x:window.innerWidth}, duration:10})
-                    .to(_fishSprite, {pixi:{scaleX:0}, duration:3})
-                    .to(_fishSprite, {pixi:{scaleX:-0.3}, duration:3})
+      _fishSprite.rotation=-0.3;
+      const fishTl = new TimelineMax({yoyo:true})
+                    .to(_fishSprite, {pixi: {x:window.innerWidth-50}, duration:7})
+                    .to(_fishSprite, {pixi:{scaleX:0}, duration:1})
+                    .to(_fishSprite, {pixi:{scaleX:-0.3}, duration:1})
                     .to(_fishSprite, {pixi: {x:0, y:window.innerHeight/2}, duration:10})
-                    .to(_fishSprite, {pixi:{scaleX:0}, duration:3})
-                    .to(_fishSprite, {pixi:{scaleX:0.3}, duration:3})
-                    .to(_fishSprite, {pixi: {x:window.innerWidth}, duration:10})
-                    .to(_fishSprite, {pixi:{scaleX:0}, duration:3})
-                    .to(_fishSprite, {pixi:{scaleX:-0.3}, duration:3})
+                    .to(_fishSprite, {pixi:{scaleX:0}, duration:1})
+                    .to(_fishSprite, {pixi:{scaleX:0.3}, duration:1})
+                    .to(_fishSprite, {pixi: {x:window.innerWidth-50}, duration:12})
+                    .to(_fishSprite, {pixi:{scaleX:0}, duration:1})
+                    .to(_fishSprite, {pixi:{scaleX:-0.3}, duration:1})
                     .to(_fishSprite, {pixi: {x:0, y:window.innerHeight}, duration:10})
-      
-    }
-
-    window.addEventListener("keydown", (e) => {
+                    .to(_fishSprite, {pixi:{scaleX:0}, duration:1})
+                    .to(_fishSprite, {pixi:{scaleX:0.3}, duration:1})
+     // setFishTl(fishTl)
+      window.addEventListener("keydown", (e) => {
+        if (fishTl.isActive()){
+          fishTl.pause();
+          setTimeout(()=>{fishTl.play()},2000)
+        }
       e.preventDefault();
       if (e.key === "ArrowDown")
         if (_fishSprite) _fishSprite.position.y += 10;
@@ -232,6 +238,10 @@ export default function App() {
         if (_fishSprite) _fishSprite.position.x += 10;
 
     })
+    
+    }
+
+    
   }, [hasLoaded])
 
   //Manage Scrolling arrow animation and listeners
@@ -246,7 +256,6 @@ export default function App() {
         rotate: 180,
         scrollTrigger: { trigger: havefunRef.current, start: "bottom bottom", toggleActions: 'restart reset restart reset' }
       })
-
   }, [])
 
   function handleRippleAnimation(e) {
@@ -294,7 +303,6 @@ export default function App() {
           <MainWindowsHoc myRef={havefunRef} direction={{ right: false }}>
             <HaveFun />
           </MainWindowsHoc>
-
         </Col>
       </Row>
     </Container>

@@ -11,12 +11,10 @@ gsap.registerPlugin(ScrollTrigger);
 const MainWindowsHoc = React.memo(function ({ myRef, children, direction }) {
     console.log("Rerendering MainWindowHoc")
     gsap.to(myRef.current, {
-
         duration: 1,
-        ease: "linear",
+        ease: "elastic",
         x: 0,
         opacity: 1,
-
         scrollTrigger: { trigger: myRef.current, toggleActions: 'restart reset restart reset' }
     });
     return (
