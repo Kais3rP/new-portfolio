@@ -35,7 +35,7 @@
 #arrow-down {
     width: 10%;
     fill: white;
-    z-index: 20;
+    z-index: 50;
     position: fixed;
     bottom: 30px;
     left: 45%;
