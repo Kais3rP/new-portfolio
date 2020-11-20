@@ -17,7 +17,6 @@ console.log(targetRefs)
 },[])
 
 function handleClick(e, ref){
-    console.log(ref.current.getBoundingClientRect().y + ref.current.getBoundingClientRect().height)
     handleRippleAnimation(e);
     handleWaterSpeed();
     //moveNavlinks(e.target, ref.current)

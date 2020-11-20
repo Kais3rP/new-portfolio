@@ -207,48 +207,48 @@ export default function App() {
       _fishSprite.anchor.set(0.5);
       _fishSprite.position.set(200, 200);
       _fishSprite.scale.set(0.3)
-      _fishSprite.rotation=-0.3;
-      const fishTl = new TimelineMax({yoyo:true})
-                    .to(_fishSprite, {pixi: {x:window.innerWidth-50}, duration:7})
-                    .to(_fishSprite, {pixi:{scaleX:0}, duration:1})
-                    .to(_fishSprite, {pixi:{scaleX:-0.3}, duration:1})
-                    .to(_fishSprite, {pixi: {x:0, y:window.innerHeight/2}, duration:10})
-                    .to(_fishSprite, {pixi:{scaleX:0}, duration:1})
-                    .to(_fishSprite, {pixi:{scaleX:0.3}, duration:1})
-                    .to(_fishSprite, {pixi: {x:window.innerWidth-50}, duration:12})
-                    .to(_fishSprite, {pixi:{scaleX:0}, duration:1})
-                    .to(_fishSprite, {pixi:{scaleX:-0.3}, duration:1})
-                    .to(_fishSprite, {pixi: {x:0, y:window.innerHeight}, duration:10})
-                    .to(_fishSprite, {pixi:{scaleX:0}, duration:1})
-                    .to(_fishSprite, {pixi:{scaleX:0.3}, duration:1})
-     // setFishTl(fishTl)
+      _fishSprite.rotation = -0.3;
+      const fishTl = new TimelineMax({ yoyo: true })
+        .to(_fishSprite, { pixi: { x: window.innerWidth - 50 }, duration: 7 })
+        .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
+        .to(_fishSprite, { pixi: { scaleX: -0.3 }, duration: 1 })
+        .to(_fishSprite, { pixi: { x: 0, y: window.innerHeight / 2 }, duration: 10 })
+        .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
+        .to(_fishSprite, { pixi: { scaleX: 0.3 }, duration: 1 })
+        .to(_fishSprite, { pixi: { x: window.innerWidth - 50 }, duration: 12 })
+        .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
+        .to(_fishSprite, { pixi: { scaleX: -0.3 }, duration: 1 })
+        .to(_fishSprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
+        .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
+        .to(_fishSprite, { pixi: { scaleX: 0.3 }, duration: 1 })
+      // setFishTl(fishTl)
       window.addEventListener("keydown", (e) => {
-        if (fishTl.isActive()){
+        if (fishTl.isActive()) {
           fishTl.pause();
-          setTimeout(()=>{fishTl.play()},2000)
+          setTimeout(() => { fishTl.play() }, 2000)
         }
-      e.preventDefault();
-      if (e.key === "ArrowDown")
-        if (_fishSprite) _fishSprite.position.y += 10;
-      if (e.key === "ArrowUp")
-        if (_fishSprite) _fishSprite.position.y -= 10;
-      if (e.key === "ArrowLeft")
-        if (_fishSprite) _fishSprite.position.x -= 10;
-      if (e.key === "ArrowRight")
-        if (_fishSprite) _fishSprite.position.x += 10;
+        e.preventDefault();
+        if (e.key === "ArrowDown")
+          if (_fishSprite) _fishSprite.position.y += 10;
+        if (e.key === "ArrowUp")
+          if (_fishSprite) _fishSprite.position.y -= 10;
+        if (e.key === "ArrowLeft")
+          if (_fishSprite) _fishSprite.position.x -= 10;
+        if (e.key === "ArrowRight")
+          if (_fishSprite) _fishSprite.position.x += 10;
 
-    })
-    
+      })
+
     }
 
-    
+
   }, [hasLoaded])
 
-  //Manage Scrolling arrow animation and listeners
+  //Manage Scrolling arrow animation and Arrow auimation
   useEffect(() => {
     console.log("Arrow animation")
     //Arrow animation:
-
+    if (hasLoaded){
     const arrowTlDown = new TimelineMax()
       .to(arrowRef.current, 0.5, { repeat: -1, yoyo: true, width: "8%", left: "46%", y: 10 })
       .to(arrowRef.current, 1, {
@@ -256,7 +256,8 @@ export default function App() {
         rotate: 180,
         scrollTrigger: { trigger: havefunRef.current, start: "bottom bottom", toggleActions: 'restart reset restart reset' }
       })
-  }, [])
+    }
+  }, [hasLoaded])
 
   function handleRippleAnimation(e) {
     console.log("redrawing ripple")
@@ -270,13 +271,16 @@ export default function App() {
     setWaterSpeed(10)
     setTimeout(() => { setWaterSpeed(2) }, 1000)
   }
-  console.log("Rendering main app")
+  
+
   return (
     <Container className="main-theme" fluid>
-    <div className="main-theme" id="container" ref={containerRef}></div>
+      
       <Row id="main-row">
-      {hasLoaded ?  <Col>
-        
+      
+        <Col>
+          <div className="main-theme" id="container" ref={containerRef}></div>
+          {hasLoaded ? <>
           <svg ref={arrowRef}
             id="arrow-down"
             data-name="Capa 1"
@@ -290,7 +294,6 @@ export default function App() {
                 transform="translate(-200 -119.99)" />
             </g>
           </svg>
-          
           <Navbar handleWaterSpeed={handleWaterSpeed} handleRippleAnimation={handleRippleAnimation} targetRefs={{ aboutRef, projectsRef, technologiesRef, havefunRef }} />
           <Main />
           <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
@@ -305,9 +308,8 @@ export default function App() {
           <MainWindowsHoc myRef={havefunRef} direction={{ right: false }}>
             <HaveFun />
           </MainWindowsHoc>
-       
-        
-        </Col>  : <div>...Loading</div>}
+        </> : <div>...Loading</div> }
+        </Col> 
       </Row>
     </Container>
   );
