@@ -273,8 +273,10 @@ export default function App() {
   console.log("Rendering main app")
   return (
     <Container className="main-theme" fluid>
+    <div className="main-theme" id="container" ref={containerRef}></div>
       <Row id="main-row">
-        <Col>
+      {hasLoaded ?  <Col>
+        
           <svg ref={arrowRef}
             id="arrow-down"
             data-name="Capa 1"
@@ -288,7 +290,7 @@ export default function App() {
                 transform="translate(-200 -119.99)" />
             </g>
           </svg>
-          <div className="main-theme" id="container" ref={containerRef}></div>
+          
           <Navbar handleWaterSpeed={handleWaterSpeed} handleRippleAnimation={handleRippleAnimation} targetRefs={{ aboutRef, projectsRef, technologiesRef, havefunRef }} />
           <Main />
           <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
@@ -303,7 +305,9 @@ export default function App() {
           <MainWindowsHoc myRef={havefunRef} direction={{ right: false }}>
             <HaveFun />
           </MainWindowsHoc>
-        </Col>
+       
+        
+        </Col>  : <div>...Loading</div>}
       </Row>
     </Container>
   );
