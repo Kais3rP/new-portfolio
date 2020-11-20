@@ -19,7 +19,7 @@ const MainWindowsHoc = React.memo(function ({ myRef, children, direction }) {
     });
     return (
         <Row className="h-100 justify-content-center align-items-center">
-            <Col id={myRef.current ? myRef.current.id : null} ref={myRef} className={`p-20 ${direction.right ? "central-body-right" : "central-body-left"}`} >
+            <Col lg={6} id={myRef.current ? myRef.current.id : null} ref={myRef} className={`window h-100 d-flex justify-content-center align-items-center p-20 ${direction.right ? "central-body-right" : "central-body-left"}`} >
                 {children}
             </Col>
         </Row>

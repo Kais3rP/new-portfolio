@@ -49,7 +49,7 @@ export default function App() {
   useEffect(() => {
     console.log("loading assets effect...")
     //Aliases
-    const size = [window.visualViewport.width, window.visualViewport.height*1];
+    const size = [window.visualViewport.width, window.visualViewport.height+50];
     const loader = PIXI.Loader.shared;
     const Sprite = PIXI.Sprite;
     const ratio = size[0] / size[1];
