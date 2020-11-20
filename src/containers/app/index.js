@@ -11,12 +11,18 @@ import Technologies from "../../components/technologies/index"
 import * as PIXI from "pixi.js"
 import { gsap, TimelineMax } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { PixiPlugin } from "gsap/PixiPlugin";
 import water from "../../pics/water.jpg"
 import ripple from "../../pics/ripple.png"
 import swan from "../../pics/swan.png"
 import clouds from "../../pics/clouds.jpg"
+import fish from "../../pics/fish.png"
 import MainWindowsHoc from "../mainwindow/index"
+
+//Registering GSAP plugins
+window.PIXI = PIXI;
 gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(PixiPlugin);
 
 
 export default function App() {
@@ -26,9 +32,8 @@ export default function App() {
   const [_rippleSprite, set_RippleSprite] = useState(null);
   const [_waterSprite, set_waterSprite] = useState(null);
   const [_cloudsSprite, set_cloudsSprite] = useState(null);
-  const [_swanSprite, set_swanSprite] = useState(null);
-  const [appTicker, setAppTicker] = useState(null);
-  const [waterSpeed, setWaterSpeed] = useState(2);
+  const [_fishSprite, set_fishSprite] = useState(null);
+  const [waterSpeed, setWaterSpeed] = useState(1);
 
 
   const containerRef = useRef();
@@ -62,8 +67,8 @@ export default function App() {
     //Assets loader
     loader.add("water", water)
       .add("ripple", ripple)
-      .add("swan", swan)
       .add("clouds", clouds)
+      .add("fish", fish)
       .load(init)
     //Canvas resizing listener and scrolling auto position
     window.addEventListener("resize", handleResize);
@@ -72,6 +77,7 @@ export default function App() {
     function handleScroll(e) {
       console.log("scrolling...")
       containerRef.current.style.top = window.scrollY + "px";
+
     }
 
     function handleResize(e) {
@@ -86,14 +92,15 @@ export default function App() {
       //Sprites creation
       const waterSprite = new Sprite(resources.water.texture);
       const rippleSprite = new Sprite(resources.ripple.texture);
-      const swanSprite = new Sprite(resources.swan.texture);
+      //const swanSprite = new Sprite(resources.swan.texture);
       const cloudsSprite = new Sprite(resources.clouds.texture);
+      const fishSprite = new Sprite(resources.fish.texture);
 
       setApp(app);
       set_RippleSprite(rippleSprite);
       set_cloudsSprite(cloudsSprite);
       set_waterSprite(waterSprite);
-      set_swanSprite(swanSprite);
+      set_fishSprite(fishSprite);
       setHasLoaded(true);
 
     }
@@ -113,9 +120,8 @@ export default function App() {
     */
     if (hasLoaded) {
       //Sprites config
-      _waterSprite.anchor.set(0.5);
-      _waterSprite.scale.set(1);
-      _waterSprite.alpha = 0.7;
+      _waterSprite.anchor.set(0.5, 0.7);
+      _waterSprite.scale.set(0.9);
       _waterSprite.position.set(window.innerWidth / 2);
       _cloudsSprite.anchor.set(0.5);
       _cloudsSprite.scale.set(1);
@@ -127,161 +133,172 @@ export default function App() {
       app.stage.filterArea = app.screen;
       app.stage.filters = [cloudsFilter];
       app.stage.interactive = true;
-      app.stage.addChild(_rippleSprite, _waterSprite, _cloudsSprite);
+      app.stage.addChild(_rippleSprite, _waterSprite, _cloudsSprite, _fishSprite);
       //Animate @ 60FPS
-      const appTicker = app.ticker.add(() => {
+      //Little trick to read the updated speed state without rerender
+      const moveWater = (delta) => {
+        setWaterSpeed(
+          speed => {
+            console.log(speed)
+            _cloudsSprite.x += speed * delta;
+            _cloudsSprite.y += speed * delta * 2;
+            return speed
+          }
+        )
 
-        _cloudsSprite.x += waterSpeed;
-        _cloudsSprite.y += waterSpeed;
+      }
+      app.ticker.add(moveWater)
 
-      })
-      setAppTicker(appTicker)
     }
 
   }, [hasLoaded])
 
   //Ripple Effect
   useEffect(() => {
-
-    let isFirstLoad = true;
-    console.log("Ripple sprite animation setting", "firstLoad:", isFirstLoad)
+    console.log("Ripple sprite animation setting")
     if (hasLoaded) {
-        _rippleSprite.anchor.set(0.5);
-        _rippleSprite.scale.set(0.05);
+      _rippleSprite.anchor.set(0.5);
+      _rippleSprite.scale.set(0.05);
+      //Filters creation
+      const rippleFilter = new PIXI.filters.DisplacementFilter(_rippleSprite);
+      rippleFilter.scale.set(100);
+      //Add the filter to the previous ones
+      app.stage.filters = app.stage.filters || []
+      app.stage.filters = [...app.stage.filters, rippleFilter];
+      //Create the GSAP timeline of the filter scale
+      const tl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
+        .to(_rippleSprite.scale, 3, { x: 2, y: 2 })
+        .to(rippleFilter.scale, 3, { x: 2, y: 2 })
+      setRippleAnimation(tl);
+      //Add ripple click listener
+      app.stage.addListener("click", handleWaterClick)
+
+      function handleWaterClick(e) {
+        console.log("canvas clicked")
+        const mousePos = e.data.getLocalPosition(app.stage)
+
+        const newRippleSprite = new PIXI.Sprite(PIXI.Loader.shared.resources.ripple.texture);
+        app.stage.addChild(newRippleSprite);
+        //newRippleSprite.anchor.set(-1)
+        newRippleSprite.anchor.set(0.5);
+        newRippleSprite.scale.set(0.05);
+        newRippleSprite.position.x = mousePos.x;
+        newRippleSprite.position.y = mousePos.y;
         //Filters creation
-        const rippleFilter = new PIXI.filters.DisplacementFilter(_rippleSprite);
-        rippleFilter.scale.set(100);
+        const newRippleFilter = new PIXI.filters.DisplacementFilter(newRippleSprite);
+        newRippleFilter.scale.set(100);
         //Add the filter to the previous ones
-        app.stage.filters = app.stage.filters || []
-        app.stage.filters = [...app.stage.filters, rippleFilter];
+        //app.stage.filters = app.stage.filters || []
+        app.stage.filters = [...app.stage.filters, newRippleFilter];
         //Create the GSAP timeline of the filter scale
-        const tl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
-          .to(_rippleSprite.scale, 3, { x: 2, y: 2 })
-          .to(rippleFilter.scale, 3, { x: 2, y: 2 })
-        setRippleAnimation(tl);
-        //Add ripple click listener
-        app.stage.addListener("click", handleWaterClick)
-
-        function handleWaterClick(e) {
-          console.log("canvas clicked")
-          const mousePos = e.data.getLocalPosition(app.stage)
-          console.log(PIXI.Loader.shared.resources)
-          const newRippleSprite = new PIXI.Sprite(PIXI.Loader.shared.resources.ripple.texture);
-          app.stage.addChild(newRippleSprite);
-          //newRippleSprite.anchor.set(-1)
-          newRippleSprite.anchor.set(0.5);
-          newRippleSprite.scale.set(0.05);
-          newRippleSprite.position.x = mousePos.x;
-          newRippleSprite.position.y = mousePos.y;
-          //Filters creation
-          const newRippleFilter = new PIXI.filters.DisplacementFilter(newRippleSprite);
-          newRippleFilter.scale.set(100);
-          //Add the filter to the previous ones
-          //app.stage.filters = app.stage.filters || []
-          app.stage.filters = [...app.stage.filters, newRippleFilter];
-          //Create the GSAP timeline of the filter scale
-          new TimelineMax({ onComplete: () => { }, repeat: 0 })
-            .to(newRippleSprite.scale, 3, { x: 2, y: 2 })
-            .to(newRippleFilter.scale, 3, { x: 2, y: 2 })
-        }
-      
-      if (appTicker) appTicker.remove()
-      setAppTicker(app.ticker.add(() => {
-        _cloudsSprite.x += waterSpeed;
-        _cloudsSprite.y += waterSpeed;
-      })
-      );
-
+        new TimelineMax({ onComplete: () => { }, repeat: 0 })
+          .to(newRippleSprite.scale, 3, { x: 2, y: 2 })
+          .to(newRippleFilter.scale, 3, { x: 2, y: 2 })
+      }
       return () => {
         app.stage.removeListener("click", handleWaterClick)
       }
     }
-
-    
-    
-   
-  
-  }, [hasLoaded, appTicker, waterSpeed])
-//Dynamic water animation speed control
-/*  useEffect(()=>{
+  }, [hasLoaded])
+  //Fish init
+  useEffect(() => {
     if (hasLoaded) {
-   
-  }
-  },[])*/
+      _fishSprite.anchor.set(0.5);
+      _fishSprite.position.set(200, 200);
+      _fishSprite.scale.set(0.3)
+      const fishTl = new TimelineMax()
+                    .to(_fishSprite, {pixi: {x:window.innerWidth}, duration:10})
+                    .to(_fishSprite, {pixi:{scaleX:0}, duration:3})
+                    .to(_fishSprite, {pixi:{scaleX:-0.3}, duration:3})
+                    .to(_fishSprite, {pixi: {x:0, y:window.innerHeight/2}, duration:10})
+                    .to(_fishSprite, {pixi:{scaleX:0}, duration:3})
+                    .to(_fishSprite, {pixi:{scaleX:0.3}, duration:3})
+                    .to(_fishSprite, {pixi: {x:window.innerWidth}, duration:10})
+                    .to(_fishSprite, {pixi:{scaleX:0}, duration:3})
+                    .to(_fishSprite, {pixi:{scaleX:-0.3}, duration:3})
+                    .to(_fishSprite, {pixi: {x:0, y:window.innerHeight}, duration:10})
+      
+    }
 
-//Manage Scrolling arrow animation and listeners
-useEffect(() => {
-  console.log("Arrow animation")
-  //Arrow animation:
+    window.addEventListener("keydown", (e) => {
+      e.preventDefault();
+      if (e.key === "ArrowDown")
+        if (_fishSprite) _fishSprite.position.y += 10;
+      if (e.key === "ArrowUp")
+        if (_fishSprite) _fishSprite.position.y -= 10;
+      if (e.key === "ArrowLeft")
+        if (_fishSprite) _fishSprite.position.x -= 10;
+      if (e.key === "ArrowRight")
+        if (_fishSprite) _fishSprite.position.x += 10;
 
-  const arrowTlDown = new TimelineMax()
-    .to(arrowRef.current, 0.5, { repeat: -1, yoyo: true, width: "8%", left: "46%", y: 10 })
-    .to(arrowRef.current, 1, {
-      ease: "linear",
-      rotate: 180,
-      scrollTrigger: { trigger: havefunRef.current, start: "bottom bottom", toggleActions: 'restart reset restart reset' }
     })
+  }, [hasLoaded])
 
-}, [])
+  //Manage Scrolling arrow animation and listeners
+  useEffect(() => {
+    console.log("Arrow animation")
+    //Arrow animation:
 
-function handleRippleAnimation(e) {
-  console.log("redrawing ripple")
+    const arrowTlDown = new TimelineMax()
+      .to(arrowRef.current, 0.5, { repeat: -1, yoyo: true, width: "8%", left: "46%", y: 10 })
+      .to(arrowRef.current, 1, {
+        ease: "linear",
+        rotate: 180,
+        scrollTrigger: { trigger: havefunRef.current, start: "bottom bottom", toggleActions: 'restart reset restart reset' }
+      })
 
-  _rippleSprite.position.x = e.pageX;
-  _rippleSprite.position.y = e.pageY;
-  rippleAnimation?.restart();
-}
+  }, [])
 
-/*useEffect(()=>{
-  setTimeout(()=>{setWaterSpeed(2)},2000)
-},[waterSpeed])*/
-function handleWaterSpeed() {
-  setWaterSpeed(speed => speed - 1)
-}
-console.log("Rendering main app")
-return (
-  <Container className="main-theme" fluid>
-    <Row id="main-row">
-      <Col>
-        <svg ref={arrowRef}
-          id="arrow-down"
-          data-name="Capa 1"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 560 320.01">
-          <g
-            id="Rounded_Rectangle_33_copy_4"
-            data-name="Rounded Rectangle 33 copy 4">
-            <path
-              d="M480,344.18,268.87,131.89a40.16,40.16,0,0,0-57.06,0,40.81,40.81,0,0,0,0,57.43L449.45,428.26a45.73,45.73,0,0,0,61.1,0L748.19,189.32a40.81,40.81,0,0,0,0-57.43,40.16,40.16,0,0,0-57.06,0Z"
-              transform="translate(-200 -119.99)" />
-          </g>
-        </svg>
-        <div className="main-theme" id="container" ref={containerRef}></div>
-        <Navbar handleRippleAnimation={handleRippleAnimation} targetRefs={{ aboutRef, projectsRef, technologiesRef, havefunRef }} />
-        <Main />
-        <Row>
-          <Col>
-            <button onClick={handleWaterSpeed}>INCREASE SPEED</button>
-          </Col>
-        </Row>
+  function handleRippleAnimation(e) {
+    console.log("redrawing ripple")
 
-        <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
-          <About />
-        </MainWindowsHoc>
-        <MainWindowsHoc myRef={projectsRef} direction={{ right: true }}>
-          <Projects />
-        </MainWindowsHoc>
-        <MainWindowsHoc myRef={technologiesRef} direction={{ right: false }}>
-          <Technologies />
-        </MainWindowsHoc>
-        <MainWindowsHoc myRef={havefunRef} direction={{ right: false }}>
-          <HaveFun />
-        </MainWindowsHoc>
+    _rippleSprite.position.x = e.pageX;
+    _rippleSprite.position.y = e.pageY;
+    rippleAnimation?.restart();
+  }
 
-      </Col>
-    </Row>
-  </Container>
-);
+  function handleWaterSpeed() {
+    setWaterSpeed(10)
+    setTimeout(() => { setWaterSpeed(2) }, 1000)
+  }
+  console.log("Rendering main app")
+  return (
+    <Container className="main-theme" fluid>
+      <Row id="main-row">
+        <Col>
+          <svg ref={arrowRef}
+            id="arrow-down"
+            data-name="Capa 1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 560 320.01">
+            <g
+              id="Rounded_Rectangle_33_copy_4"
+              data-name="Rounded Rectangle 33 copy 4">
+              <path
+                d="M480,344.18,268.87,131.89a40.16,40.16,0,0,0-57.06,0,40.81,40.81,0,0,0,0,57.43L449.45,428.26a45.73,45.73,0,0,0,61.1,0L748.19,189.32a40.81,40.81,0,0,0,0-57.43,40.16,40.16,0,0,0-57.06,0Z"
+                transform="translate(-200 -119.99)" />
+            </g>
+          </svg>
+          <div className="main-theme" id="container" ref={containerRef}></div>
+          <Navbar handleWaterSpeed={handleWaterSpeed} handleRippleAnimation={handleRippleAnimation} targetRefs={{ aboutRef, projectsRef, technologiesRef, havefunRef }} />
+          <Main />
+          <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
+            <About />
+          </MainWindowsHoc>
+          <MainWindowsHoc myRef={projectsRef} direction={{ right: true }}>
+            <Projects />
+          </MainWindowsHoc>
+          <MainWindowsHoc myRef={technologiesRef} direction={{ right: false }}>
+            <Technologies />
+          </MainWindowsHoc>
+          <MainWindowsHoc myRef={havefunRef} direction={{ right: false }}>
+            <HaveFun />
+          </MainWindowsHoc>
+
+        </Col>
+      </Row>
+    </Container>
+  );
 }
 
 

@@ -8,7 +8,7 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
 gsap.registerPlugin(ScrollToPlugin);
 
-export default function Navbar( { handleRippleAnimation, targetRefs }) {
+export default function Navbar( { handleRippleAnimation, handleWaterSpeed, targetRefs }) {
 
 
 
@@ -19,6 +19,7 @@ console.log(targetRefs)
 function handleClick(e, ref){
     console.log(ref.current.getBoundingClientRect().y + ref.current.getBoundingClientRect().height)
     handleRippleAnimation(e);
+    handleWaterSpeed();
     //moveNavlinks(e.target, ref.current)
     gsap.to( window, { duration:1, scrollTo: {x:0, y:ref.current}} )
 }
