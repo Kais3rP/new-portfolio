@@ -6,11 +6,11 @@ import { gsap } from "gsap";
 
 
 
-export default function HaveFun({ havefunRef }) {
+export default function Main() {
     
     return (
-        <Row className=" justify-content-center align-items-center">
-            <Col ref={havefunRef}  className="main-theme main-window">
+        <Row className=" h-100 justify-content-center align-items-center">
+            <Col  className="main-theme main-window">
 MAIN            </Col>
         </Row>
 

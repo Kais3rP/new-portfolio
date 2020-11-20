@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300&display=swap');
 html{
-    scroll-behavior: smooth;
+   
 }
 body {
   margin: 0;
@@ -14,7 +14,7 @@ body {
 }
 
 .main-theme{
-  background-color: #535353; /*#1A0315;*/
+  background-color: #000000; /*#1A0315;*/
   color: #88D317;
 }
 

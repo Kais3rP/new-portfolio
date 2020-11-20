@@ -49,7 +49,7 @@ export default function App() {
   useEffect(() => {
     console.log("loading assets effect...")
     //Aliases
-    const size = [window.innerWidth, window.innerHeight + 50];
+    const size = [window.visualViewport.width, window.visualViewport.height*1];
     const loader = PIXI.Loader.shared;
     const Sprite = PIXI.Sprite;
     const ratio = size[0] / size[1];
@@ -64,6 +64,8 @@ export default function App() {
     //app Settings
 
     app.renderer.autoResize = true;
+    app.renderer.view.style.touchAction = 'auto';
+    app.renderer.plugins.interaction.autoPreventDefault = false;
     app.renderer.resize(size[0], size[1]);
     //Assets loader
     loader.add("water", water)
@@ -121,11 +123,11 @@ export default function App() {
     */
     if (hasLoaded) {
       //Sprites config
-      _waterSprite.anchor.set(0.5, 0.7);
-      _waterSprite.scale.set(0.9);
+      _waterSprite.anchor.set(0.5);
+      _waterSprite.scale.set((app.renderer.width/1000), app.renderer.height/1000);
       _waterSprite.position.set(window.innerWidth / 2);
       _cloudsSprite.anchor.set(0.5);
-      _cloudsSprite.scale.set(1);
+      _cloudsSprite.scale.set((app.renderer.width/1000), app.renderer.height/1000);
       _cloudsSprite.position.set(0);
       //This makes the animation continuous
       _cloudsSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
@@ -172,7 +174,7 @@ export default function App() {
         .to(rippleFilter.scale, 3, { x: 2, y: 2 })
       setRippleAnimation(tl);
       //Add ripple click listener
-      app.stage.addListener("click", handleWaterClick)
+      app.stage.addListener("pointerdown", handleWaterClick)
 
       function handleWaterClick(e) {
         console.log("canvas clicked")
@@ -206,7 +208,7 @@ export default function App() {
     if (hasLoaded) {
       _fishSprite.anchor.set(0.5);
       _fishSprite.position.set(200, 200);
-      _fishSprite.scale.set(0.3)
+      _fishSprite.scale.set(app.renderer.width/6000)
       _fishSprite.rotation = -0.3;
       const fishTl = new TimelineMax({ yoyo: true })
         .to(_fishSprite, { pixi: { x: window.innerWidth - 50 }, duration: 7 })
@@ -274,10 +276,8 @@ export default function App() {
   
 
   return (
-    <Container className="main-theme" fluid>
-      
-      <Row id="main-row">
-      
+    <Container className="main-theme" fluid>      
+      <Row id="main-row">      
         <Col>
           <div className="main-theme" id="container" ref={containerRef}></div>
           {hasLoaded ? <>
@@ -299,7 +299,7 @@ export default function App() {
           <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
             <About />
           </MainWindowsHoc>
-          <MainWindowsHoc myRef={projectsRef} direction={{ right: true }}>
+          <MainWindowsHoc myRef={projectsRef} direction={{ right: false }}>
             <Projects />
           </MainWindowsHoc>
           <MainWindowsHoc myRef={technologiesRef} direction={{ right: false }}>
