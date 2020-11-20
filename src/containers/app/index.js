@@ -161,13 +161,28 @@ export default function App() {
         setRippleAnimation(tl);
         //Add ripple click listener
         app.stage.addListener("click", handleWaterClick)
+
         function handleWaterClick(e) {
           console.log("canvas clicked")
           const mousePos = e.data.getLocalPosition(app.stage)
-          _rippleSprite.position.x = mousePos.x;
-          _rippleSprite.position.y = mousePos.y;
-          //Restart the ripple animation
-          if (tl) tl.restart()
+          console.log(PIXI.Loader.shared.resources)
+          const newRippleSprite = new PIXI.Sprite(PIXI.Loader.shared.resources.ripple.texture);
+          app.stage.addChild(newRippleSprite);
+          //newRippleSprite.anchor.set(-1)
+          newRippleSprite.anchor.set(0.5);
+          newRippleSprite.scale.set(0.05);
+          newRippleSprite.position.x = mousePos.x;
+          newRippleSprite.position.y = mousePos.y;
+          //Filters creation
+          const newRippleFilter = new PIXI.filters.DisplacementFilter(newRippleSprite);
+          newRippleFilter.scale.set(100);
+          //Add the filter to the previous ones
+          //app.stage.filters = app.stage.filters || []
+          app.stage.filters = [...app.stage.filters, newRippleFilter];
+          //Create the GSAP timeline of the filter scale
+          new TimelineMax({ onComplete: () => { }, repeat: 0 })
+            .to(newRippleSprite.scale, 3, { x: 2, y: 2 })
+            .to(newRippleFilter.scale, 3, { x: 2, y: 2 })
         }
       
       if (appTicker) appTicker.remove()
