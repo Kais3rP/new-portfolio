@@ -1,0 +1,10 @@
+.loading-box {
+    height: 30px;
+    width:1px;
+    background-color:white;
+    border: inherit;
+}
+
+.loader-container {
+    width:min(300px, 70vw);
+}
