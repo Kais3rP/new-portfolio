@@ -253,34 +253,55 @@ export default function App() {
         {
           fish: _fishSprite,
           direction: "right",
-          startX: -window.innerWidth/10,
+          startX: -window.innerWidth / 10,
           startY: 0
         },
         {
           fish: _fish2Sprite,
           direction: "right",
-          startX: -window.innerWidth/10,
-          startY: window.innerHeight /4
+          startX: -window.innerWidth / 10,
+          startY: window.innerHeight / 4
         },
         {
           fish: _fish3Sprite,
           direction: "right",
-          startX: -window.innerWidth/10,
-          startY: window.innerHeight /3
+          startX: -window.innerWidth / 10,
+          startY: window.innerHeight / 3
         },
         {
           fish: _fish4Sprite,
           direction: "right",
-          startX: -window.innerWidth/10,
-          startY: window.innerHeight /2
+          startX: -window.innerWidth / 10,
+          startY: window.innerHeight / 2
         },
         {
           fish: _fish5Sprite,
           direction: "right",
-          startX: -window.innerWidth/10,
-          startY: window.innerHeight 
+          startX: -window.innerWidth / 10,
+          startY: window.innerHeight
         },
       ]
+
+      //Assign a turning timeline to the fishes
+      for (let fish of allFishes) {
+        fish.tlLeft =
+          new TimelineMax()
+            .to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
+            .to(fish.fish, { pixi: { scaleX: -window.innerWidth / 6000 }, duration: 0.1 })
+        fish.tlRight =
+          new TimelineMax()
+            .to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
+            .to(fish.fish, { pixi: { scaleX: window.innerWidth / 6000 }, duration: 0.1 })
+      }
+
+      //Fishes animations to follow the mouse pointer and to run back away to the starting positions 
+
+      let fishFollowTl = new TimelineMax({})
+        .to(allFishes.map(fish => fish.fish), 10, { x: () => mousePos.x, y: (idx,target) => target.position.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
+
+
+
+
       //This handles the rotation of the fishes toward the mouse pointer
       function rotateFish() {
         for (let fish of allFishes) {
@@ -295,32 +316,12 @@ export default function App() {
           }
         }
       }
-      //Fishes animations to follow the mouse pointer and to run back away to the starting positions 
-      let fishFollowTl = new TimelineMax()
-        .to(allFishes.map(fish => fish.fish), 2, { x: () => mousePos.x, y: () => mousePos.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
-      let fishRunTl = new TimelineMax({onComplete:()=>{ for (let fish of allFishes)
-                                                                    fish.tlRight.restart()}})
-        .to(allFishes.map(fish => fish.fish), 2, { x: (idx, target) => allFishes[idx].startX, y: (idx, target) => allFishes[idx].startY, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
-      fishRunTl.pause()
-      let fishRunTimeout;
 
-//Assign a turning timeline to the fishes
-for (let fish of allFishes){
-fish.tlLeft = 
-new TimelineMax()
-.to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
-.to(fish.fish, { pixi: { scaleX: -window.innerWidth / 6000 }, duration: 0.1 })
-fish.tlRight = 
-new TimelineMax()
-.to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
-.to(fish.fish, { pixi: { scaleX: window.innerWidth / 6000 }, duration: 0.1 })
-      }
+
 
       function handleMouseMove(e) {
         mousePos.x = e.data.global.x;
         mousePos.y = e.data.global.y;
-        clearTimeout(fishRunTimeout);
-        fishRunTl.invalidate();
         fishFollowTl?.invalidate();
         fishFollowTl?.restart();
 
@@ -328,23 +329,15 @@ new TimelineMax()
         for (let fish of allFishes) {
           if (fish.fish.position.x >= mousePos.x) {
             if (fish.direction === "right")
-             fish.tlLeft.restart();
+              fish.tlLeft.restart();
             fish.direction = "left"
           }
           if (fish.fish.position.x <= mousePos.x) {
             if (fish.direction === "left")
-            fish.tlRight.restart();
+              fish.tlRight.restart();
             fish.direction = "right"
           }
         }
-      fishRunTimeout =  setTimeout(() => { 
-        for (let fish of allFishes){
-          if (fish.direction === "right"){
-          fish.tlLeft.restart()
-          }
-        } 
-        fishFollowTl?.invalidate();
-        fishRunTl.restart() }, 1000)
       }
 
       function handleScroll(e) {
@@ -441,27 +434,27 @@ new TimelineMax()
       //Setting fishes sprites 
 
       _fishSprite.anchor.set(0.5);
-      _fishSprite.position.set(-window.innerWidth/10, 0);
+      _fishSprite.position.set(-window.innerWidth / 10, 0);
       _fishSprite.scale.set(window.innerWidth / 6000)
       _fishSprite.rotation = -0.3;
 
       _fish2Sprite.anchor.set(0.5);
-      _fish2Sprite.position.set(-window.innerWidth/10, window.innerHeight/4);
+      _fish2Sprite.position.set(-window.innerWidth / 10, window.innerHeight / 4);
       _fish2Sprite.scale.set(window.innerWidth / 6000)
       _fish2Sprite.rotation = 0;
 
       _fish3Sprite.anchor.set(0.5);
-      _fish3Sprite.position.set(-window.innerWidth/10, window.innerHeight/3);
+      _fish3Sprite.position.set(-window.innerWidth / 10, window.innerHeight / 3);
       _fish3Sprite.scale.set(window.innerWidth / 6000)
       _fish3Sprite.rotation = 0;
 
       _fish4Sprite.anchor.set(0.5);
-      _fish4Sprite.position.set(-window.innerWidth/10, window.innerHeight/2);
+      _fish4Sprite.position.set(-window.innerWidth / 10, window.innerHeight / 2);
       _fish4Sprite.scale.set(window.innerWidth / 6000)
       _fish4Sprite.rotation = -0.3;
 
       _fish5Sprite.anchor.set(0.5);
-      _fish5Sprite.position.set(-window.innerWidth/10, window.innerHeight);
+      _fish5Sprite.position.set(-window.innerWidth / 10, window.innerHeight);
       _fish5Sprite.scale.set(window.innerWidth / 6000)
       _fish5Sprite.rotation = -0.3;
 
