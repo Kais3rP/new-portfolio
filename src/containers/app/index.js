@@ -63,12 +63,9 @@ export default function App() {
   const [_normalTreeSprite, set_normalTreeSprite] = useState(null);
   const [_blurredTreeSprite, set_blurredTreeSprite] = useState(null);
   const [_titleText, set_titleText] = useState(null);
-  const [waterSpeed, setWaterSpeed] = useState(1);
-  const [fishesTl, setFishesTl] = useState(null);
   const [_flowSound, set_flowSound] = useState(null);
   const [_dropSound, set_dropSound] = useState(null);
-
-
+  const [waterSpeed, setWaterSpeed] = useState(2);
 
   const containerRef = useRef();
   const aboutRef = useRef();
@@ -83,6 +80,14 @@ export default function App() {
       _flowSound.play()
     let rippleTimeout;
     playRippleAnimation();
+    //Arrow continuous animation
+    const arrowTlDown = new TimelineMax()
+      .to(arrowRef.current, 0.5, { repeat: -1, yoyo: true, width: "8%", left: "46%", y: 10 })
+      .to(arrowRef.current, 1, {
+        ease: "linear",
+        rotate: 180,
+        scrollTrigger: { trigger: havefunRef.current, start: "top bottom", toggleActions: 'restart reset restart reset' }
+      })
 
     function playRippleAnimation() {
       console.log(window.innerHeight, document.documentElement.scrollTop)
@@ -94,7 +99,7 @@ export default function App() {
     return () => { clearTimeout(rippleTimeout) }
   }, [isReady])
 
-
+  //Effect that loads the assets and sets the basic app containers
   useEffect(() => {
     console.log("loading assets effect...")
 
@@ -207,8 +212,7 @@ export default function App() {
     }
   }, [])
 
-  // stage Init
-
+  // stage Init Effect
   useEffect(() => {
     //Stage config
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -217,91 +221,68 @@ export default function App() {
       x: 0,
       y: 0
     }
+
+    const allFishes = [
+      {
+        fish: _fishSprite,
+        direction: "right",
+        startX: -window.innerWidth / 10,
+        startY: 0
+      },
+      {
+        fish: _fish2Sprite,
+        direction: "right",
+        startX: -window.innerWidth / 10,
+        startY: window.innerHeight / 4
+      },
+      {
+        fish: _fish3Sprite,
+        direction: "right",
+        startX: -window.innerWidth / 10,
+        startY: window.innerHeight / 3
+      },
+      {
+        fish: _fish4Sprite,
+        direction: "right",
+        startX: -window.innerWidth / 10,
+        startY: window.innerHeight / 2
+      },
+      {
+        fish: _fish5Sprite,
+        direction: "right",
+        startX: -window.innerWidth / 10,
+        startY: window.innerHeight
+      },
+    ]
+
+    //Assign a turning timeline to the fishes
+    for (let fish of allFishes) {
+      fish.tlLeft =
+        new TimelineMax()
+          .to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
+          .to(fish.fish, { pixi: { scaleX: -window.innerWidth / 6000 }, duration: 0.1 })
+      fish.tlRight =
+        new TimelineMax()
+          .to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
+          .to(fish.fish, { pixi: { scaleX: window.innerWidth / 6000 }, duration: 0.1 })
+    }
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
     if (hasLoaded) {
       app.stage.filterArea = app.screen;
       app.stage.addChild(_firstContainer, _secondContainer, _thirdContainer);
       _firstContainer.interactive = true;
       _firstContainer.addChild(_rippleSprite, _waterSprite, _cloudsSprite, _fishSprite, _fish2Sprite, _fish3Sprite, _fish4Sprite, _fish5Sprite, _titleText)
-      //_secondContainer.interactive = true;
-      //_secondContainer.addChild(_water2Sprite)
-      //_thirdContainer.interactive = true;
-      //_thirdContainer.addChild(_normalTreeSprite, _blurredTreeSprite)
-      //Canvas resizing listener and scrolling auto position
-
+      //Fishes animations to follow the mouse pointer and to run back away to the starting positions 
+      let fishFollowTl = new TimelineMax({})
+        .to(allFishes.map(fish => fish.fish), 10, { x: () => mousePos.x, y: (idx, target) => target.position.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
       window.addEventListener("resize", handleResize);
       window.addEventListener("scroll", handleScroll);
-      _firstContainer.addListener("pointermove", handleMouseMove)
-      _firstContainer.addListener("pointerdown", handleWaterClick)
+      _firstContainer.addListener("pointermove", handleMouseMove);
+      _firstContainer.addListener("pointerdown", handleWaterClick);
       //Animate @ 60FPS
-      app.ticker.add(moveWater)
-      app.ticker.add(rotateFish)
-      //Little trick to read the updated speed state without rerender
-      function moveWater(delta) {
-        setWaterSpeed(
-          speed => {
-            console.log(speed)
-            _cloudsSprite.x += speed * delta;
-            _cloudsSprite.y += speed * delta * 2;
-            return speed
-          }
-        )
-      }
-      let fishDirection = "right";
-
-      const allFishes = [
-        {
-          fish: _fishSprite,
-          direction: "right",
-          startX: -window.innerWidth / 10,
-          startY: 0
-        },
-        {
-          fish: _fish2Sprite,
-          direction: "right",
-          startX: -window.innerWidth / 10,
-          startY: window.innerHeight / 4
-        },
-        {
-          fish: _fish3Sprite,
-          direction: "right",
-          startX: -window.innerWidth / 10,
-          startY: window.innerHeight / 3
-        },
-        {
-          fish: _fish4Sprite,
-          direction: "right",
-          startX: -window.innerWidth / 10,
-          startY: window.innerHeight / 2
-        },
-        {
-          fish: _fish5Sprite,
-          direction: "right",
-          startX: -window.innerWidth / 10,
-          startY: window.innerHeight
-        },
-      ]
-
-      //Assign a turning timeline to the fishes
-      for (let fish of allFishes) {
-        fish.tlLeft =
-          new TimelineMax()
-            .to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
-            .to(fish.fish, { pixi: { scaleX: -window.innerWidth / 6000 }, duration: 0.1 })
-        fish.tlRight =
-          new TimelineMax()
-            .to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
-            .to(fish.fish, { pixi: { scaleX: window.innerWidth / 6000 }, duration: 0.1 })
-      }
-
-      //Fishes animations to follow the mouse pointer and to run back away to the starting positions 
-
-      let fishFollowTl = new TimelineMax({})
-        .to(allFishes.map(fish => fish.fish), 10, { x: () => mousePos.x, y: (idx,target) => target.position.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
-
-
-
-
+      app.ticker.add(moveWater);
+      app.ticker.add(rotateFish);
       //This handles the rotation of the fishes toward the mouse pointer
       function rotateFish() {
         for (let fish of allFishes) {
@@ -316,9 +297,17 @@ export default function App() {
           }
         }
       }
-
-
-
+      //Little trick to read the updated speed state without rerender
+      function moveWater(delta) {
+        setWaterSpeed(
+          speed => {
+            console.log(speed)
+            _cloudsSprite.x += speed * delta;
+            _cloudsSprite.y += speed * delta * 2;
+            return speed
+          }
+        )
+      }
       function handleMouseMove(e) {
         mousePos.x = e.data.global.x;
         mousePos.y = e.data.global.y;
@@ -395,20 +384,16 @@ export default function App() {
           .to(newRippleFilter.scale, 3, { x: 2, y: 2 })
         _dropSound.play()
       }
-
-
       return () => {
         window.removeEventListener("resize", handleResize)
         window.removeEventListener("scroll", handleScroll)
       }
     }
-
   }, [hasLoaded])
 
-  //First container animation
+  //First container settings
   useEffect(() => {
     console.log("Sprites setting")
-
     if (hasLoaded) {
       _waterSprite.anchor.set(0.5);
       _waterSprite.width = app.renderer.view.width;
@@ -432,24 +417,23 @@ export default function App() {
       setRippleAnimation(rippleTl);
 
       //Setting fishes sprites 
-
       _fishSprite.anchor.set(0.5);
       _fishSprite.position.set(-window.innerWidth / 10, 0);
       _fishSprite.scale.set(window.innerWidth / 6000)
       _fishSprite.rotation = -0.3;
 
       _fish2Sprite.anchor.set(0.5);
-      _fish2Sprite.position.set(-window.innerWidth / 10, window.innerHeight / 4);
+      _fish2Sprite.position.set(-window.innerWidth / 10, (1 / 4) * window.innerHeight);
       _fish2Sprite.scale.set(window.innerWidth / 6000)
       _fish2Sprite.rotation = 0;
 
       _fish3Sprite.anchor.set(0.5);
-      _fish3Sprite.position.set(-window.innerWidth / 10, window.innerHeight / 3);
+      _fish3Sprite.position.set(-window.innerWidth / 10, (2 / 4) * window.innerHeight);
       _fish3Sprite.scale.set(window.innerWidth / 6000)
       _fish3Sprite.rotation = 0;
 
       _fish4Sprite.anchor.set(0.5);
-      _fish4Sprite.position.set(-window.innerWidth / 10, window.innerHeight / 2);
+      _fish4Sprite.position.set(-window.innerWidth / 10, (3 / 4) * window.innerHeight);
       _fish4Sprite.scale.set(window.innerWidth / 6000)
       _fish4Sprite.rotation = -0.3;
 
@@ -468,15 +452,11 @@ export default function App() {
   }, [hasLoaded])
 
 
-  //Second Container Animation
+  //Second Container setting
   useEffect(() => {
     console.log("Second Animation init")
     if (hasLoaded) {
-      //Second animation:
-      _water2Sprite.anchor.set(0.5);
-      _water2Sprite.width = window.innerWidth;
-      _water2Sprite.height = window.innerHeight;
-      _water2Sprite.position.set(window.innerWidth / 2, window.innerHeight + window.innerHeight / 2);
+
     }
     return () => {
 
@@ -484,7 +464,7 @@ export default function App() {
 
   }, [hasLoaded])
 
-  //Third Container Animation
+  //Third Container Setting
   useEffect(() => {
     console.log("Second Animation init")
     if (hasLoaded) {
@@ -526,26 +506,8 @@ export default function App() {
 
   }, [hasLoaded])
 
-  //Manage Scrolling arrow animation and Arrow animation
-  useEffect(() => {
-    console.log("Arrow animation")
-    //Arrow animation:
-    if (isReady) {
-      const arrowTlDown = new TimelineMax()
-        .to(arrowRef.current, 0.5, { repeat: -1, yoyo: true, width: "8%", left: "46%", y: 10 })
-        .to(arrowRef.current, 1, {
-          ease: "linear",
-          rotate: 180,
-          scrollTrigger: { trigger: havefunRef.current, start: "top bottom", toggleActions: 'restart reset restart reset' }
-        })
-    }
-  }, [isReady])
-
-
-
   function handleRippleAnimation(e) {
     console.log("redrawing ripple")
-
     _rippleSprite.position.x = e.pageX;
     _rippleSprite.position.y = e.pageY;
     rippleAnimation?.restart();
@@ -582,7 +544,6 @@ export default function App() {
       <Row>
         <Col>
           <div className="main-theme" id="container" ref={containerRef}></div>
-
           {isReady ? <>
             <svg onClick={handleArrowClick} ref={arrowRef}
               id="arrow-down"
