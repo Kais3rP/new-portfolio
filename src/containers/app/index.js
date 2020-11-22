@@ -9,6 +9,7 @@ import Projects from "../../components/projects/index"
 import HaveFun from "../../components/havefun/index"
 import Technologies from "../../components/technologies/index"
 import * as PIXI from "pixi.js"
+import * as PIXISound from "pixi-sound"
 import { gsap, TimelineMax } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrollToPlugin } from "gsap/ScrollToPlugin"
@@ -26,6 +27,8 @@ import fish5 from "../../pics/fish5.png"
 import tree from "../../pics/tree.png"
 import treeNormal from "../../pics/tree_normal.png"
 import treeBlur from "../../pics/blurred_tree.png"
+import flowSound from "../../sound/flow.wav"
+import dropSound from "../../sound/drop.wav"
 import MainWindowsHoc from "../mainwindow/index"
 import LoadingView from "../../components/loading-view/index"
 
@@ -61,7 +64,9 @@ export default function App() {
   const [_blurredTreeSprite, set_blurredTreeSprite] = useState(null);
   const [_titleText, set_titleText] = useState(null);
   const [waterSpeed, setWaterSpeed] = useState(1);
-  const [fishTl, setFishTl] = useState(null);
+  const [fishesTl, setFishesTl] = useState(null);
+  const [_flowSound, set_flowSound] = useState(null);
+  const [_dropSound, set_dropSound] = useState(null);
 
 
 
@@ -72,6 +77,22 @@ export default function App() {
   const havefunRef = useRef();
   const arrowRef = useRef();
 
+  //This is the effect that checks for the isReady state
+  useEffect(() => {
+    if (isReady)
+      _flowSound.play()
+    let rippleTimeout;
+    playRippleAnimation();
+
+    function playRippleAnimation() {
+      console.log(window.innerHeight, document.documentElement.scrollTop)
+      rippleAnimation?.restart()
+      _dropSound?.play()
+      _rippleSprite?.position.set(0, 0)
+      rippleTimeout = setTimeout(playRippleAnimation, 6000)
+    }
+    return () => { clearTimeout(rippleTimeout) }
+  }, [isReady])
 
 
   useEffect(() => {
@@ -121,17 +142,19 @@ export default function App() {
       .add("fish5", fish5)
       .add("normal_tree", treeNormal)
       .add("blurred_tree", treeBlur)
+      .add("flowSound", flowSound)
+      .add("dropSound", dropSound)
       .load(init)
-   
-    loader.onProgress.add(data=>{
-console.log(data.progress)
-setLoadProgress(data.progress)
+
+    loader.onProgress.add(data => {
+      console.log(data.progress)
+      setLoadProgress(Math.ceil(data.progress))
     })
 
-    loader.onComplete.add((a,b,c)=>{
-      console.log("progress:",a,b,c)
+    loader.onComplete.add((a, b, c) => {
+      console.log("progress:", a, b, c)
       setHasLoaded(true);
-          }
+    }
     )
     //Function fired on load assets complete
     function init(loader, resources) {
@@ -148,7 +171,20 @@ setLoadProgress(data.progress)
       const normalTreeSprite = new Sprite(resources.normal_tree.texture);
       const blurredTreeSprite = new Sprite(resources.blurred_tree.texture);
       //const swanSprite = new Sprite(resources.swan.texture);
-      const titleText = new PIXI.Text('WELCOME',{fontFamily : 'Arial', fontSize: 50, fill : 0xFFFFFF, align : 'center'});
+      const titleText = new PIXI.Text('WELCOME', { fontFamily: 'Arial', fontSize: 50, fill: 0xFFFFFF, align: 'center' });
+      const flowSound = PIXISound.default.Sound.from({
+        url: resources.flowSound,
+        loop: true,
+        volume: 0.1,
+        speed: 0.3,
+        autoStart: false
+      });
+      const dropSound = PIXISound.default.Sound.from({
+        url: resources.dropSound,
+        autostart: false,
+        volume: 0.1
+
+      })
 
       setApp(app);
       set_firstContainer(firstContainer);
@@ -166,16 +202,22 @@ setLoadProgress(data.progress)
       set_normalTreeSprite(normalTreeSprite);
       set_blurredTreeSprite(blurredTreeSprite);
       set_titleText(titleText)
-      
-
+      set_flowSound(flowSound)
+      set_dropSound(dropSound)
     }
-  
   }, [])
 
   // stage Init
 
   useEffect(() => {
     //Stage config
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+      //Scoped mouse position variables
+      const mousePos = {
+        x: 0,
+        y: 0
+      }
+      //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     if (hasLoaded) {
       app.stage.filterArea = app.screen;
       app.stage.addChild(_firstContainer, _secondContainer, _thirdContainer);
@@ -185,62 +227,106 @@ setLoadProgress(data.progress)
       //_secondContainer.addChild(_water2Sprite)
       //_thirdContainer.interactive = true;
       //_thirdContainer.addChild(_normalTreeSprite, _blurredTreeSprite)
-       //Canvas resizing listener and scrolling auto position
+      //Canvas resizing listener and scrolling auto position
 
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll)
+      window.addEventListener("resize", handleResize);
+      window.addEventListener("scroll", handleScroll);
+      _firstContainer.addListener("pointermove", handleMouseMove)
+      _firstContainer.addListener("pointerdown", handleWaterClick)
+      //Animate @ 60FPS
+      app.ticker.add(moveWater)
+      app.ticker.add(rotateFish)
+      //Little trick to read the updated speed state without rerender
+      function moveWater(delta) {
+        setWaterSpeed(
+          speed => {
+            console.log(speed)
+            _cloudsSprite.x += speed * delta;
+            _cloudsSprite.y += speed * delta * 2;
+            return speed
+          }
+        )
+      }
+
+      function rotateFish(){
+        let dx =  mousePos.x - _fishSprite.position.x;
+        let dy =  mousePos.y - _fishSprite.position.y;
+          _fishSprite.rotation = Math.atan2(dy, dx);
+      }
+      //Fishes animation to follow mouse 
     
-    }
-    function handleScroll(e) {
-      console.log("scrolling...")
-      console.log("scrollY:", document.body.scrollHeight, window.pageYOffset, document.body.clientHeight)
-      setCurrentWindow(current => { console.log("current div:", current); return current })
-      setIsBottom(isBottom => { console.log("is bottom:", isBottom); return isBottom })
+      let fishFollowTl = new TimelineMax()
+        .to([_fishSprite.position], 2, { x: () => mousePos.x, y: () => mousePos.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
 
-      setScroll(window.pageYOffset)
-      if (document.body.scrollHeight - window.pageYOffset <= document.body.clientHeight)
-        setIsBottom(true)
-      else
-        setIsBottom(false)
-      //Current window
-      if (window.pageYOffset <= window.innerHeight){
-        _titleText.text = "WELCOME";
-        setCurrentWindow("main")
+      function handleMouseMove(e) {
+        mousePos.x = e.data.global.x;
+        mousePos.y = e.data.global.y;
+        fishFollowTl?.invalidate()
+        fishFollowTl?.restart()
       }
-       
-      if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset > window.innerHeight){
-        setCurrentWindow("about");
-        _titleText.text = "ABOUT ME";
+      function handleScroll(e) {
+        console.log("scrolling...")
+        setScroll(window.pageYOffset)
+        if (document.body.scrollHeight - window.pageYOffset <= document.body.clientHeight)
+          setIsBottom(true)
+        else
+          setIsBottom(false)
+        //Current window
+        if (window.pageYOffset <= window.innerHeight) {
+          _titleText.text = "WELCOME";
+          setCurrentWindow("main")
+        }
+
+        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset > window.innerHeight) {
+          setCurrentWindow("about");
+          _titleText.text = "ABOUT ME";
+        }
+
+        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight) {
+          _titleText.text = "MY PROJECTS";
+          setCurrentWindow("projects")
+        }
+        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight) {
+          _titleText.text = "TECHNOLOGIES I USE";
+          setCurrentWindow("technologies")
+        }
+        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight) {
+          _titleText.text = "HAVE FUN";
+          setCurrentWindow("havefun")
+        }
       }
-        
-      if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight)
-       {
-        _titleText.text = "MY PROJECTS";
-        setCurrentWindow("projects")
-       } 
-      if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight)
-       {
-        _titleText.text = "TECHNOLOGIES I USE";
-        setCurrentWindow("technologies")
-       } 
-      if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight)
-      {
-        _titleText.text = "HAVE FUN";
-        setCurrentWindow("havefun")
-      }  
+
+      function handleResize(e) {
+        console.log("resizing...")
+        if (e.target.innerWidth < app.renderer.width) {
+          app.renderer.resize(e.target.innerWidth, e.target.innerHeight);
+        }
+      }
+
+      function handleWaterClick(e) {
+        console.log("canvas clicked")
+        const newRippleSprite = new PIXI.Sprite(PIXI.Loader.shared.resources.ripple.texture);
+        _firstContainer.addChild(newRippleSprite);
+        newRippleSprite.anchor.set(0.5);
+        newRippleSprite.scale.set(0.05);
+        newRippleSprite.position.x = mousePos.x;
+        newRippleSprite.position.y = mousePos.y;
+        const newRippleFilter = new PIXI.filters.DisplacementFilter(newRippleSprite);
+        newRippleFilter.scale.set(100);
+        _firstContainer.filters = [..._firstContainer.filters, newRippleFilter];
+        new TimelineMax({ onComplete: () => { }, repeat: 0 })
+          .to(newRippleSprite.scale, 3, { x: 2, y: 2 })
+          .to(newRippleFilter.scale, 3, { x: 2, y: 2 })
+        _dropSound.play()
+      }
+
+
+      return () => {
+        window.removeEventListener("resize", handleResize)
+        window.removeEventListener("scroll", handleScroll)
+      }
     }
 
-    function handleResize(e) {
-      console.log("resizing...")
-      if (e.target.innerWidth < app.renderer.width) {
-        app.renderer.resize(e.target.innerWidth, e.target.innerHeight);
-      }
-    }
-    return () => {
-      //loader.reset();
-      window.removeEventListener("resize", handleResize)
-      window.removeEventListener("scroll", handleScroll)
-    }
   }, [hasLoaded])
 
   //First container animation
@@ -260,13 +346,14 @@ setLoadProgress(data.progress)
       const cloudsFilter = new PIXI.filters.DisplacementFilter(_cloudsSprite, 80);
       _rippleSprite.anchor.set(0.5);
       _rippleSprite.scale.set(0.05);
+      _rippleSprite.position.set(0, 0)
       const rippleFilter = new PIXI.filters.DisplacementFilter(_rippleSprite);
       rippleFilter.scale.set(100);
       _firstContainer.filters = [cloudsFilter, rippleFilter]
-      const tl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
+      const rippleTl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
         .to(_rippleSprite.scale, 3, { x: 2, y: 2 })
         .to(rippleFilter.scale, 3, { x: 2, y: 2 })
-      setRippleAnimation(tl);
+      setRippleAnimation(rippleTl);
 
       //Setting fishes sprites 
 
@@ -274,7 +361,7 @@ setLoadProgress(data.progress)
       _fishSprite.position.set(200, 200);
       _fishSprite.scale.set(window.innerWidth / 6000)
       _fishSprite.rotation = -0.3;
-      const fishTl = new TimelineMax({ yoyo: true })
+      const fish1Tl = new TimelineMax({ yoyo: true })
         .to(_fishSprite, { pixi: { x: window.innerWidth - 50 }, duration: 7 })
         .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
         .to(_fishSprite, { pixi: { scaleX: -window.innerWidth / 6000 }, duration: 1 })
@@ -287,10 +374,11 @@ setLoadProgress(data.progress)
         .to(_fishSprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
         .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
         .to(_fishSprite, { pixi: { scaleX: 0.3 }, duration: 1 })
+      fish1Tl.pause();
       // setFishTl(fishTl)
-       
+
       _fish2Sprite.anchor.set(0.5);
-      _fish2Sprite.position.set(window.innerWidth-200, 200);
+      _fish2Sprite.position.set(window.innerWidth - 200, 200);
       _fish2Sprite.scale.set(window.innerWidth / 6000)
       _fish2Sprite.rotation = 0;
       const fish2Tl = new TimelineMax({ yoyo: true })
@@ -306,10 +394,11 @@ setLoadProgress(data.progress)
         .to(_fish2Sprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
         .to(_fish2Sprite, { pixi: { scaleX: 0 }, duration: 1 })
         .to(_fish2Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
+      fish2Tl.pause();
       // setFishTl(fishTl)
-       
+
       _fish3Sprite.anchor.set(0.5);
-      _fish3Sprite.position.set(200,600);
+      _fish3Sprite.position.set(200, 600);
       _fish3Sprite.scale.set(window.innerWidth / 6000)
       _fish3Sprite.rotation = 0;
       const fish3Tl = new TimelineMax({ yoyo: true })
@@ -325,8 +414,9 @@ setLoadProgress(data.progress)
         .to(_fish3Sprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
         .to(_fish3Sprite, { pixi: { scaleX: 0 }, duration: 1 })
         .to(_fish3Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
+      fish3Tl.pause();
       // setFishTl(fishTl)
-       
+
       _fish4Sprite.anchor.set(0.5);
       _fish4Sprite.position.set(200, 900);
       _fish4Sprite.scale.set(window.innerWidth / 6000)
@@ -344,10 +434,11 @@ setLoadProgress(data.progress)
         .to(_fish4Sprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
         .to(_fish4Sprite, { pixi: { scaleX: 0 }, duration: 1 })
         .to(_fish4Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
+      fish4Tl.pause();
       // setFishTl(fishTl)
-       
+
       _fish5Sprite.anchor.set(0.5);
-      _fish5Sprite.position.set(600, window.innerWidth-200);
+      _fish5Sprite.position.set(600, window.innerWidth - 200);
       _fish5Sprite.scale.set(window.innerWidth / 6000)
       _fish5Sprite.rotation = -0.3;
       const fish5Tl = new TimelineMax({ yoyo: true })
@@ -363,63 +454,41 @@ setLoadProgress(data.progress)
         .to(_fish5Sprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
         .to(_fish5Sprite, { pixi: { scaleX: 0 }, duration: 1 })
         .to(_fish5Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-      // setFishTl(fishTl)
+      fish5Tl.pause();
 
-     //Text config
-     _titleText.anchor.set(0.5)
-     _titleText.position.set(app.renderer.width/2, (app.renderer.height/100) * 10)
-
-      window.addEventListener("keydown", (e) => {
-        if (fishTl.isActive()) {
-          fishTl.pause();
-          setTimeout(() => { fishTl.play() }, 2000)
-        }
-        e.preventDefault();
-        if (e.key === "ArrowDown")
-          if (_fishSprite) _fishSprite.position.y += 10;
-        if (e.key === "ArrowUp")
-          if (_fishSprite) _fishSprite.position.y -= 10;
-        if (e.key === "ArrowLeft")
-          if (_fishSprite) _fishSprite.position.x -= 10;
-        if (e.key === "ArrowRight")
-          if (_fishSprite) _fishSprite.position.x += 10;
-
+      setFishesTl({
+        first: fish1Tl,
+        second: fish2Tl,
+        third: fish3Tl,
+        fourth: fish4Tl,
+        fifth: fish5Tl
       })
+      //Text config
+      _titleText.anchor.set(0.5)
+      _titleText.position.set(app.renderer.width / 2, (app.renderer.height / 100) * 10)
 
-      _firstContainer.addListener("pointerdown", handleWaterClick)
-      //Animate @ 60FPS
-      //Little trick to read the updated speed state without rerender
-      const moveWater = (delta) => {
-        setWaterSpeed(
-          speed => {
-            console.log(speed)
-            _cloudsSprite.x += speed * delta;
-            _cloudsSprite.y += speed * delta * 2;
-            return speed
-          }
-        )
-      }
-      app.ticker.add(moveWater)
+      /* window.addEventListener("keydown", (e) => {
+         if (fishTl.isActive()) {
+           fishTl.pause();
+           setTimeout(() => { fishTl.play() }, 2000)
+         }
+         e.preventDefault();
+         if (e.key === "ArrowDown")
+           if (_fishSprite) _fishSprite.position.y += 10;
+         if (e.key === "ArrowUp")
+           if (_fishSprite) _fishSprite.position.y -= 10;
+         if (e.key === "ArrowLeft")
+           if (_fishSprite) _fishSprite.position.x -= 10;
+         if (e.key === "ArrowRight")
+           if (_fishSprite) _fishSprite.position.x += 10;
+ 
+       })
+ */
+    }
 
-    }
-    function handleWaterClick(e) {
-      console.log("canvas clicked")
-      const mousePos = e.data.getLocalPosition(_firstContainer)
-      const newRippleSprite = new PIXI.Sprite(PIXI.Loader.shared.resources.ripple.texture);
-      _firstContainer.addChild(newRippleSprite);
-      newRippleSprite.anchor.set(0.5);
-      newRippleSprite.scale.set(0.05);
-      newRippleSprite.position.x = mousePos.x;
-      newRippleSprite.position.y = mousePos.y;
-      const newRippleFilter = new PIXI.filters.DisplacementFilter(newRippleSprite);
-      newRippleFilter.scale.set(100);
-      _firstContainer.filters = [..._firstContainer.filters, newRippleFilter];
-      new TimelineMax({ onComplete: () => { }, repeat: 0 })
-        .to(newRippleSprite.scale, 3, { x: 2, y: 2 })
-        .to(newRippleFilter.scale, 3, { x: 2, y: 2 })
-    }
+
     return () => {
-      if (_firstContainer) _firstContainer.removeListener("click", handleWaterClick)
+
     }
   }, [hasLoaded])
 
@@ -464,8 +533,8 @@ setLoadProgress(data.progress)
         setTilt(15, eventData.data.global.x, eventData.data.global.y, treeFilter);
       }
       function setTilt(maxTilt, mouseX, mouseY, displacementFilter) {
-        var midpointX = window.innerWidth / 2,
-          midpointY = window.innerHeight / 2,
+        var midpointX = app.renderer.innerWidth / 2,
+          midpointY = app.renderer.innerHeight / 2,
           posX = midpointX - mouseX,
           posY = midpointY - mouseY,
           // consider the ratio of the current position of the mouse to the center of the screen and multiply by the maximum shift
@@ -538,7 +607,7 @@ setLoadProgress(data.progress)
       <Row>
         <Col>
           <div className="main-theme" id="container" ref={containerRef}></div>
-          
+
           {isReady ? <>
             <svg onClick={handleArrowClick} ref={arrowRef}
               id="arrow-down"
@@ -567,7 +636,7 @@ setLoadProgress(data.progress)
             <MainWindowsHoc myRef={havefunRef} direction={{ right: false }}>
               <HaveFun />
             </MainWindowsHoc>
-          </> : <LoadingView setIsReady={setIsReady} loadProgress={loadProgress}/>}
+          </> : <LoadingView setIsReady={setIsReady} loadProgress={loadProgress} />}
         </Col>
       </Row>
     </Container>

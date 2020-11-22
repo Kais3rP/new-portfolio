@@ -14,7 +14,7 @@ export default function Loading({ loadProgress, setIsReady }) {
                 <h1>Loading... </h1>
                 <h3>Progress: {loadProgress} % </h3>
                 <div className="loader-container">
-                <div className="loading-box" style={{width: Math.floor(loadProgress)+"%"}}></div>
+                <div className="loading-box" style={{width: loadProgress+"%"}}></div>
                 </div>
                 <button onClick={()=>{ setIsReady(true)}}>START NAVIGATING</button>
             </Col>
