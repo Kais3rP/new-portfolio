@@ -31,6 +31,7 @@ import flowSound from "../../sound/flow.wav"
 import dropSound from "../../sound/drop.wav"
 import MainWindowsHoc from "../mainwindow/index"
 import LoadingView from "../../components/loading-view/index"
+import AudioButton from "../../components/button/AudioButton"
 
 //Registering GSAP plugins
 window.PIXI = PIXI;
@@ -539,6 +540,15 @@ export default function App() {
       })
   }
 
+  function handleAudio(isMuted){
+    if (isMuted){
+      _flowSound.resume();
+   _dropSound.resume();
+    } else {
+      _flowSound.pause();
+   _dropSound.pause();
+    }
+  }
   return (
     <Container className="main-theme" fluid>
       <Row>
@@ -555,10 +565,12 @@ export default function App() {
                 data-name="Rounded Rectangle 33 copy 4">
                 <path
                   d="M480,344.18,268.87,131.89a40.16,40.16,0,0,0-57.06,0,40.81,40.81,0,0,0,0,57.43L449.45,428.26a45.73,45.73,0,0,0,61.1,0L748.19,189.32a40.81,40.81,0,0,0,0-57.43,40.16,40.16,0,0,0-57.06,0Z"
-                  transform="translate(-200 -119.99)" />
+                  transform="translate(-200 -119.99)"
+                  />
               </g>
             </svg>
             <Navbar handleWaterSpeed={handleWaterSpeed} handleRippleAnimation={handleRippleAnimation} targetRefs={{ aboutRef, projectsRef, technologiesRef, havefunRef }} />
+            <AudioButton handleAudio={handleAudio}/>
             <Main />
             <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
               <About />

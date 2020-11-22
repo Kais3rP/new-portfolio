@@ -1,0 +1,21 @@
+.control-button {
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:5px inset white;
+    background:black;
+    color:white;
+    z-index:100;
+    position: fixed;
+    top:10px;
+    left:10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    pointer-events:default;
+}
+
+.control-button:hover {
+    opacity:0.8;
+}
