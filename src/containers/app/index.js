@@ -212,12 +212,12 @@ export default function App() {
   useEffect(() => {
     //Stage config
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-      //Scoped mouse position variables
-      const mousePos = {
-        x: 0,
-        y: 0
-      }
-      //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    //Scoped mouse position variables
+    const mousePos = {
+      x: 0,
+      y: 0
+    }
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     if (hasLoaded) {
       app.stage.filterArea = app.screen;
       app.stage.addChild(_firstContainer, _secondContainer, _thirdContainer);
@@ -247,23 +247,106 @@ export default function App() {
           }
         )
       }
+      let fishDirection = "right";
 
-      function rotateFish(){
-        let dx =  mousePos.x - _fishSprite.position.x;
-        let dy =  mousePos.y - _fishSprite.position.y;
-          _fishSprite.rotation = Math.atan2(dy, dx);
+      const allFishes = [
+        {
+          fish: _fishSprite,
+          direction: "right",
+          startX: -window.innerWidth/10,
+          startY: 0
+        },
+        {
+          fish: _fish2Sprite,
+          direction: "right",
+          startX: -window.innerWidth/10,
+          startY: window.innerHeight /4
+        },
+        {
+          fish: _fish3Sprite,
+          direction: "right",
+          startX: -window.innerWidth/10,
+          startY: window.innerHeight /3
+        },
+        {
+          fish: _fish4Sprite,
+          direction: "right",
+          startX: -window.innerWidth/10,
+          startY: window.innerHeight /2
+        },
+        {
+          fish: _fish5Sprite,
+          direction: "right",
+          startX: -window.innerWidth/10,
+          startY: window.innerHeight 
+        },
+      ]
+      //This handles the rotation of the fishes toward the mouse pointer
+      function rotateFish() {
+        for (let fish of allFishes) {
+          if (fish.direction === "left") {
+            let dx = fish.fish.position.x - mousePos.x;
+            let dy = fish.fish.position.y - mousePos.y;
+            fish.fish.rotation = Math.atan2(dy, dx)
+          } else {
+            let dx = mousePos.x - fish.fish.position.x;
+            let dy = mousePos.y - fish.fish.position.y;
+            fish.fish.rotation = Math.atan2(dy, dx)
+          }
+        }
       }
-      //Fishes animation to follow mouse 
-    
+      //Fishes animations to follow the mouse pointer and to run back away to the starting positions 
       let fishFollowTl = new TimelineMax()
-        .to([_fishSprite.position], 2, { x: () => mousePos.x, y: () => mousePos.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
+        .to(allFishes.map(fish => fish.fish), 2, { x: () => mousePos.x, y: () => mousePos.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
+      let fishRunTl = new TimelineMax({onComplete:()=>{ for (let fish of allFishes)
+                                                                    fish.tlRight.restart()}})
+        .to(allFishes.map(fish => fish.fish), 2, { x: (idx, target) => allFishes[idx].startX, y: (idx, target) => allFishes[idx].startY, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
+      fishRunTl.pause()
+      let fishRunTimeout;
+
+//Assign a turning timeline to the fishes
+for (let fish of allFishes){
+fish.tlLeft = 
+new TimelineMax()
+.to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
+.to(fish.fish, { pixi: { scaleX: -window.innerWidth / 6000 }, duration: 0.1 })
+fish.tlRight = 
+new TimelineMax()
+.to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
+.to(fish.fish, { pixi: { scaleX: window.innerWidth / 6000 }, duration: 0.1 })
+      }
 
       function handleMouseMove(e) {
         mousePos.x = e.data.global.x;
         mousePos.y = e.data.global.y;
-        fishFollowTl?.invalidate()
-        fishFollowTl?.restart()
+        clearTimeout(fishRunTimeout);
+        fishRunTl.invalidate();
+        fishFollowTl?.invalidate();
+        fishFollowTl?.restart();
+
+        //This handles the fish direction shift during mouse moving from left to right
+        for (let fish of allFishes) {
+          if (fish.fish.position.x >= mousePos.x) {
+            if (fish.direction === "right")
+             fish.tlLeft.restart();
+            fish.direction = "left"
+          }
+          if (fish.fish.position.x <= mousePos.x) {
+            if (fish.direction === "left")
+            fish.tlRight.restart();
+            fish.direction = "right"
+          }
+        }
+      fishRunTimeout =  setTimeout(() => { 
+        for (let fish of allFishes){
+          if (fish.direction === "right"){
+          fish.tlLeft.restart()
+          }
+        } 
+        fishFollowTl?.invalidate();
+        fishRunTl.restart() }, 1000)
       }
+
       function handleScroll(e) {
         console.log("scrolling...")
         setScroll(window.pageYOffset)
@@ -358,135 +441,34 @@ export default function App() {
       //Setting fishes sprites 
 
       _fishSprite.anchor.set(0.5);
-      _fishSprite.position.set(200, 200);
+      _fishSprite.position.set(-window.innerWidth/10, 0);
       _fishSprite.scale.set(window.innerWidth / 6000)
       _fishSprite.rotation = -0.3;
-      const fish1Tl = new TimelineMax({ yoyo: true })
-        .to(_fishSprite, { pixi: { x: window.innerWidth - 50 }, duration: 7 })
-        .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fishSprite, { pixi: { scaleX: -window.innerWidth / 6000 }, duration: 1 })
-        .to(_fishSprite, { pixi: { x: 0 }, duration: 10 })
-        .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fishSprite, { pixi: { scaleX: window.innerWidth / 6000 }, duration: 1 })
-        .to(_fishSprite, { pixi: { x: window.innerWidth - 50 }, duration: 12 })
-        .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fishSprite, { pixi: { scaleX: -0.3 }, duration: 1 })
-        .to(_fishSprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
-        .to(_fishSprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fishSprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-      fish1Tl.pause();
-      // setFishTl(fishTl)
 
       _fish2Sprite.anchor.set(0.5);
-      _fish2Sprite.position.set(window.innerWidth - 200, 200);
+      _fish2Sprite.position.set(-window.innerWidth/10, window.innerHeight/4);
       _fish2Sprite.scale.set(window.innerWidth / 6000)
       _fish2Sprite.rotation = 0;
-      const fish2Tl = new TimelineMax({ yoyo: true })
-        .to(_fish2Sprite, { pixi: { x: window.innerWidth - 50 }, duration: 7 })
-        .to(_fish2Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish2Sprite, { pixi: { scaleX: -0.3 }, duration: 1 })
-        .to(_fish2Sprite, { pixi: { x: 0, y: window.innerHeight / 2 }, duration: 10 })
-        .to(_fish2Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish2Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-        .to(_fish2Sprite, { pixi: { x: window.innerWidth - 50 }, duration: 12 })
-        .to(_fish2Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish2Sprite, { pixi: { scaleX: -0.3 }, duration: 1 })
-        .to(_fish2Sprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
-        .to(_fish2Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish2Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-      fish2Tl.pause();
-      // setFishTl(fishTl)
 
       _fish3Sprite.anchor.set(0.5);
-      _fish3Sprite.position.set(200, 600);
+      _fish3Sprite.position.set(-window.innerWidth/10, window.innerHeight/3);
       _fish3Sprite.scale.set(window.innerWidth / 6000)
       _fish3Sprite.rotation = 0;
-      const fish3Tl = new TimelineMax({ yoyo: true })
-        .to(_fish3Sprite, { pixi: { x: window.innerWidth - 50 }, duration: 7 })
-        .to(_fish3Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish3Sprite, { pixi: { scaleX: -0.3 }, duration: 1 })
-        .to(_fish3Sprite, { pixi: { x: 0, y: window.innerHeight / 2 }, duration: 10 })
-        .to(_fish3Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish3Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-        .to(_fish3Sprite, { pixi: { x: window.innerWidth - 50 }, duration: 12 })
-        .to(_fish3Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish3Sprite, { pixi: { scaleX: -0.3 }, duration: 1 })
-        .to(_fish3Sprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
-        .to(_fish3Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish3Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-      fish3Tl.pause();
-      // setFishTl(fishTl)
 
       _fish4Sprite.anchor.set(0.5);
-      _fish4Sprite.position.set(200, 900);
+      _fish4Sprite.position.set(-window.innerWidth/10, window.innerHeight/2);
       _fish4Sprite.scale.set(window.innerWidth / 6000)
       _fish4Sprite.rotation = -0.3;
-      const fish4Tl = new TimelineMax({ yoyo: true })
-        .to(_fish4Sprite, { pixi: { x: window.innerWidth - 50 }, duration: 7 })
-        .to(_fish4Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish4Sprite, { pixi: { scaleX: -0.3 }, duration: 1 })
-        .to(_fish4Sprite, { pixi: { x: 0, y: window.innerHeight / 2 }, duration: 10 })
-        .to(_fish4Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish4Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-        .to(_fish4Sprite, { pixi: { x: window.innerWidth - 50 }, duration: 12 })
-        .to(_fish4Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish4Sprite, { pixi: { scaleX: -0.3 }, duration: 1 })
-        .to(_fish4Sprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
-        .to(_fish4Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish4Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-      fish4Tl.pause();
-      // setFishTl(fishTl)
 
       _fish5Sprite.anchor.set(0.5);
-      _fish5Sprite.position.set(600, window.innerWidth - 200);
+      _fish5Sprite.position.set(-window.innerWidth/10, window.innerHeight);
       _fish5Sprite.scale.set(window.innerWidth / 6000)
       _fish5Sprite.rotation = -0.3;
-      const fish5Tl = new TimelineMax({ yoyo: true })
-        .to(_fish5Sprite, { pixi: { x: window.innerWidth - 50 }, duration: 7 })
-        .to(_fish5Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish5Sprite, { pixi: { scaleX: -0.3 }, duration: 1 })
-        .to(_fish5Sprite, { pixi: { x: 0, y: window.innerHeight / 2 }, duration: 10 })
-        .to(_fish5Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish5Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-        .to(_fish5Sprite, { pixi: { x: window.innerWidth - 50 }, duration: 12 })
-        .to(_fish5Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish5Sprite, { pixi: { scaleX: -0.3 }, duration: 1 })
-        .to(_fish5Sprite, { pixi: { x: 0, y: window.innerHeight }, duration: 10 })
-        .to(_fish5Sprite, { pixi: { scaleX: 0 }, duration: 1 })
-        .to(_fish5Sprite, { pixi: { scaleX: 0.3 }, duration: 1 })
-      fish5Tl.pause();
 
-      setFishesTl({
-        first: fish1Tl,
-        second: fish2Tl,
-        third: fish3Tl,
-        fourth: fish4Tl,
-        fifth: fish5Tl
-      })
       //Text config
       _titleText.anchor.set(0.5)
       _titleText.position.set(app.renderer.width / 2, (app.renderer.height / 100) * 10)
-
-      /* window.addEventListener("keydown", (e) => {
-         if (fishTl.isActive()) {
-           fishTl.pause();
-           setTimeout(() => { fishTl.play() }, 2000)
-         }
-         e.preventDefault();
-         if (e.key === "ArrowDown")
-           if (_fishSprite) _fishSprite.position.y += 10;
-         if (e.key === "ArrowUp")
-           if (_fishSprite) _fishSprite.position.y -= 10;
-         if (e.key === "ArrowLeft")
-           if (_fishSprite) _fishSprite.position.x -= 10;
-         if (e.key === "ArrowRight")
-           if (_fishSprite) _fishSprite.position.x += 10;
- 
-       })
- */
     }
-
-
     return () => {
 
     }
