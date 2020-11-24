@@ -9,7 +9,7 @@ import { gsap } from "gsap";
 export default function Main() {
     
     return (
-        <Row className=" h-100 justify-content-center align-items-center">
+        <Row className="justify-content-center align-items-center">
             <Col  className="main-theme main-window">
 MAIN            </Col>
         </Row>

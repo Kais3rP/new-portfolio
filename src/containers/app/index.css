@@ -1,15 +1,9 @@
-canvas {
+#container {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 0 !important;
-   
-}
-
-#dummy {
-    position: absolute;
-    top: 30%;
-    left: 25%;
+    isolation: isolate;
 }
 
 .central-body-left {

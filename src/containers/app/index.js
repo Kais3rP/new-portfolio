@@ -31,7 +31,8 @@ import flowSound from "../../sound/flow.wav"
 import dropSound from "../../sound/drop.wav"
 import MainWindowsHoc from "../mainwindow/index"
 import LoadingView from "../../components/loading-view/index"
-import AudioButton from "../../components/button/AudioButton"
+import Arrow from "../../components/arrow"
+
 
 //Registering GSAP plugins
 window.PIXI = PIXI;
@@ -83,11 +84,10 @@ export default function App() {
     playRippleAnimation();
     //Arrow continuous animation
     const arrowTlDown = new TimelineMax()
-      .to(arrowRef.current, 0.5, { repeat: -1, yoyo: true, width: "8%", left: "46%", y: 10 })
+      .to(arrowRef.current, 0.3, { repeat: -1, yoyo: true, y: 15 })
       .to(arrowRef.current, 1, {
-        ease: "linear",
         rotate: 180,
-        scrollTrigger: { trigger: havefunRef.current, start: "top bottom", toggleActions: 'restart reset restart reset' }
+        scrollTrigger: { trigger: havefunRef.current, start: "center bottom", toggleActions: 'restart reset restart reset' }
       })
 
     function playRippleAnimation() {
@@ -333,30 +333,36 @@ export default function App() {
       function handleScroll(e) {
         console.log("scrolling...")
         setScroll(window.pageYOffset)
-        if (document.body.scrollHeight - window.pageYOffset <= document.body.clientHeight)
+        if (document.body.scrollHeight - window.pageYOffset <= 100 )
           setIsBottom(true)
         else
           setIsBottom(false)
+         
         //Current window
         if (window.pageYOffset <= window.innerHeight) {
+          console.log("setting main")
           _titleText.text = "WELCOME";
           setCurrentWindow("main")
         }
 
-        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset > window.innerHeight) {
+        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight) {
+          console.log("setting about")
           setCurrentWindow("about");
           _titleText.text = "ABOUT ME";
         }
 
         if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight) {
+          console.log("setting projects")
           _titleText.text = "MY PROJECTS";
           setCurrentWindow("projects")
         }
         if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight) {
+          console.log("setting technologies")
           _titleText.text = "TECHNOLOGIES I USE";
           setCurrentWindow("technologies")
         }
         if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight) {
+          console.log("setting have fun")
           _titleText.text = "HAVE FUN";
           setCurrentWindow("havefun")
         }
@@ -520,6 +526,7 @@ export default function App() {
   }
 
   function handleArrowClick() {
+    console.log(currentWindow)
     if (isBottom)
       gsap.to(window, { duration: 1, scrollTo: { x: 0, y: 0 } })
     else
@@ -555,23 +562,11 @@ export default function App() {
         <Col>
           <div className="main-theme" id="container" ref={containerRef}></div>
           {isReady ? <>
-            <svg onClick={handleArrowClick} ref={arrowRef}
-              id="arrow-down"
-              data-name="Capa 1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 560 320.01">
-              <g
-                id="Rounded_Rectangle_33_copy_4"
-                data-name="Rounded Rectangle 33 copy 4">
-                <path
-                  d="M480,344.18,268.87,131.89a40.16,40.16,0,0,0-57.06,0,40.81,40.81,0,0,0,0,57.43L449.45,428.26a45.73,45.73,0,0,0,61.1,0L748.19,189.32a40.81,40.81,0,0,0,0-57.43,40.16,40.16,0,0,0-57.06,0Z"
-                  transform="translate(-200 -119.99)"
-                  />
-              </g>
-            </svg>
-            <Navbar handleWaterSpeed={handleWaterSpeed} handleRippleAnimation={handleRippleAnimation} targetRefs={{ aboutRef, projectsRef, technologiesRef, havefunRef }} />
-            <AudioButton handleAudio={handleAudio}/>
+          <Arrow id="arrow-down" onClick={handleArrowClick} myRef={arrowRef} />         
+            <Navbar handleAudio={handleAudio} handleWaterSpeed={handleWaterSpeed} handleRippleAnimation={handleRippleAnimation} targetRefs={{ aboutRef, projectsRef, technologiesRef, havefunRef }} />         
+            <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
             <Main />
+            </MainWindowsHoc>
             <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
               <About />
             </MainWindowsHoc>

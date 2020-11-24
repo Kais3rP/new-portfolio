@@ -6,14 +6,13 @@
     background:black;
     color:white;
     z-index:100;
-    position: fixed;
-    top:10px;
-    left:10px;
     display:flex;
     justify-content:center;
     align-items:center;
     cursor:pointer;
     pointer-events:default;
+   margin:20px;
+   font-size:1.3rem;
 }
 
 .control-button:hover {
