@@ -404,8 +404,8 @@ const previousLink = {};
         _firstContainer.addChild(newRippleSprite);
         newRippleSprite.anchor.set(0.5);
         newRippleSprite.scale.set(0.05);
-        newRippleSprite.position.x = mousePos.x;
-        newRippleSprite.position.y = mousePos.y;
+        newRippleSprite.position.x = e.data.global.x;
+        newRippleSprite.position.y = e.data.global.y;
         const newRippleFilter = new PIXI.filters.DisplacementFilter(newRippleSprite);
         newRippleFilter.scale.set(100);
         _firstContainer.filters = [..._firstContainer.filters, newRippleFilter];
@@ -591,7 +591,8 @@ const previousLink = {};
     gsap.to(window, { duration: 1, scrollTo: { x: 0, y: windowRef.current } })
     const linkFall = new TimelineMax()
       .to(targetRef.current, 1, { color: "#ff6600", y: targetRef.current.parentNode.getBoundingClientRect().height - (targetRef.current.getBoundingClientRect().y - targetRef.current.parentNode.getBoundingClientRect().y) - 30, ease: "bounce" })
-    gsap.to(hereRef.current, { width: "+=12", left: "-=6", duration: 0.7, visibility: "visible", modifiers: { width: checkHereWidth, left: checkHereLeft } })
+    if (window.innerWidth > 768)
+      gsap.to(hereRef.current, { width: "+=12", left: "-=6", duration: 0.7, visibility: "visible", modifiers: { width: checkHereWidth, left: checkHereLeft } })
     
     function checkHereWidth(width) {
       console.log(width)

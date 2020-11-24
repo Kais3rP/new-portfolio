@@ -1,47 +1,65 @@
 #navbar {
-    height:100%;
-    width:170px;
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:30;
-   background-color: black;
-   border-right:3px outset white;
-   transition:left 0.5s ease-in-out;
-   color: #66ccff;
+    height: 100%;
+    width: 170px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    background-color: black;
+    border-right: 3px outset white;
+    transition: left 0.5s ease-in-out;
+    color: #66ccff;
 }
 
 .nav-container {
-    position:relative;
+    position: relative;
 }
 
 #nav-arrow {
-fill:white;
-width:30px;
-position:absolute;
-top:50%;
-left:100%;
-cursor:pointer;
-transform:rotate(90deg);
+    fill: white;
+    width: 30px;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    cursor: pointer;
+    transform: rotate(90deg);
 }
 
-#nav-controls {
-height:20%;
-}
+
+
 #nav-menu {
-height:70%;
-position:relative;
+    height: 70%;
+    position: relative;
 }
+
 #nav-contacts {
-height:10%;
-font-size:25px;
+    height: 10%;
+    font-size: 25px;
 }
 
-#here-img{
-    width:71px;
-    position:absolute;
-    bottom:43px;
-    left:49.5px;
-    visibility:hidden;
+#here-img {
+    width: 71px;
+    position: absolute;
+    bottom: 43px;
+    left: 49.5px;
+    visibility: hidden;
+}
 
+@media Screen and (max-width:768px){
+    #nav-controls {
+        height: 10%;
+    }
+    #nav-menu {
+        height: 70%;
+        font-size:1rem;
+        
+    }
+    
+    #nav-contacts {
+        height: 10%;
+    }
+    
+    #here-img {
+    visibility:visible;
+    }
 }
