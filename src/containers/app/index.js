@@ -265,7 +265,7 @@ export default function App() {
         startY: window.innerHeight
       },
     ]
-
+const previousLink = {};
     //Assign a turning timeline to the fishes
     for (let fish of allFishes) {
       fish.tlLeft =
@@ -343,53 +343,47 @@ export default function App() {
       function handleScroll(e) {
       
         const pageRanges = {
-          home: window.innerHeight,
-          about:  window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight,
-          projects: window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
-          technologies: window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
-          havefun: window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight
+          home:window.pageYOffset <= window.innerHeight,
+          about:window.pageYOffset <=  window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight,
+          projects:window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
+          technologies:window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight,
+          havefun:window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight
         }
+        //console.log(pageRanges.home,pageRanges.about,pageRanges.projects,pageRanges.technologies,pageRanges.havefun)
         setScroll(window.pageYOffset);
         
         if (document.body.scrollHeight - window.pageYOffset <= 100)
           setIsBottom(true)
         else
           setIsBottom(false)
-          //Handle links menu animations on scroll
-          if (currentWindow !== previousWindow)
-        
+          
         //Current window
-        if (window.pageYOffset <= pageRanges.home) {
+        if (pageRanges.home) {
           console.log("setting home")
           _titleText.text = "WELCOME";
           setCurrentWindow("home")
-          if (prevNavLinkAnimated !== "home"){
-            HTMLFormControlsCollection.log("setting previous link as 'home'")
-          handleMenuLinks(homeLinkRef, mainRef, hereRef, prevNavLinkAnimated, setPrevNavLinkAnimated )
-          setPrevNavLinkAnimated("home")
-          }
         }
 
-        if (window.pageYOffset <= pageRanges.about) {
+        if (pageRanges.about) {
           console.log("setting about")
           _titleText.text = "ABOUT ME";
           setPreviousWindow(currentWindow)
-          setCurrentWindow("about");         
+          setCurrentWindow("about");     
         }
 
-        if (window.pageYOffset <= pageRanges.projects) {
+        if (pageRanges.projects) {
           console.log("setting projects")
           _titleText.text = "MY PROJECTS";
           setPreviousWindow(currentWindow)
           setCurrentWindow("projects")
         }
-        if (window.pageYOffset <= pageRanges.technologies) {
+        if (pageRanges.technologies) {
           console.log("setting technologies")
           _titleText.text = "TECHNOLOGIES I USE";
           setPreviousWindow(currentWindow)
           setCurrentWindow("technologies")
         }
-        if (window.pageYOffset <= pageRanges.havefun) {
+        if (pageRanges.havefun) {
           console.log("setting have fun")
           _titleText.text = "HAVE FUN";
           setPreviousWindow(currentWindow)
@@ -563,7 +557,7 @@ export default function App() {
         duration: 1,
         scrollTo: {
           x: 0,
-          y: currentWindow === "main" ?
+          y: currentWindow === "home" ?
             aboutRef.current :
             currentWindow === "about" ?
               projectsRef.current :
