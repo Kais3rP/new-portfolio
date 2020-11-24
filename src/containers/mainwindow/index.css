@@ -1,5 +1,5 @@
-.window{
-    background-color:rgba(0,0,0,0.9);   
+.window{  
+    background-color:rgba(0,0,0,0.9);
     z-index:20;
     min-height:100vh !important;
 }

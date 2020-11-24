@@ -24,3 +24,24 @@ left:100%;
 cursor:pointer;
 transform:rotate(90deg);
 }
+
+#nav-controls {
+height:20%;
+}
+#nav-menu {
+height:70%;
+position:relative;
+}
+#nav-contacts {
+height:10%;
+font-size:25px;
+}
+
+#here{
+    width:71px;
+    position:absolute;
+    bottom:43px;
+    left:49.5px;
+    visibility:hidden;
+
+}

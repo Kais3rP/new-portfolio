@@ -7,7 +7,7 @@ import "./index.css";
 export default function About() {
 
   return (
-    <div className="menu-window-container d-flex flex-column">
+    <div className="d-flex flex-column">
     <div className="w-100 d-flex">
       <p style={{ color: "#3333ff" }}>function &nbsp;</p>
       <p style={{ color: "#ffffcc" }}>aboutMe</p>

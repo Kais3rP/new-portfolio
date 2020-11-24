@@ -41,6 +41,7 @@ gsap.registerPlugin(PixiPlugin);
 gsap.registerPlugin(ScrollToPlugin);
 
 
+
 export default function App() {
   const [loadProgress, setLoadProgress] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -70,6 +71,7 @@ export default function App() {
   const [waterSpeed, setWaterSpeed] = useState(2);
 
   const containerRef = useRef();
+  const mainRef = useRef();
   const aboutRef = useRef();
   const projectsRef = useRef();
   const technologiesRef = useRef();
@@ -82,7 +84,7 @@ export default function App() {
       _flowSound.play()
     let rippleTimeout;
     playRippleAnimation();
-    //Arrow continuous animation
+    //Arrow infinite animation
     const arrowTlDown = new TimelineMax()
       .to(arrowRef.current, 0.3, { repeat: -1, yoyo: true, y: 15 })
       .to(arrowRef.current, 1, {
@@ -91,7 +93,6 @@ export default function App() {
       })
 
     function playRippleAnimation() {
-      console.log(window.innerHeight, document.documentElement.scrollTop)
       rippleAnimation?.restart()
       _dropSound?.play()
       _rippleSprite?.position.set(0, 0)
@@ -333,11 +334,11 @@ export default function App() {
       function handleScroll(e) {
         console.log("scrolling...")
         setScroll(window.pageYOffset)
-        if (document.body.scrollHeight - window.pageYOffset <= 100 )
+        if (document.body.scrollHeight - window.pageYOffset <= 100)
           setIsBottom(true)
         else
           setIsBottom(false)
-         
+
         //Current window
         if (window.pageYOffset <= window.innerHeight) {
           console.log("setting main")
@@ -547,13 +548,13 @@ export default function App() {
       })
   }
 
-  function handleAudio(isMuted){
-    if (isMuted){
+  function handleAudio(isMuted) {
+    if (isMuted) {
       _flowSound.resume();
-   _dropSound.resume();
+      _dropSound.resume();
     } else {
       _flowSound.pause();
-   _dropSound.pause();
+      _dropSound.pause();
     }
   }
   return (
@@ -562,11 +563,9 @@ export default function App() {
         <Col>
           <div className="main-theme" id="container" ref={containerRef}></div>
           {isReady ? <>
-          <Arrow id="arrow-down" onClick={handleArrowClick} myRef={arrowRef} />         
-            <Navbar handleAudio={handleAudio} handleWaterSpeed={handleWaterSpeed} handleRippleAnimation={handleRippleAnimation} targetRefs={{ aboutRef, projectsRef, technologiesRef, havefunRef }} />         
-            <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
-            <Main />
-            </MainWindowsHoc>
+            <Arrow id="arrow-down" onClick={handleArrowClick} myRef={arrowRef} />
+            <Navbar handleAudio={handleAudio} handleWaterSpeed={handleWaterSpeed} handleRippleAnimation={handleRippleAnimation} targetRefs={{ mainRef, aboutRef, projectsRef, technologiesRef, havefunRef }} />
+            <div id="home-window" ref={mainRef}></div>
             <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
               <About />
             </MainWindowsHoc>

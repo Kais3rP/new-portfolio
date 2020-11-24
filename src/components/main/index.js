@@ -6,16 +6,12 @@ import { gsap } from "gsap";
 
 
 
-export default function Main() {
+export default function Main({myRef}) {
     
     return (
-        <Row className="justify-content-center align-items-center">
-            <Col  className="main-theme main-window">
-MAIN            </Col>
-        </Row>
+        <div  ref={myRef} className="h-100 home-window">
 
+        </div>
 
     )
-
-
 }
