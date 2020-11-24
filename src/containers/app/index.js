@@ -47,9 +47,9 @@ export default function App() {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [scroll, setScroll] = useState(0);
-  const [previousWindow, setPreviousWindow] = useState("home");
-  const [currentWindow, setCurrentWindow] = useState("home");
-  const [prevNavLinkAnimated, setPrevNavLinkAnimated] = useState("home")
+  const [_previousWindow, set_PreviousWindow] = useState("home");
+  const [_currentWindow, set_CurrentWindow] = useState("home");
+  const [prevNavLinkAnimated, setPrevNavLinkAnimated] = useState(null);
   const [isBottom, setIsBottom] = useState(false);
   const [app, setApp] = useState(null);
   const [_firstContainer, set_firstContainer] = useState(null);
@@ -89,9 +89,9 @@ export default function App() {
 
   //This is the effect that checks for the isReady state
   useEffect(() => {
-    if (isReady)
-      _flowSound.play()
     let rippleTimeout;
+    if (isReady){
+      _flowSound.play()
     playRippleAnimation();
     //Arrow infinite animation
     const arrowTlDown = new TimelineMax()
@@ -100,7 +100,9 @@ export default function App() {
         rotate: 180,
         scrollTrigger: { trigger: havefunRef.current, start: "center bottom", toggleActions: 'restart reset restart reset' }
       })
-
+     //Move the first nav menu link on load
+   // handleMenuLinks(homeLinkRef, hereRef, homeLinkRef);
+    }
     function playRippleAnimation() {
       rippleAnimation?.restart()
       _dropSound?.play()
@@ -224,6 +226,7 @@ export default function App() {
   }, [])
 
   // stage Init Effect
+  //Handling resize, scroll, pointermove, and click events
   useEffect(() => {
     //Stage config
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -265,7 +268,10 @@ export default function App() {
         startY: window.innerHeight
       },
     ]
-const previousLink = {};
+    let previousLink = {current: homeLinkRef.current};
+    let currentWindow = "";
+    let previousWindow = "";
+
     //Assign a turning timeline to the fishes
     for (let fish of allFishes) {
       fish.tlLeft =
@@ -287,8 +293,8 @@ const previousLink = {};
       //Fishes animations to follow the mouse pointer and to run back away to the starting positions 
       let fishFollowTl = new TimelineMax({})
         .to(allFishes.map(fish => fish.fish), 10, { x: () => mousePos.x, y: (idx, target) => target.position.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
-      window.addEventListener("resize", handleResize);
-      window.addEventListener("scroll", handleScroll);
+        window.addEventListener("resize", handleResize);
+        window.addEventListener("scroll", handleScroll);
       _firstContainer.addListener("pointermove", handleMouseMove);
       _firstContainer.addListener("pointerdown", handleWaterClick);
       //Animate @ 60FPS
@@ -308,11 +314,11 @@ const previousLink = {};
           }
         }
       }
+
       //Little trick to read the updated speed state without rerender
       function moveWater(delta) {
         setWaterSpeed(
           speed => {
-            console.log(speed)
             _cloudsSprite.x += speed * delta;
             _cloudsSprite.y += speed * delta * 2;
             return speed
@@ -339,58 +345,94 @@ const previousLink = {};
           }
         }
       }
-
+     
+        console.log("home link",homeLinkRef.current)
+     
       function handleScroll(e) {
-      
+      console.log("previous link log:",previousLink)
         const pageRanges = {
-          home:window.pageYOffset <= window.innerHeight,
-          about:window.pageYOffset <=  window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight,
-          projects:window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
-          technologies:window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight,
-          havefun:window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight
+          home: window.pageYOffset <= window.innerHeight,
+          about: window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight,
+          projects: window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
+          technologies: window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight,
+          havefun: window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight
         }
-        //console.log(pageRanges.home,pageRanges.about,pageRanges.projects,pageRanges.technologies,pageRanges.havefun)
+        //console.log("home link",homeLinkRef.current)
         setScroll(window.pageYOffset);
-        
         if (document.body.scrollHeight - window.pageYOffset <= 100)
           setIsBottom(true)
         else
           setIsBottom(false)
-          
+         
         //Current window
         if (pageRanges.home) {
-          console.log("setting home")
-          _titleText.text = "WELCOME";
-          setCurrentWindow("home")
+          currentWindow = "home"
+          set_CurrentWindow("home")
+          if (previousWindow !== currentWindow) {
+            _titleText.text = "WELCOME"
+            if (previousWindow === "about") {
+              console.log(homeLinkRef.current)
+              handleMenuLinks(homeLinkRef, hereRef, previousLink);              
+            }
+            previousWindow = "home"
+            set_PreviousWindow("home")
+          }
         }
 
         if (pageRanges.about) {
-          console.log("setting about")
-          _titleText.text = "ABOUT ME";
-          setPreviousWindow(currentWindow)
-          setCurrentWindow("about");     
+          currentWindow = "about"
+          set_CurrentWindow("about")
+          if (previousWindow !== currentWindow) {
+            _titleText.text = "ABOUT ME"
+            if (previousWindow === "home" || previousWindow === "projects") {
+              handleMenuLinks(aboutLinkRef, hereRef, previousLink);
+            }
+            previousWindow = "about"
+            set_PreviousWindow("about")
+          }
         }
 
         if (pageRanges.projects) {
-          console.log("setting projects")
-          _titleText.text = "MY PROJECTS";
-          setPreviousWindow(currentWindow)
-          setCurrentWindow("projects")
+          currentWindow = "projects"
+          set_CurrentWindow("projects")
+          if (previousWindow !== currentWindow) {
+            _titleText.text = "MY PROJECTS"
+            if (previousWindow === "about" || previousWindow === "technologies") {
+             handleMenuLinks(projectsLinkRef, hereRef, previousLink);
+            }
+            previousWindow = "projects"
+            set_PreviousWindow("projects")
+          }
         }
+
         if (pageRanges.technologies) {
-          console.log("setting technologies")
-          _titleText.text = "TECHNOLOGIES I USE";
-          setPreviousWindow(currentWindow)
-          setCurrentWindow("technologies")
+          currentWindow = "technologies"
+          set_CurrentWindow("technologies")
+          if (previousWindow !== currentWindow) {
+            _titleText.text = "TECHNOLOGIES I USE";
+            if (previousWindow === "projects" || previousWindow === "havefun") {
+             handleMenuLinks(technologiesLinkRef, hereRef, previousLink); 
+            }
+            previousWindow = "technologies"
+            set_PreviousWindow("technologies")
+          }
         }
+
         if (pageRanges.havefun) {
-          console.log("setting have fun")
-          _titleText.text = "HAVE FUN";
-          setPreviousWindow(currentWindow)
-          setCurrentWindow("havefun")
+          currentWindow = "havefun"
+          set_CurrentWindow("havefun")
+          if (previousWindow !== currentWindow) {
+            _titleText.text = "HAVE FUN"
+            if (previousWindow === "technologies") {
+               handleMenuLinks(havefunLinkRef, hereRef, previousLink); 
+            }
+            previousWindow = "havefun"
+            set_PreviousWindow("havefun")
+          }
         }
       }
-
+   
+    
       function handleResize(e) {
         console.log("resizing...")
         if (e.target.innerWidth < app.renderer.width) {
@@ -419,7 +461,7 @@ const previousLink = {};
         window.removeEventListener("scroll", handleScroll)
       }
     }
-  }, [hasLoaded])
+  }, [hasLoaded, isReady])
 
   //First container settings
   useEffect(() => {
@@ -496,7 +538,7 @@ const previousLink = {};
 
   //Third Container Setting
   useEffect(() => {
-    console.log("Second Animation init")
+    console.log("Third Animation init")
     if (hasLoaded) {
       _normalTreeSprite.anchor.set(0.5);
       _normalTreeSprite.width = window.innerWidth;
@@ -549,7 +591,7 @@ const previousLink = {};
   }
 
   function handleArrowClick() {
-    console.log(currentWindow)
+    console.log(_currentWindow)
     if (isBottom)
       gsap.to(window, { duration: 1, scrollTo: { x: 0, y: 0 } })
     else
@@ -557,13 +599,13 @@ const previousLink = {};
         duration: 1,
         scrollTo: {
           x: 0,
-          y: currentWindow === "home" ?
+          y: _currentWindow === "home" ?
             aboutRef.current :
-            currentWindow === "about" ?
+            _currentWindow === "about" ?
               projectsRef.current :
-              currentWindow === "projects" ?
+              _currentWindow === "projects" ?
                 technologiesRef.current :
-                currentWindow === "technologies" ?
+                _currentWindow === "technologies" ?
                   havefunRef.current :
                   0
         }
@@ -580,22 +622,22 @@ const previousLink = {};
     }
   }
 
-  function handleMenuLinks(targetRef, windowRef, hereRef, prevTargetRef, setPrevTarget, optionalCb) {
-    console.log(targetRef, prevTargetRef)
+ 
+
+  function handleMenuLinks(targetRef, hereRef, prevTarget, optionalCb) {
     if (optionalCb) optionalCb();
-    if (targetRef.current !== prevTargetRef?.current) {
+   console.log("inside move link handler",targetRef.current, prevTarget.current, targetRef.current !== prevTarget.current)
+    if (targetRef.current !== prevTarget) {
       const goBack = new TimelineMax()
-        .to(prevTargetRef?.current, 1, { color: "#66ccff", y: 0, duration: 1, ease: "bounce" })
-      setPrevTarget(targetRef)
+        .to(prevTarget.current, 1, { color: "#66ccff", y: 0, duration: 1, ease: "bounce" })
+     prevTarget.current = targetRef.current;
     }
-    gsap.to(window, { duration: 1, scrollTo: { x: 0, y: windowRef.current } })
     const linkFall = new TimelineMax()
       .to(targetRef.current, 1, { color: "#ff6600", y: targetRef.current.parentNode.getBoundingClientRect().height - (targetRef.current.getBoundingClientRect().y - targetRef.current.parentNode.getBoundingClientRect().y) - 30, ease: "bounce" })
-    if (window.innerWidth > 768)
+    if (window.innerWidth > 768) //Animates Im here only for big screens
       gsap.to(hereRef.current, { width: "+=12", left: "-=6", duration: 0.7, visibility: "visible", modifiers: { width: checkHereWidth, left: checkHereLeft } })
-    
+
     function checkHereWidth(width) {
-      console.log(width)
       width = +width.split("px")[0]
       return width >= 143 ? "71px" : width + "px"
     }
@@ -613,16 +655,16 @@ const previousLink = {};
           <div className="main-theme" id="container" ref={containerRef}></div>
           {isReady ? <>
             <Arrow id="arrow-down" onClick={handleArrowClick} myRef={arrowRef} />
-            <Navbar 
-            hereRef={hereRef}
-            linkRefs={{
-              homeLinkRef,
-              aboutLinkRef,
-              projectsLinkRef,
-              technologiesLinkRef,
-              havefunLinkRef,
-              arrowLinkRef
-            }}
+            <Navbar
+              hereRef={hereRef}
+              linkRefs={{
+                homeLinkRef,
+                aboutLinkRef,
+                projectsLinkRef,
+                technologiesLinkRef,
+                havefunLinkRef,
+                arrowLinkRef
+              }}
               handleMenuLinks={handleMenuLinks}
               handleAudio={handleAudio}
               handleWaterSpeed={handleWaterSpeed}

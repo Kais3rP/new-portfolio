@@ -17,7 +17,7 @@ import here from "../../pics/here.png"
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
 
-export default function Navbar({ handleWaterSpeed, linkRefs, hereRef, targetRefs, handleAudio, handleMenuLinks:handleMenuClick }) {
+export default function Navbar({ linkRefs, hereRef, targetRefs, handleAudio }) {
     const [isNavLarge, setIsNavLarge] = useState(true);
     const [arrow, setArrow] = useState(null);
     const [prevLinkClicked, setPrevLinkClicked] = useState(null)
@@ -32,9 +32,12 @@ export default function Navbar({ handleWaterSpeed, linkRefs, hereRef, targetRefs
     }, [isNavLarge])
 
     useEffect(()=>{
-        handleMenuClick(linkRefs.homeLinkRef, targetRefs.mainRef, hereRef, prevLinkClicked, setPrevLinkClicked)
+       // handleMenuClick(linkRefs.homeLinkRef, hereRef, prevLinkClicked, setPrevLinkClicked)
     },[])
    
+    function handleMoveTo(targetRef){
+        gsap.to(window, { duration: 1, scrollTo: { x: 0, y: targetRef.current } })
+    }
     return (
         <Row id="navbar" style={{ left: isNavLarge ? 0 : "-170px" }} className="m-0">
             <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
@@ -42,23 +45,23 @@ export default function Navbar({ handleWaterSpeed, linkRefs, hereRef, targetRefs
                     <AudioButton handleAudio={handleAudio} />
                 </div>
                 <ul id="nav-menu" className=" d-flex flex-column justify-content-start align-items-center">
-                    <li ref={linkRefs.homeLinkRef} onClick={(e) => { handleMenuClick(linkRefs.homeLinkRef, targetRefs.mainRef, hereRef, prevLinkClicked, setPrevLinkClicked, handleWaterSpeed) }} className="p-3">
+                    <li ref={linkRefs.homeLinkRef} onClick={(e) => { handleMoveTo(targetRefs.mainRef); }} className="p-3">
                         <Link to="/">
                             <h6>.home()</h6>
                         </Link>
                     </li>
-                    <li ref={linkRefs.aboutLinkRef} onClick={(e) => { handleMenuClick(linkRefs.aboutLinkRef, targetRefs.aboutRef, hereRef, prevLinkClicked, setPrevLinkClicked, handleWaterSpeed) }} className="p-3">
+                    <li ref={linkRefs.aboutLinkRef} onClick={(e) => { handleMoveTo(targetRefs.aboutRef);  }} className="p-3">
                         <Link to="/about">
                             <h6>.about()</h6>
                         </Link>
                     </li>
-                    <li ref={linkRefs.projectsLinkRef} onClick={(e) => { handleMenuClick(linkRefs.projectsLinkRef, targetRefs.projectsRef, hereRef, prevLinkClicked, setPrevLinkClicked, handleWaterSpeed) }} className="p-3">
+                    <li ref={linkRefs.projectsLinkRef} onClick={(e) => { handleMoveTo(targetRefs.projectsRef);  }} className="p-3">
                         <Link to="/projects"> <h6>.projects()</h6></Link>
                     </li>
-                    <li ref={linkRefs.technologiesLinkRef} onClick={(e) => { handleMenuClick(linkRefs.technologiesLinkRef, targetRefs.technologiesRef,hereRef, prevLinkClicked, setPrevLinkClicked, handleWaterSpeed) }} className="p-3">
+                    <li ref={linkRefs.technologiesLinkRef} onClick={(e) => { handleMoveTo(targetRefs.technologiesRef); }} className="p-3">
                         <Link to="/technologies"> <h6>.technologies()</h6></Link>
                     </li>
-                    <li ref={linkRefs.havefunLinkRef} onClick={(e) => { handleMenuClick(linkRefs.havefunLinkRef, targetRefs.havefunRef,hereRef,prevLinkClicked, setPrevLinkClicked, handleWaterSpeed) }} className="p-3">
+                    <li ref={linkRefs.havefunLinkRef} onClick={(e) => { handleMoveTo(targetRefs.havefunRef);  }} className="p-3">
                         <Link to="/havefun"> <h6>.haveFun()</h6></Link>
                     </li>
                     <img id="here-img" ref={hereRef} src={here} alt="You are here" />
