@@ -47,7 +47,9 @@ export default function App() {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [scroll, setScroll] = useState(0);
-  const [currentWindow, setCurrentWindow] = useState("main");
+  const [previousWindow, setPreviousWindow] = useState("home");
+  const [currentWindow, setCurrentWindow] = useState("home");
+  const [prevNavLinkAnimated, setPrevNavLinkAnimated] = useState("home")
   const [isBottom, setIsBottom] = useState(false);
   const [app, setApp] = useState(null);
   const [_firstContainer, set_firstContainer] = useState(null);
@@ -77,6 +79,13 @@ export default function App() {
   const technologiesRef = useRef();
   const havefunRef = useRef();
   const arrowRef = useRef();
+  const homeLinkRef = useRef();
+  const aboutLinkRef = useRef();
+  const projectsLinkRef = useRef();
+  const technologiesLinkRef = useRef();
+  const havefunLinkRef = useRef();
+  const arrowLinkRef = useRef();
+  const hereRef = useRef();
 
   //This is the effect that checks for the isReady state
   useEffect(() => {
@@ -332,39 +341,58 @@ export default function App() {
       }
 
       function handleScroll(e) {
-        console.log("scrolling...")
-        setScroll(window.pageYOffset)
+      
+        const pageRanges = {
+          home: window.innerHeight,
+          about:  window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight,
+          projects: window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
+          technologies: window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
+          havefun: window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight
+        }
+        setScroll(window.pageYOffset);
+        
         if (document.body.scrollHeight - window.pageYOffset <= 100)
           setIsBottom(true)
         else
           setIsBottom(false)
-
+          //Handle links menu animations on scroll
+          if (currentWindow !== previousWindow)
+        
         //Current window
-        if (window.pageYOffset <= window.innerHeight) {
-          console.log("setting main")
+        if (window.pageYOffset <= pageRanges.home) {
+          console.log("setting home")
           _titleText.text = "WELCOME";
-          setCurrentWindow("main")
+          setCurrentWindow("home")
+          if (prevNavLinkAnimated !== "home"){
+            HTMLFormControlsCollection.log("setting previous link as 'home'")
+          handleMenuLinks(homeLinkRef, mainRef, hereRef, prevNavLinkAnimated, setPrevNavLinkAnimated )
+          setPrevNavLinkAnimated("home")
+          }
         }
 
-        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight) {
+        if (window.pageYOffset <= pageRanges.about) {
           console.log("setting about")
-          setCurrentWindow("about");
           _titleText.text = "ABOUT ME";
+          setPreviousWindow(currentWindow)
+          setCurrentWindow("about");         
         }
 
-        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight) {
+        if (window.pageYOffset <= pageRanges.projects) {
           console.log("setting projects")
           _titleText.text = "MY PROJECTS";
+          setPreviousWindow(currentWindow)
           setCurrentWindow("projects")
         }
-        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight) {
+        if (window.pageYOffset <= pageRanges.technologies) {
           console.log("setting technologies")
           _titleText.text = "TECHNOLOGIES I USE";
+          setPreviousWindow(currentWindow)
           setCurrentWindow("technologies")
         }
-        if (window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight) {
+        if (window.pageYOffset <= pageRanges.havefun) {
           console.log("setting have fun")
           _titleText.text = "HAVE FUN";
+          setPreviousWindow(currentWindow)
           setCurrentWindow("havefun")
         }
       }
@@ -557,6 +585,32 @@ export default function App() {
       _dropSound.pause();
     }
   }
+
+  function handleMenuLinks(targetRef, windowRef, hereRef, prevTargetRef, setPrevTarget, optionalCb) {
+    console.log(targetRef, prevTargetRef)
+    if (optionalCb) optionalCb();
+    if (targetRef.current !== prevTargetRef?.current) {
+      const goBack = new TimelineMax()
+        .to(prevTargetRef?.current, 1, { color: "#66ccff", y: 0, duration: 1, ease: "bounce" })
+      setPrevTarget(targetRef)
+    }
+    gsap.to(window, { duration: 1, scrollTo: { x: 0, y: windowRef.current } })
+    const linkFall = new TimelineMax()
+      .to(targetRef.current, 1, { color: "#ff6600", y: targetRef.current.parentNode.getBoundingClientRect().height - (targetRef.current.getBoundingClientRect().y - targetRef.current.parentNode.getBoundingClientRect().y) - 30, ease: "bounce" })
+    gsap.to(hereRef.current, { width: "+=12", left: "-=6", duration: 0.7, visibility: "visible", modifiers: { width: checkHereWidth, left: checkHereLeft } })
+    
+    function checkHereWidth(width) {
+      console.log(width)
+      width = +width.split("px")[0]
+      return width >= 143 ? "71px" : width + "px"
+    }
+
+    function checkHereLeft(left) {
+      left = +left.split("px")[0]
+      return left <= 15 ? "49.5px" : left + "px"
+    }
+  }
+
   return (
     <Container className="main-theme" fluid>
       <Row>
@@ -564,7 +618,27 @@ export default function App() {
           <div className="main-theme" id="container" ref={containerRef}></div>
           {isReady ? <>
             <Arrow id="arrow-down" onClick={handleArrowClick} myRef={arrowRef} />
-            <Navbar handleAudio={handleAudio} handleWaterSpeed={handleWaterSpeed} handleRippleAnimation={handleRippleAnimation} targetRefs={{ mainRef, aboutRef, projectsRef, technologiesRef, havefunRef }} />
+            <Navbar 
+            hereRef={hereRef}
+            linkRefs={{
+              homeLinkRef,
+              aboutLinkRef,
+              projectsLinkRef,
+              technologiesLinkRef,
+              havefunLinkRef,
+              arrowLinkRef
+            }}
+              handleMenuLinks={handleMenuLinks}
+              handleAudio={handleAudio}
+              handleWaterSpeed={handleWaterSpeed}
+              handleRippleAnimation={handleRippleAnimation}
+              targetRefs={{
+                mainRef,
+                aboutRef,
+                projectsRef,
+                technologiesRef,
+                havefunRef
+              }} />
             <div id="home-window" ref={mainRef}></div>
             <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
               <About />

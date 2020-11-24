@@ -9,7 +9,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 
 const MainWindowsHoc = React.memo(function ({ myRef, children, direction }) {
-    console.log("Rerendering MainWindowHoc")
  useEffect(()=>{
     if(myRef) gsap.to(myRef.current, {
         duration: 1,
