@@ -73,7 +73,7 @@ export default function App() {
   const [isBallDeflating, setIsBallDeflating] = useState(false)
 
   const containerRef = useRef();
-  const mainRef = useRef();
+  const homeRef = useRef();
   const aboutRef = useRef();
   const projectsRef = useRef();
   const technologiesRef = useRef();
@@ -108,7 +108,7 @@ export default function App() {
         .to(arrowUpRef.current, 0.3, { repeat: -1, yoyo: true, y: -15 })
         .to(arrowUpRef.current, 1, {
           rotate: 180,
-          scrollTrigger: { trigger: mainRef.current, start: "top top", toggleActions: 'restart reset restart reset' }
+          scrollTrigger: { trigger: homeRef.current, start: "top top", toggleActions: 'restart reset restart reset' }
         })
       //Move the first nav menu link on load
        handleMenuLinks(homeLinkRef, previousLink);
@@ -632,9 +632,9 @@ export default function App() {
         scrollTo: {
           x: 0,
           y: _currentWindow === "home" ?
-            mainRef.current :
+            homeRef.current :
             _currentWindow === "about" ?
-              mainRef.current :
+              homeRef.current :
               _currentWindow === "projects" ?
                 aboutRef.current :
                 _currentWindow === "technologies" ?
@@ -737,13 +737,13 @@ export default function App() {
               handleWaterSpeed={handleWaterSpeed}
               handleRippleAnimation={handleRippleAnimation}
               targetRefs={{
-                mainRef,
+                homeRef,
                 aboutRef,
                 projectsRef,
                 technologiesRef,
                 havefunRef
               }} />
-            <div id="home-window" ref={mainRef}></div>
+            <div id="home-window" ref={homeRef}></div>
             <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
               <About />
             </MainWindowsHoc>

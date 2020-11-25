@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom"
 import "./index.css";
@@ -12,15 +12,16 @@ import { AiFillFacebook } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
 import { AiFillMail } from "react-icons/ai"
 import here from "../../pics/here.png"
+import { Timeline } from "gsap/gsap-core";
 
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
-
+const links = ["home", "about", "projects", "technologies", "havefun"];
 export default function Navbar({ linkRefs, hereRef, targetRefs, handleAudio }) {
     const [isNavLarge, setIsNavLarge] = useState(true);
     const [arrow, setArrow] = useState(null);
-    const [prevLinkClicked, setPrevLinkClicked] = useState(null)
+    const [currentLinkAnim, setCurrentlinkAnim] = useState(null)
 
     useEffect(() => {
         console.log(arrow)
@@ -31,13 +32,19 @@ export default function Navbar({ linkRefs, hereRef, targetRefs, handleAudio }) {
         gsap.to(arrow, { rotate: isNavLarge ? 90 : 270 })
     }, [isNavLarge])
 
-    useEffect(()=>{
-       // handleMenuClick(linkRefs.homeLinkRef, hereRef, prevLinkClicked, setPrevLinkClicked)
-    },[])
-   
-    function handleMoveTo(targetRef){
+    useEffect(() => {
+        // handleMenuClick(linkRefs.homeLinkRef, hereRef, prevLinkClicked, setPrevLinkClicked)
+    }, [])
+
+    function handleMoveTo(targetRef) {
         gsap.to(window, { duration: 1, scrollTo: { x: 0, y: targetRef.current } })
     }
+
+    function animateLink(link) {     
+        if (!currentLinkAnim)
+            setCurrentlinkAnim(new TimelineMax({ repeat: -1, yoyo: true }).to(link, 0.2, { scale:1.2, ease: "linear" }))       
+        }
+   
     return (
         <Row id="navbar" style={{ left: isNavLarge ? 0 : "-170px" }} className="m-0">
             <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
@@ -45,25 +52,22 @@ export default function Navbar({ linkRefs, hereRef, targetRefs, handleAudio }) {
                     <AudioButton handleAudio={handleAudio} />
                 </div>
                 <ul id="nav-menu" className=" d-flex flex-column justify-content-start align-items-center">
-                    <li ref={linkRefs.homeLinkRef} onClick={(e) => { handleMoveTo(targetRefs.mainRef); }} className="p-3">
-                        <Link to="/">
-                            <h6>.home()</h6>
+                   {links.map( link => ( <li ref={linkRefs[`${link}LinkRef`]} onClick={(e) => {
+                        handleMoveTo(targetRefs[`${link}Ref`]);
+                    }}  className="p-3">
+                        <Link onMouseEnter={(e) => {
+                            console.log("enter")
+                            animateLink(e.target)
+                        }}
+                        onMouseLeave={(e) => {
+                            console.log("left")
+                            gsap.set(e.target, { scale: 1 });
+                            currentLinkAnim?.kill();
+                            setCurrentlinkAnim(null)
+                        }} to="/">
+                            <h6>{`.${link}()`}</h6>
                         </Link>
-                    </li>
-                    <li ref={linkRefs.aboutLinkRef} onClick={(e) => { handleMoveTo(targetRefs.aboutRef);  }} className="p-3">
-                        <Link to="/about">
-                            <h6>.about()</h6>
-                        </Link>
-                    </li>
-                    <li ref={linkRefs.projectsLinkRef} onClick={(e) => { handleMoveTo(targetRefs.projectsRef);  }} className="p-3">
-                        <Link to="/projects"> <h6>.projects()</h6></Link>
-                    </li>
-                    <li ref={linkRefs.technologiesLinkRef} onClick={(e) => { handleMoveTo(targetRefs.technologiesRef); }} className="p-3">
-                        <Link to="/technologies"> <h6>.technologies()</h6></Link>
-                    </li>
-                    <li ref={linkRefs.havefunLinkRef} onClick={(e) => { handleMoveTo(targetRefs.havefunRef);  }} className="p-3">
-                        <Link to="/havefun"> <h6>.haveFun()</h6></Link>
-                    </li>
+                    </li> ))}
                     <img id="here-img" ref={hereRef} src={here} alt="You are here" />
                 </ul>
                 <div id="nav-contacts" className="align-self-start d-flex flex-column justify-content-around">
