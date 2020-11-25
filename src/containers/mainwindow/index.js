@@ -26,11 +26,7 @@ const MainWindowsHoc = React.memo(function ({ myRef, children, direction }) {
                 {children}
             </Col>
         </Row>
-
-
     )
-
-
 })
 
 export default MainWindowsHoc

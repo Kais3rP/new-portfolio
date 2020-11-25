@@ -111,10 +111,7 @@ export default function App() {
           scrollTrigger: { trigger: mainRef.current, start: "top top", toggleActions: 'restart reset restart reset' }
         })
       //Move the first nav menu link on load
-      // handleMenuLinks(homeLinkRef, hereRef, homeLinkRef);
-
-      //setBallAnimations({inflate, deflate})
-
+       handleMenuLinks(homeLinkRef, previousLink);
 
       function playRippleAnimation() {
         rippleAnimation?.restart()
@@ -669,7 +666,7 @@ export default function App() {
     function checkScaleX(scale) {
       console.log(scale)
       if (+scale >= 2.1)  {
-        this.kill()
+        this.kill();
         deflate();
          return 2.1;
       } else

@@ -3,37 +3,66 @@ import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom"
 import "./index.css";
 import { gsap, TimelineMax } from "gsap";
+import fallSound from "../../sound/fall.mp3"
+import stompSound from "../../sound/stomp.mp3"
 
 
 
 export default function Loading({ loadProgress, setIsReady }) {
     const logoRef = useRef();
     const buttonRef = useRef();
+    const buttonTextRef = useRef();
     const loadColRef = useRef();
+    const logoContainerRef = useRef();
+    const fallRef = useRef();
+    const stompRef = useRef();
+    const progressDataRef = useRef();
     const [animations, setAnimations] = useState({});
 
     useEffect(() => {
         const moveLogo = new TimelineMax({ repeat: -1, yoyo: true })
-            .to(logoRef.current, 1, { scale: "+=0.1" })
-        const resize = new TimelineMax({ onComplete: () => { setIsReady(true) } })
-            .to(buttonRef.current, 1, { width: 0, boxShadow: "0px 0px 0px 0px", ease: "power2.out" })
-            .to(buttonRef.current, 0.8, { y: (i, target)=> window.innerHeight - target.getBoundingClientRect().y - 80, ease: "bounce" })
-            .to(buttonRef.current, 3, { width: window.innerWidth, fontSize: "200rem", opacity: 0, ease: "expo" })
+            .to(logoContainerRef.current, 1, { scale: "+=0.1" })
+        const resize = new TimelineMax({
+            onComplete: () => {
+                setIsReady(true)
+            },
+            onUpdate: function () {
+                let delta = +this.progress().toFixed(2);
+                console.log("delta", delta);
+                if (delta === 0)
+                    fallRef.current.play();
+                if (delta === 0.4)
+                    stompRef.current.play();
+                if (delta === 0.62)
+                    stompRef.current.pause();
+            }
+        })
+            .to(buttonRef.current, 1, { width: 0, fontSize: 0, boxShadow: "0px 0px 0px 0px",border:"0px solid", padding:0, ease: "power2.out" })
+            .to(buttonRef.current, 0.8, { y: (i, target) => -(window.innerHeight - target.getBoundingClientRect().y + 80), ease: "bounce" })
+            .to(buttonTextRef.current, 3, {fontSize: "100rem", opacity: 0, ease: "expo" })
             .pause()
-        const fade = new TimelineMax({ delay: 2 })
-            .to([logoRef.current, loadColRef.current], 2.8, { opacity: 0 })
+        const fadeLogo = new TimelineMax({})
+            .to(logoContainerRef.current, 4.8, { scale: 20, opacity: 0 })
             .pause()
-        setAnimations({ moveLogo, resize, fade })
+        const fadeBg = new TimelineMax({ delay: 2 })
+            .to(loadColRef.current, 2.8, { opacity: 0 })
+            .pause()
+        const fadeData = new TimelineMax()
+            .to(progressDataRef.current, 0.5, { opacity: 0 })
+            .pause()
+        const skewLogo = new TimelineMax({ repeat: -1, yoy: true })
+
+
+        setAnimations({ moveLogo, resize, fadeLogo, fadeBg, fadeData })
     }, [])
 
-    console.log("first render:", buttonRef.current, logoRef.current, loadColRef.current)
     return (
         <Row className="justify-content-center align-items-center">
-            <Col ref={loadColRef} className="d-flex flex-column justify-content-center align-items-center full-height main-theme">
+            <Col ref={loadColRef} className=" loading-col d-flex flex-column justify-content-center align-items-center full-height main-theme">
+                <audio ref={fallRef} src={fallSound}></audio>
+                <audio ref={stompRef} src={stompSound}></audio>
 
-
-                <div className="loader-container">
-
+                <div ref={logoContainerRef} className="loader-container">
                     <svg
                         id="logo"
                         data-name="Layer 1"
@@ -43,10 +72,11 @@ export default function Loading({ loadProgress, setIsReady }) {
                     >
                         <defs>
                             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset={loadProgress + "%"} style={{ stopColor: "rgb(255,255,255)", stopOpacity: 1 }} />
+                                <stop offset={loadProgress + "%"} style={{ stopColor: "#66ccff", stopOpacity: 1 }} />
                                 <stop offset="0%" style={{ stopColor: "rgb(0,0,0)", stopOpacity: 1 }} />
                             </linearGradient>
                         </defs>
+                        <text x="170" y="200" fill="#ff6600">©</text>
                         <path
                             class="cls-1" d="M104.5,198v2C-12.89,192.52-26.82,30.4,87.5,3V35l-.4,0C16.49,62.46,29.76,160.17,104.5,169v29Z"
                             transform="translate(-8.22 -0.42)" />
@@ -60,21 +90,27 @@ export default function Loading({ loadProgress, setIsReady }) {
                             transform="translate(-8.22 -0.42)" />
                     </svg>
                 </div>
-                <h5 id="progress">{loadProgress} % </h5>
-                <h4>{loadProgress !== 100 ? "Loading..." : "Done!"}</h4>
-                <div ref={buttonRef}
+
+
+                <div
+                    id="start-button"
+                    ref={buttonRef}
                     style={{ opacity: loadProgress === 100 && 1 }}
                     onClick={() => {
                         animations.resize.play()
-                        animations.fade.play()
-                    }}
-                    id="start-button">
+                        animations.fadeLogo.play()
+                        animations.fadeBg.play()
+                        animations.fadeData.play()
+                    }}>
 
-                    <div className="d-flex justify-content-center align-items-center">
-                        <h3 >START</h3>
-                    </div>
+                    <h3 ref={buttonTextRef}>START</h3>
+
                 </div>
-                {/*} {loadProgress === 100 && <button onClick={() => { setIsReady(true) }}>START NAVIGATING</button>} */}
+                {/*}  <div id="progress-data" ref={progressDataRef}>
+                    <h5 id="progress">{loadProgress} % </h5>
+                    <h4>{loadProgress !== 100 ? "Loading..." : "Done!"}</h4>
+                </div>
+                */}
             </Col>
         </Row>
 
