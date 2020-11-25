@@ -10,23 +10,27 @@ export default function Loading({ loadProgress, setIsReady }) {
     const logoRef = useRef();
     const buttonRef = useRef();
     const loadColRef = useRef();
-    const resize = new TimelineMax({onComplete: ()=> { setIsReady(true) }})
-    .to(buttonRef.current, 1, {width:0, boxShadow: "0px 0px 0px 0px", ease:"power2.out" })
-    .to(buttonRef.current, 0.8, {y:120, ease:"bounce"})
-    .to(buttonRef.current,3,{width:window.innerWidth, fontSize:"200rem", opacity:0, ease:"expo"})
-    .pause()
+    const [animations, setAnimations] = useState({});
 
     useEffect(() => {
-        new TimelineMax({ repeat: -1, yoyo: true })
-            .to(logoRef.current, 1, { scale: "+=0.1"})
-
+        const moveLogo = new TimelineMax({ repeat: -1, yoyo: true })
+            .to(logoRef.current, 1, { scale: "+=0.1" })
+        const resize = new TimelineMax({ onComplete: () => { setIsReady(true) } })
+            .to(buttonRef.current, 1, { width: 0, boxShadow: "0px 0px 0px 0px", ease: "power2.out" })
+            .to(buttonRef.current, 0.8, { y: (i, target)=> window.innerHeight - target.getBoundingClientRect().y - 80, ease: "bounce" })
+            .to(buttonRef.current, 3, { width: window.innerWidth, fontSize: "200rem", opacity: 0, ease: "expo" })
+            .pause()
+        const fade = new TimelineMax({ delay: 2 })
+            .to([logoRef.current, loadColRef.current], 2.8, { opacity: 0 })
+            .pause()
+        setAnimations({ moveLogo, resize, fade })
     }, [])
 
-    
+    console.log("first render:", buttonRef.current, logoRef.current, loadColRef.current)
     return (
         <Row className="justify-content-center align-items-center">
             <Col ref={loadColRef} className="d-flex flex-column justify-content-center align-items-center full-height main-theme">
-           
+
 
                 <div className="loader-container">
 
@@ -60,15 +64,14 @@ export default function Loading({ loadProgress, setIsReady }) {
                 <h4>{loadProgress !== 100 ? "Loading..." : "Done!"}</h4>
                 <div ref={buttonRef}
                     style={{ opacity: loadProgress === 100 && 1 }}
-                    onClick={() => { 
-                        resize.play()
-                        new TimelineMax({delay:2})
-                        .to([logoRef.current, loadColRef.current], 2.8, {opacity:0})
-                         }}
+                    onClick={() => {
+                        animations.resize.play()
+                        animations.fade.play()
+                    }}
                     id="start-button">
-                    
+
                     <div className="d-flex justify-content-center align-items-center">
-                    <h3 >START</h3>
+                        <h3 >START</h3>
                     </div>
                 </div>
                 {/*} {loadProgress === 100 && <button onClick={() => { setIsReady(true) }}>START NAVIGATING</button>} */}
