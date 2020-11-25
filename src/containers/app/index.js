@@ -49,7 +49,6 @@ export default function App() {
   const [scroll, setScroll] = useState(0);
   const [_previousWindow, set_PreviousWindow] = useState("home");
   const [_currentWindow, set_CurrentWindow] = useState("home");
-  const [prevNavLinkAnimated, setPrevNavLinkAnimated] = useState(null);
   const [isBottom, setIsBottom] = useState(false);
   const [app, setApp] = useState(null);
   const [_firstContainer, set_firstContainer] = useState(null);
@@ -71,6 +70,7 @@ export default function App() {
   const [_flowSound, set_flowSound] = useState(null);
   const [_dropSound, set_dropSound] = useState(null);
   const [waterSpeed, setWaterSpeed] = useState(2);
+  const [isBallDeflating, setIsBallDeflating] = useState(false)
 
   const containerRef = useRef();
   const mainRef = useRef();
@@ -78,7 +78,8 @@ export default function App() {
   const projectsRef = useRef();
   const technologiesRef = useRef();
   const havefunRef = useRef();
-  const arrowRef = useRef();
+  const arrowDownRef = useRef();
+  const arrowUpRef = useRef();
   const homeLinkRef = useRef();
   const aboutLinkRef = useRef();
   const projectsLinkRef = useRef();
@@ -86,29 +87,45 @@ export default function App() {
   const havefunLinkRef = useRef();
   const arrowLinkRef = useRef();
   const hereRef = useRef();
+  const previousLink = useRef()
 
   //This is the effect that checks for the isReady state
   useEffect(() => {
     let rippleTimeout;
-    if (isReady){
+    if (isReady) {
       _flowSound.play()
-    playRippleAnimation();
-    //Arrow infinite animation
-    const arrowTlDown = new TimelineMax()
-      .to(arrowRef.current, 0.3, { repeat: -1, yoyo: true, y: 15 })
-      .to(arrowRef.current, 1, {
-        rotate: 180,
-        scrollTrigger: { trigger: havefunRef.current, start: "center bottom", toggleActions: 'restart reset restart reset' }
-      })
-     //Move the first nav menu link on load
-   // handleMenuLinks(homeLinkRef, hereRef, homeLinkRef);
+      //Play the ripple continuous animation
+      playRippleAnimation();
+      //Play the Arrows infinite animation
+      const arrowTlDown = new TimelineMax()
+        .to(arrowDownRef.current, 0.3, { repeat: -1, yoyo: true, y: 15 })
+        .to(arrowDownRef.current, 1, {
+          rotate: 180,
+          scrollTrigger: { trigger: havefunRef.current, start: "center bottom", toggleActions: 'restart reset restart reset' }
+        })
+      gsap.set(arrowUpRef.current, { rotate: 180 });
+      const arrowTlUp = new TimelineMax()
+        .to(arrowUpRef.current, 0.3, { repeat: -1, yoyo: true, y: -15 })
+        .to(arrowUpRef.current, 1, {
+          rotate: 180,
+          scrollTrigger: { trigger: mainRef.current, start: "top top", toggleActions: 'restart reset restart reset' }
+        })
+      //Move the first nav menu link on load
+      // handleMenuLinks(homeLinkRef, hereRef, homeLinkRef);
+
+      //setBallAnimations({inflate, deflate})
+
+
+      function playRippleAnimation() {
+        rippleAnimation?.restart()
+        _dropSound?.play()
+        _rippleSprite?.position.set(0, 0)
+        rippleTimeout = setTimeout(playRippleAnimation, 6000)
+      }
     }
-    function playRippleAnimation() {
-      rippleAnimation?.restart()
-      _dropSound?.play()
-      _rippleSprite?.position.set(0, 0)
-      rippleTimeout = setTimeout(playRippleAnimation, 6000)
-    }
+
+
+
     return () => { clearTimeout(rippleTimeout) }
   }, [isReady])
 
@@ -268,7 +285,7 @@ export default function App() {
         startY: window.innerHeight
       },
     ]
-    let previousLink = {current: homeLinkRef.current};
+
     let currentWindow = "";
     let previousWindow = "";
 
@@ -293,8 +310,8 @@ export default function App() {
       //Fishes animations to follow the mouse pointer and to run back away to the starting positions 
       let fishFollowTl = new TimelineMax({})
         .to(allFishes.map(fish => fish.fish), 10, { x: () => mousePos.x, y: (idx, target) => target.position.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
-        window.addEventListener("resize", handleResize);
-        window.addEventListener("scroll", handleScroll);
+      window.addEventListener("resize", handleResize);
+      window.addEventListener("scroll", handleScroll);
       _firstContainer.addListener("pointermove", handleMouseMove);
       _firstContainer.addListener("pointerdown", handleWaterClick);
       //Animate @ 60FPS
@@ -345,25 +362,22 @@ export default function App() {
           }
         }
       }
-     
-        console.log("home link",homeLinkRef.current)
-     
+
       function handleScroll(e) {
-      console.log("previous link log:",previousLink)
         const pageRanges = {
-          home: window.pageYOffset <= window.innerHeight,
-          about: window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight,
-          projects: window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
-          technologies: window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight,
-          havefun: window.pageYOffset <= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight
+          home: window.pageYOffset < window.innerHeight,
+          about: window.pageYOffset < window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight,
+          projects: window.pageYOffset < window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
+          technologies: window.pageYOffset < window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight,
+          havefun: window.pageYOffset < window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight
         }
-        //console.log("home link",homeLinkRef.current)
+
         setScroll(window.pageYOffset);
         if (document.body.scrollHeight - window.pageYOffset <= 100)
           setIsBottom(true)
         else
           setIsBottom(false)
-         
+
         //Current window
         if (pageRanges.home) {
           currentWindow = "home"
@@ -371,8 +385,7 @@ export default function App() {
           if (previousWindow !== currentWindow) {
             _titleText.text = "WELCOME"
             if (previousWindow === "about") {
-              console.log(homeLinkRef.current)
-              handleMenuLinks(homeLinkRef, hereRef, previousLink);              
+              handleMenuLinks(homeLinkRef, previousLink);
             }
             previousWindow = "home"
             set_PreviousWindow("home")
@@ -385,7 +398,7 @@ export default function App() {
           if (previousWindow !== currentWindow) {
             _titleText.text = "ABOUT ME"
             if (previousWindow === "home" || previousWindow === "projects") {
-              handleMenuLinks(aboutLinkRef, hereRef, previousLink);
+              handleMenuLinks(aboutLinkRef, previousLink);
             }
             previousWindow = "about"
             set_PreviousWindow("about")
@@ -398,7 +411,7 @@ export default function App() {
           if (previousWindow !== currentWindow) {
             _titleText.text = "MY PROJECTS"
             if (previousWindow === "about" || previousWindow === "technologies") {
-             handleMenuLinks(projectsLinkRef, hereRef, previousLink);
+              handleMenuLinks(projectsLinkRef, previousLink);
             }
             previousWindow = "projects"
             set_PreviousWindow("projects")
@@ -411,7 +424,7 @@ export default function App() {
           if (previousWindow !== currentWindow) {
             _titleText.text = "TECHNOLOGIES I USE";
             if (previousWindow === "projects" || previousWindow === "havefun") {
-             handleMenuLinks(technologiesLinkRef, hereRef, previousLink); 
+              handleMenuLinks(technologiesLinkRef, previousLink);
             }
             previousWindow = "technologies"
             set_PreviousWindow("technologies")
@@ -424,15 +437,15 @@ export default function App() {
           if (previousWindow !== currentWindow) {
             _titleText.text = "HAVE FUN"
             if (previousWindow === "technologies") {
-               handleMenuLinks(havefunLinkRef, hereRef, previousLink); 
+              handleMenuLinks(havefunLinkRef, previousLink);
             }
             previousWindow = "havefun"
             set_PreviousWindow("havefun")
           }
         }
       }
-   
-    
+
+
       function handleResize(e) {
         console.log("resizing...")
         if (e.target.innerWidth < app.renderer.width) {
@@ -590,7 +603,7 @@ export default function App() {
     setTimeout(() => { setWaterSpeed(2) }, 1000)
   }
 
-  function handleArrowClick() {
+  function handleArrowDownClick() {
     console.log(_currentWindow)
     if (isBottom)
       gsap.to(window, { duration: 1, scrollTo: { x: 0, y: 0 } })
@@ -612,40 +625,96 @@ export default function App() {
       })
   }
 
+  function handleArrowUpClick() {
+    console.log(_currentWindow)
+    if (isBottom)
+      gsap.to(window, { duration: 1, scrollTo: { x: 0, y: 0 } })
+    else
+      gsap.to(window, {
+        duration: 1,
+        scrollTo: {
+          x: 0,
+          y: _currentWindow === "home" ?
+            mainRef.current :
+            _currentWindow === "about" ?
+              mainRef.current :
+              _currentWindow === "projects" ?
+                aboutRef.current :
+                _currentWindow === "technologies" ?
+                  projectsRef.current :
+                  _currentWindow === "havefun" ?
+                    technologiesRef.current :
+                    0
+        }
+      })
+  }
+
   function handleAudio(isMuted) {
     if (isMuted) {
       _flowSound.resume();
-      _dropSound.resume();
     } else {
       _flowSound.pause();
-      _dropSound.pause();
     }
   }
+  function deflate() {
+    console.log("deflating:",hereRef.current.getBoundingClientRect().width)
+    new TimelineMax({ onStart:()=>{ setIsBallDeflating(true)}, onComplete: ()=>{setIsBallDeflating(false)}})
+    .to(hereRef.current, { scale:1, bottom:"43px", duration: 3.5, ease: "elastic" })
+  }
+  function inflate() {
+    console.log("inflating:",hereRef.current.getBoundingClientRect().width)
+    new TimelineMax()
+      .to(hereRef.current, { scale:"+=0.3", bottom:"+=10px", duration: 0.7, visibility: "visible", modifiers: { scaleX: checkScaleX } })
 
- 
+    function checkScaleX(scale) {
+      console.log(scale)
+      if (+scale >= 2.1)  {
+        this.kill()
+        deflate();
+         return 2.1;
+      } else
+      return scale
+    }
+  
+  }
 
-  function handleMenuLinks(targetRef, hereRef, prevTarget, optionalCb) {
+  function handleMenuLinks(targetRef, prevTarget, optionalCb) {
     if (optionalCb) optionalCb();
-   console.log("inside move link handler",targetRef.current, prevTarget.current, targetRef.current !== prevTarget.current)
+    const containerHeight = targetRef.current.parentNode.getBoundingClientRect().height;
+    const diffPositionLinkContainer = targetRef.current.getBoundingClientRect().y - targetRef.current.parentNode.getBoundingClientRect().y;
     if (targetRef.current !== prevTarget) {
-      const goBack = new TimelineMax()
+      const linkRaise = new TimelineMax()
         .to(prevTarget.current, 1, { color: "#66ccff", y: 0, duration: 1, ease: "bounce" })
-     prevTarget.current = targetRef.current;
+      prevTarget.current = targetRef.current;
     }
     const linkFall = new TimelineMax()
-      .to(targetRef.current, 1, { color: "#ff6600", y: targetRef.current.parentNode.getBoundingClientRect().height - (targetRef.current.getBoundingClientRect().y - targetRef.current.parentNode.getBoundingClientRect().y) - 30, ease: "bounce" })
+      .to(targetRef.current, 1, {
+        color: "#ff6600",
+        y: containerHeight - diffPositionLinkContainer - 30, ease: "bounce"
+      })
+   console.log("is ball deflating ?",isBallDeflating)
     if (window.innerWidth > 768) //Animates Im here only for big screens
-      gsap.to(hereRef.current, { width: "+=12", left: "-=6", duration: 0.7, visibility: "visible", modifiers: { width: checkHereWidth, left: checkHereLeft } })
+     setIsBallDeflating(isBallDeflating => {
+        if (!isBallDeflating) 
+         inflate(); 
+       return isBallDeflating
+      }) 
+       
 
-    function checkHereWidth(width) {
+
+    //gsap.to(hereRef.current, { width: "+=20", left: "-=10", duration: 0.7, visibility: "visible", modifiers: { width: checkHereWidth } })
+
+    /*function checkHereWidth(width) {
       width = +width.split("px")[0]
-      return width >= 143 ? "71px" : width + "px"
+      if (width >= 143) gsap.to(hereRef.current, {width:"71px",left: "49.5px", duration:5, ease:"ease-in-out"})
+      return width+"px"
     }
-
+ 
     function checkHereLeft(left) {
       left = +left.split("px")[0]
-      return left <= 15 ? "49.5px" : left + "px"
-    }
+      return left <= 12 ? "49.5px" : left + "px"
+    }*/
+
   }
 
   return (
@@ -654,7 +723,8 @@ export default function App() {
         <Col>
           <div className="main-theme" id="container" ref={containerRef}></div>
           {isReady ? <>
-            <Arrow id="arrow-down" onClick={handleArrowClick} myRef={arrowRef} />
+            <Arrow id="arrow-down" onClick={handleArrowDownClick} myRef={arrowDownRef} />
+            <Arrow id="arrow-up" onClick={handleArrowUpClick} myRef={arrowUpRef} />
             <Navbar
               hereRef={hereRef}
               linkRefs={{

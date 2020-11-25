@@ -31,6 +31,16 @@
     left: 45%;
     cursor:pointer;
 }
+#arrow-up {
+    width: 10%;
+    fill: white;
+    z-index: 50;
+    position: fixed;
+    top: 30px;
+    left: 45%;
+    cursor:pointer;
+   
+}
 
 
 .full-height {

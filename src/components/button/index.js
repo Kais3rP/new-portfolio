@@ -8,8 +8,8 @@ import { Link } from "react-router-dom";
 export default function Button({ children, onClick }) {
 
     return (
-       <div onClick={onClick} className="control-button">
-{children}
-       </div>
+        <div onClick={onClick} className="control-button">
+            {children}
+        </div>
     )
 }

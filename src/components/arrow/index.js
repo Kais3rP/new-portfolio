@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react"
 import "./index.css"
 
 export default function Arrow({myRef, onClick, id, dataName, style, className}) {
-const [isMuted, setIsmuted] = useState(false)
     return (
      <>
     <svg onPointerDown={onClick} 
