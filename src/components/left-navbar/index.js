@@ -7,7 +7,7 @@ import { gsap, TimelineMax } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { CSSRulePlugin } from "gsap/CSSRulePlugin";
 import Arrow from "../arrow/index"
-import AudioButton from "../../components/button/AudioButton"
+import AudioButton from "../button/AudioButton"
 import { AiFillFacebook } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
 import { AiFillMail } from "react-icons/ai"
@@ -18,18 +18,18 @@ import { Timeline } from "gsap/gsap-core";
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
 const links = ["home", "about", "projects", "technologies", "havefun"];
-export default function Navbar({ linkRefs, hereRef, targetRefs, handleAudio }) {
+
+export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio, dir }) {
     const [isNavLarge, setIsNavLarge] = useState(true);
     const [arrow, setArrow] = useState(null);
-    const [currentLinkAnim, setCurrentlinkAnim] = useState(null)
+    const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
+    const arrowRef = useRef();
+    useEffect(() => {
+        gsap.to(arrowRef.current, { x: 10, yoyo: true, repeat: -1, duration: 0.2 })
+    }, [])
 
     useEffect(() => {
-        console.log(arrow)
-        gsap.to(arrow, { x: 10, yoyo: true, repeat: -1, duration: 0.2 })
-    }, [arrow])
-
-    useEffect(() => {
-        gsap.to(arrow, { rotate: isNavLarge ? 90 : 270 })
+        gsap.to(arrowRef.current, { rotate: isNavLarge ? 90 : 270 })
     }, [isNavLarge])
 
     useEffect(() => {
@@ -46,7 +46,7 @@ export default function Navbar({ linkRefs, hereRef, targetRefs, handleAudio }) {
         }
    
     return (
-        <Row id="navbar" style={{ left: isNavLarge ? 0 : "-170px" }} className="m-0">
+        <Row id="left-navbar" style={{ left: isNavLarge ? 0 : "-170px" }} className="left-navbar m-0">
             <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
                 <div id="nav-controls" className="">
                     <AudioButton handleAudio={handleAudio} />
@@ -56,11 +56,9 @@ export default function Navbar({ linkRefs, hereRef, targetRefs, handleAudio }) {
                         handleMoveTo(targetRefs[`${link}Ref`]);
                     }}  className="p-3">
                         <Link onMouseEnter={(e) => {
-                            console.log("enter")
                             animateLink(e.target)
                         }}
                         onMouseLeave={(e) => {
-                            console.log("left")
                             gsap.set(e.target, { scale: 1 });
                             currentLinkAnim?.kill();
                             setCurrentlinkAnim(null)
@@ -78,7 +76,7 @@ export default function Navbar({ linkRefs, hereRef, targetRefs, handleAudio }) {
                     </div>
                     <p style={{ fontSize: "10px" }}>Copyright © 2020 Cesare Polonara, All rights reserved.</p>
                 </div>
-                <Arrow id="nav-arrow" onClick={() => { setIsNavLarge(isLarge => !isLarge) }} myRef={setArrow} />
+                <Arrow id="left-nav-arrow" onClick={() => { setIsNavLarge(isLarge => !isLarge) }} myRef={arrowRef} />
             </Col>
         </Row>
     )

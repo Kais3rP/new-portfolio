@@ -21,7 +21,7 @@
 }
 
 #start-button {
-    opacity: 0;
+    opacity: 1;
     font-size: 2rem;
     font-weight: bold;
     background-color:#000;
@@ -48,9 +48,7 @@
     box-shadow: 0px 0px 15px 10px  #ff6600;
 }
 
-#progress-data {
-    margin: 30px;
-}
+
 
 @media Screen and (max-width:600px) {
     .loader-container {

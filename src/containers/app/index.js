@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap"
 import { Route, Switch } from "react-router-dom";
-import Navbar from "../../components/navbar/index"
+import LeftNavbar from "../../components/left-navbar/index"
+import RightNavbar from "../../components/right-navbar/index"
 import './index.css'
 import Main from "../../components/main/index"
 import About from "../../components/about/index"
@@ -156,14 +157,6 @@ export default function App() {
     //Assets loader
     loader
       .add("water", water)
-      .add("water3", water)
-      .add("water4", water)
-      .add("water5", water)
-      .add("water6", water)
-      .add("water7", water)
-      .add("water8", water)
-      .add("water9", water)
-      .add("water0", water)
       .add("water2", water2)
       .add("ripple", ripple)
       .add("clouds", clouds)
@@ -183,8 +176,7 @@ export default function App() {
       setLoadProgress(Math.ceil(data.progress))
     })
 
-    loader.onComplete.add((a, b, c) => {
-      console.log("progress:", a, b, c)
+    loader.onComplete.add(() => {
       setHasLoaded(true);
     }
     )
@@ -239,10 +231,9 @@ export default function App() {
     }
   }, [])
 
-  // stage Init Effect
+  //Stage Init Effect
   //Handling resize, scroll, pointermove, and click events
   useEffect(() => {
-    //Stage config
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //Scoped mouse position variables
     const mousePos = {
@@ -658,6 +649,7 @@ export default function App() {
     new TimelineMax({ onStart:()=>{ setIsBallDeflating(true)}, onComplete: ()=>{setIsBallDeflating(false)}})
     .to(hereRef.current, { scale:1, bottom:"43px", duration: 3.5, ease: "elastic" })
   }
+  
   function inflate() {
     console.log("inflating:",hereRef.current.getBoundingClientRect().width)
     new TimelineMax()
@@ -698,20 +690,6 @@ export default function App() {
       }) 
        
 
-
-    //gsap.to(hereRef.current, { width: "+=20", left: "-=10", duration: 0.7, visibility: "visible", modifiers: { width: checkHereWidth } })
-
-    /*function checkHereWidth(width) {
-      width = +width.split("px")[0]
-      if (width >= 143) gsap.to(hereRef.current, {width:"71px",left: "49.5px", duration:5, ease:"ease-in-out"})
-      return width+"px"
-    }
- 
-    function checkHereLeft(left) {
-      left = +left.split("px")[0]
-      return left <= 12 ? "49.5px" : left + "px"
-    }*/
-
   }
 
   return (
@@ -722,7 +700,7 @@ export default function App() {
           {isReady ? <>
             <Arrow id="arrow-down" onClick={handleArrowDownClick} myRef={arrowDownRef} />
             <Arrow id="arrow-up" onClick={handleArrowUpClick} myRef={arrowUpRef} />
-            <Navbar
+            <LeftNavbar
               hereRef={hereRef}
               linkRefs={{
                 homeLinkRef,
@@ -743,6 +721,7 @@ export default function App() {
                 technologiesRef,
                 havefunRef
               }} />
+              <RightNavbar />
             <div id="home-window" ref={homeRef}></div>
             <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
               <About />

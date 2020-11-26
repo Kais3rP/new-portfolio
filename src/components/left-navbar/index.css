@@ -1,12 +1,12 @@
-#navbar {
+.left-navbar {
+    top: 0;
+    left: 0;
+    border-right: 3px outset #ff6600;
     height: 100%;
     width: 170px;
     position: fixed;
-    top: 0;
-    left: 0;
     z-index: 30;
     background-color: black;
-    border-right: 3px outset white;
     transition: left 0.5s ease-in-out;
     color: #66ccff;
 }
@@ -15,7 +15,7 @@
     position: relative;
 }
 
-#nav-arrow {
+#left-nav-arrow {
     fill: white;
     width: 30px;
     position: absolute;
