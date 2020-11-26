@@ -24,7 +24,6 @@ export default function About() {
      <div>
      <p style={{ color: "white" }}>{"};"}</p>
      </div>
-
     </div>
 
 

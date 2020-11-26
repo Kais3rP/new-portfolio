@@ -4,7 +4,6 @@ import { Route, Switch } from "react-router-dom";
 import LeftNavbar from "../../components/left-navbar/index"
 import RightNavbar from "../../components/right-navbar/index"
 import './index.css'
-import Main from "../../components/main/index"
 import About from "../../components/about/index"
 import Projects from "../../components/projects/index"
 import HaveFun from "../../components/havefun/index"
@@ -18,7 +17,6 @@ import { PixiPlugin } from "gsap/PixiPlugin"
 import water from "../../pics/water.jpg"
 import water2 from "../../pics/water2.jpg"
 import ripple from "../../pics/ripple.png"
-import swan from "../../pics/swan.png"
 import clouds from "../../pics/clouds.jpg"
 import fish from "../../pics/fish.png"
 import fish2 from "../../pics/fish2.png"
@@ -723,16 +721,16 @@ export default function App() {
               }} />
               <RightNavbar />
             <div id="home-window" ref={homeRef}></div>
-            <MainWindowsHoc myRef={aboutRef} direction={{ right: false }}>
+            <MainWindowsHoc myRef={aboutRef} >
               <About />
             </MainWindowsHoc>
-            <MainWindowsHoc myRef={projectsRef} direction={{ right: false }}>
+            <MainWindowsHoc myRef={projectsRef} >
               <Projects />
             </MainWindowsHoc>
-            <MainWindowsHoc myRef={technologiesRef} direction={{ right: false }}>
+            <MainWindowsHoc myRef={technologiesRef} >
               <Technologies />
             </MainWindowsHoc>
-            <MainWindowsHoc myRef={havefunRef} direction={{ right: false }}>
+            <MainWindowsHoc myRef={havefunRef} >
               <HaveFun />
             </MainWindowsHoc>
           </> : <LoadingView setIsReady={setIsReady} loadProgress={loadProgress} />}

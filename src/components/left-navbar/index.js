@@ -40,32 +40,34 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
         gsap.to(window, { duration: 1, scrollTo: { x: 0, y: targetRef.current } })
     }
 
-    function animateLink(link) {     
+    function animateLink(link) {
         if (!currentLinkAnim)
-            setCurrentlinkAnim(new TimelineMax({ repeat: -1, yoyo: true }).to(link, 0.2, { scale:1.2, ease: "linear" }))       
-        }
-   
+            setCurrentlinkAnim(new TimelineMax({ repeat: -1, yoyo: true }).to(link, 0.2, { scale: 1.2, ease: "linear" }))
+    }
+
     return (
-        <Row id="left-navbar" style={{ left: isNavLarge ? 0 : "-170px" }} className="left-navbar m-0">
+        <Row id="left-navbar" style={{ left: isNavLarge ? 0 : "-170px" }} className=" m-0">
             <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
                 <div id="nav-controls" className="">
                     <AudioButton handleAudio={handleAudio} />
                 </div>
                 <ul id="nav-menu" className=" d-flex flex-column justify-content-start align-items-center">
-                   {links.map( link => ( <li ref={linkRefs[`${link}LinkRef`]} onClick={(e) => {
-                        handleMoveTo(targetRefs[`${link}Ref`]);
-                    }}  className="p-3">
-                        <Link onMouseEnter={(e) => {
-                            animateLink(e.target)
-                        }}
-                        onMouseLeave={(e) => {
-                            gsap.set(e.target, { scale: 1 });
-                            currentLinkAnim?.kill();
-                            setCurrentlinkAnim(null)
-                        }} to="/">
-                            <h6>{`.${link}()`}</h6>
-                        </Link>
-                    </li> ))}
+                    {links.map(link => (
+                        <li key={link} ref={linkRefs[`${link}LinkRef`]}
+                            onClick={(e) => {
+                                handleMoveTo(targetRefs[`${link}Ref`]);
+                            }} className="p-3">
+                            <Link onMouseEnter={(e) => {
+                                animateLink(e.target)
+                            }}
+                                onMouseLeave={(e) => {
+                                    gsap.set(e.target, { scale: 1 });
+                                    currentLinkAnim?.kill();
+                                    setCurrentlinkAnim(null)
+                                }} to="/">
+                                <h6>{`.${link}()`}</h6>
+                            </Link>
+                        </li>))}
                     <img id="here-img" ref={hereRef} src={here} alt="You are here" />
                 </ul>
                 <div id="nav-contacts" className="align-self-start d-flex flex-column justify-content-around">

@@ -6,40 +6,28 @@
     isolation: isolate;
 }
 
-.central-body-left {
-    opacity: 0;
-    height: 100%;
-    z-index: 10;
-    transform: translateX(-200%);
-    pointer-events: none;
-}
-
-.central-body-right {
-    opacity: 0;
-    height: 100%;
-    z-index: 10;
-    transform: translateX(200%);
-    pointer-events: none;
-}
 
 #arrow-down {
     width: 10%;
+    max-width:80px;
     fill: white;
     z-index: 50;
     position: fixed;
     bottom: 30px;
-    left: 45%;
+    left:50%;
+    margin-left: -40px;
     cursor:pointer;
 }
 #arrow-up {
     width: 10%;
+    max-width:80px;
     fill: white;
     z-index: 50;
     position: fixed;
     top: 30px;
-    left: 45%;
+    left:50%;
+    margin-left: -40px;
     cursor:pointer;
-   
 }
 
 
@@ -62,3 +50,4 @@
     transition: left 0.5s ease-in-out;
     color: #66ccff;
 }
+
