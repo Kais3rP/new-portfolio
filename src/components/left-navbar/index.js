@@ -23,7 +23,7 @@ const links = ["home", "about", "projects", "technologies", "havefun"];
 
 export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio, treeSprites }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
-    const [arrow, setArrow] = useState(null);
+    const [_app, setApp] = useState(null);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const arrowRef = useRef();
     const navCanvasContainerRef = useRef();
@@ -36,34 +36,36 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
     }, [isNavLarge])
 
     useEffect(() => {
+       
         const {
             app,
             Container,
           } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
-    
+          setApp(app);
           const firstContainer = new Container();
           const rect = new PIXI.Graphics();
+          rect.scale.set(1);
           rect.beginFill(0x111111);
           rect.lineStyle(5, 0x000000);
-          rect.drawRect(0, 0, app.renderer.view.width, app.renderer.view.height);
+          rect.drawRect(0, 0, navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.clientHeight);
           const filter = new CRTFilter();
           firstContainer.filters = [filter]
-          firstContainer.addListener("pointermove", onPointerMove);
           firstContainer.addChild(rect)
           app.stage.addChild(firstContainer);
           app.ticker.add(() => {
               filter.seed = Math.random();
               filter.time += 0.5;
           })
-          function onPointerMove(e) {
-  
+ 
+          function handleResize(e) {
+            console.log("resizing...")           
+              app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight+30);
+              rect.height = window.innerHeight+30;
           }
-  
-          navCanvasContainerRef.current.addEventListener("pointermove", onPointerMove)
+          window.addEventListener("resize", handleResize)
           return () => {
-  
-          }
-
+          
+        }
   }, [])
 
     function handleMoveTo(targetRef) {

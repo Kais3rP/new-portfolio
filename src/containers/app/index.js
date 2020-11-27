@@ -25,10 +25,19 @@ import fish3 from "../../pics/fish3.png"
 import fish3_1 from "../../pics/fish3_1.png"
 import fish3_2 from "../../pics/fish3_2.png"
 import fish4 from "../../pics/fish4.png"
+import fish4_1 from "../../pics/fish4_1.png"
+import fish4_2 from "../../pics/fish4_2.png"
+import fish4_3 from "../../pics/fish4_3.png"
+import fish4_4 from "../../pics/fish4_4.png"
 import fish5 from "../../pics/fish5.png"
 import tree from "../../pics/tree.png"
 import treeNormal from "../../pics/tree_normal.png"
 import treeBlur from "../../pics/blurred_tree.png"
+import about from "../../pics/ABOUT.svg"
+import projects from "../../pics/PROJECTS.svg"
+import technologies from "../../pics/TECHNOLOGIES.svg"
+import havefun from "../../pics/HAVE_FUN.svg"
+import welcome from "../../pics/WELCOME.svg"
 import flowSound from "../../sound/flow.wav"
 import dropSound from "../../sound/drop.wav"
 import MainWindowsHoc from "../mainwindow/index"
@@ -62,6 +71,7 @@ export default function App() {
   const [_water2Sprite, set_water2Sprite] = useState(null);
   const [_cloudsSprite, set_cloudsSprite] = useState(null);
   const [allFishes, setAllFishes] = useState([]);
+  const [allTitles, setAllTitles] = useState([]);
   const [_normalTreeSprite, set_normalTreeSprite] = useState(null);
   const [_blurredTreeSprite, set_blurredTreeSprite] = useState(null);
   const [_titleText, set_titleText] = useState(null);
@@ -128,18 +138,18 @@ export default function App() {
   useEffect(() => {
     console.log("loading assets effect...")
 
-const {
-  app,
-  loader,
-  Sprite,
-  Container,
-  ratio
-} =  createNewPixiApp(window.visualViewport.width, window.visualViewport.height + 30, containerRef.current)
-   
+    const {
+      app,
+      loader,
+      Sprite,
+      Container,
+      ratio
+    } = createNewPixiApp(window.visualViewport.width, window.visualViewport.height + 30, containerRef.current)
+
     const firstContainer = new Container();
     const secondContainer = new Container();
     const thirdContainer = new Container();
-    
+
     //Assets loader
     loader
       .add("water", water)
@@ -152,9 +162,18 @@ const {
       .add("fish3_1", fish3_1)
       .add("fish3_2", fish3_2)
       .add("fish4", fish4)
+      .add("fish4_1", fish4_1)
+      .add("fish4_2", fish4_2)
+      .add("fish4_3", fish4_3)
+      .add("fish4_4", fish4_4)
       .add("fish5", fish5)
       .add("normal_tree", treeNormal)
       .add("blurred_tree", treeBlur)
+      .add("welcome", welcome)
+      .add("about", about)
+      .add("projects", projects)
+      .add("technologies", technologies)
+      .add("havefun", havefun)
       .add("flowSound", flowSound)
       .add("dropSound", dropSound)
       .load(init)
@@ -178,14 +197,34 @@ const {
       const fishSprite = new Sprite(resources.fish.texture);
       const fish2Sprite = new Sprite(resources.fish2.texture);
       const fish3Sprite = new Sprite(resources.fish3.texture);
-      const fish3_1Sprite = new Sprite(resources.fish3_1.texture);
-      const fish3_2Sprite = new Sprite(resources.fish3_2.texture);
       const fish4Sprite = new Sprite(resources.fish4.texture);
       const fish5Sprite = new Sprite(resources.fish5.texture);
+      const welcomeSprite = new Sprite(resources.welcome.texture);
+      const aboutSprite = new Sprite(resources.about.texture);
+      const projectsSprite = new Sprite(resources.projects.texture);
+      const technologiesSprite = new Sprite(resources.technologies.texture);
+      const havefunSprite = new Sprite(resources.havefun.texture);
       const normalTreeSprite = new Sprite(resources.normal_tree.texture);
       const blurredTreeSprite = new Sprite(resources.blurred_tree.texture);
+
       //const swanSprite = new Sprite(resources.swan.texture);
-      const titleText = new PIXI.Text('WELCOME', { fontFamily: 'Arial', fontSize: 50, fill: 0xFFFFFF, align: 'center' });
+      const style = new PIXI.TextStyle({
+        dropShadow: true,
+        dropShadowAngle: 14,
+        dropShadowBlur: 9,
+        dropShadowColor: "#ff6600",
+        dropShadowDistance: 70,
+        fill: "#66ccff ",
+        fontFamily: "Helvetica",
+        fontSize: 60,
+        fontVariant: "small-caps",
+        letterSpacing: 0,
+        miterLimit: 20,
+        stroke: "#000",
+        strokeThickness: 9,
+        textAlign:"center"
+      });
+      const titleText = new PIXI.Text('WELCOME', style);
       const flowSound = PIXISound.default.Sound.from({
         url: resources.flowSound,
         loop: true,
@@ -197,10 +236,18 @@ const {
         url: resources.dropSound,
         autostart: false,
         volume: 0.1
-
       })
-
-      const allFishes = [
+      const allTitles = [welcomeSprite, aboutSprite, projectsSprite, technologiesSprite, havefunSprite ]
+      const allFishes = [  
+        {
+          fish: new PIXI.AnimatedSprite([resources.fish4.texture, resources.fish4_1.texture, resources.fish4_2.texture, resources.fish4_1.texture, resources.fish4.texture, resources.fish4_3.texture, resources.fish4_4.texture, resources.fish4_3.texture]),
+          direction: "right",
+          startX: -window.innerWidth / 10,
+          startY: window.innerHeight / 3,
+        }
+      ]
+  
+      const allFishes2 = [
         {
           fish: fishSprite,
           direction: "right",
@@ -215,10 +262,9 @@ const {
         },
         {
           fish: fish3Sprite,
-          fishAnim: [resources.fish3.texture, resources.fish3_1.texture, resources.fish3_2.texture],
           direction: "right",
           startX: -window.innerWidth / 10,
-          startY: window.innerHeight / 3
+          startY: window.innerHeight / 3,
         },
         {
           fish: fish4Sprite,
@@ -243,6 +289,7 @@ const {
       set_waterSprite(waterSprite);
       set_water2Sprite(water2Sprite);
       setAllFishes(allFishes)
+      setAllTitles(allTitles)
       set_normalTreeSprite(normalTreeSprite);
       set_blurredTreeSprite(blurredTreeSprite);
       set_titleText(titleText)
@@ -263,9 +310,21 @@ const {
 
     let currentWindow = "";
     let previousWindow = "";
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-    //Assign a turning timeline to the fishes
+    if (hasLoaded) {
+      app.stage.filterArea = app.screen;
+      app.stage.addChild(_firstContainer);
+      _firstContainer.interactive = true;
+      _firstContainer.addChild(_rippleSprite, _waterSprite, _cloudsSprite, _titleText)
+
+      //fishes
+        //Assign a turning timeline to the fishes
     for (let fish of allFishes) {
+      fish.fish.anchor.set(0.5);
+      fish.fish.animationSpeed = 0.5;
+      fish.fish.play()
+      _firstContainer.addChild(fish.fish)
       fish.tlLeft =
         new TimelineMax()
           .to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
@@ -275,21 +334,11 @@ const {
           .to(fish.fish, { pixi: { scaleX: 0 }, duration: 0.3 })
           .to(fish.fish, { pixi: { scaleX: 0.3 }, duration: 0.1 })
     }
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-    if (hasLoaded) {
-      app.stage.filterArea = app.screen;
-      app.stage.addChild(_firstContainer);
-      _firstContainer.interactive = true;
-      let animatedFishSprite = new PIXI.AnimatedSprite(allFishes[2].fishAnim);
-      _firstContainer.addChild(_rippleSprite, _waterSprite, _cloudsSprite, _titleText, animatedFishSprite)
-      /*for (let fish of allFishes)
-        _firstContainer.addChild(fish.fish)*/
-       // _firstContainer.addChild(allFishes[2].fish)
-      
       //Fishes animations to follow the mouse pointer and to run back away to the starting positions 
       let fishFollowTl = new TimelineMax({})
         .to(allFishes.map(fish => fish.fish), 10, { x: () => mousePos.x, y: () => mousePos.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
+     
       window.addEventListener("resize", handleResize);
       window.addEventListener("scroll", handleScroll);
       window.addEventListener("pointermove", handleMouseMove);
@@ -311,8 +360,6 @@ const {
             fish.fish.rotation = Math.atan2(dy, dx)
           }
         }
-        //create animated "gif"
-
       }
 
       //Little trick to read the updated speed state without rerender
@@ -326,7 +373,7 @@ const {
         )
       }
 
-      
+
       function handleMouseMove(e) {
         mousePos.x = e.x;
         mousePos.y = e.y;
@@ -432,16 +479,14 @@ const {
 
 
       function handleResize(e) {
-        console.log("resizing...")
-        if (e.target.innerWidth < app.renderer.width) {
-          app.renderer.resize(e.target.innerWidth, e.target.innerHeight);
-        }
+        console.log("resizing...")        
+          app.renderer.resize(e.target.innerWidth, e.target.innerHeight+30);        
       }
 
       function handleWaterClick(e) {
         console.log("window clicked")
         let isReadyLocal;
-        setIsReady(isReady => { isReadyLocal = isReady; return isReady});
+        setIsReady(isReady => { isReadyLocal = isReady; return isReady });
         console.log(isReadyLocal)
         if (!isReadyLocal) return;
         const newRippleSprite = new PIXI.Sprite(PIXI.Loader.shared.resources.ripple.texture);
@@ -458,26 +503,26 @@ const {
           .to(newRippleFilter.scale, 3, { x: 2, y: 2 })
         _dropSound.play()
         //Animate fishes on mobile views where there is no mouse move animation
-        if (window.innerWidth < 800){
-        mousePos.x = e.x;
-        mousePos.y = e.y;
-        fishFollowTl?.invalidate();
-        fishFollowTl?.restart();
+        if (window.innerWidth < 800) {
+          mousePos.x = e.x;
+          mousePos.y = e.y;
+          fishFollowTl?.invalidate();
+          fishFollowTl?.restart();
 
-        //This handles the fish direction shift during mouse moving from left to right
-        for (let fish of allFishes) {
-          if (fish.fish.position.x >= mousePos.x) {
-            if (fish.direction === "right")
-              fish.tlLeft.restart();
-            fish.direction = "left"
-          }
-          if (fish.fish.position.x <= mousePos.x) {
-            if (fish.direction === "left")
-              fish.tlRight.restart();
-            fish.direction = "right"
+          //This handles the fish direction shift during mouse moving from left to right
+          for (let fish of allFishes) {
+            if (fish.fish.position.x >= mousePos.x) {
+              if (fish.direction === "right")
+                fish.tlLeft.restart();
+              fish.direction = "left"
+            }
+            if (fish.fish.position.x <= mousePos.x) {
+              if (fish.direction === "left")
+                fish.tlRight.restart();
+              fish.direction = "right"
+            }
           }
         }
-      }
       }
       return () => {
         window.removeEventListener("resize", handleResize)
@@ -523,9 +568,10 @@ const {
         setFishSprite(allFishes[i].fish, i)
 
 
-      //Text config
+      
       _titleText.anchor.set(0.5)
-      _titleText.position.set(app.renderer.width / 2, (app.renderer.height / 100) * 10)
+      _titleText.position.set(window.innerWidth / 2+35, 200)
+    
     }
     return () => {
 
@@ -545,7 +591,7 @@ const {
 
   }, [hasLoaded])
 
- 
+
 
   function handleWaterSpeed() {
     setWaterSpeed(10)
@@ -679,9 +725,9 @@ const {
                 projectsRef,
                 technologiesRef,
                 havefunRef
-              }} 
-                treeSprites={{_blurredTreeSprite, _normalTreeSprite}}
-              />
+              }}
+              treeSprites={{ _blurredTreeSprite, _normalTreeSprite }}
+            />
             <RightNavbar testSprite={_normalTreeSprite} />
             <div id="home-window" ref={homeRef}></div>
             <MainWindowsHoc myRef={aboutRef} >

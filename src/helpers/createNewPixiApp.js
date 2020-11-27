@@ -10,7 +10,7 @@ export default function createNewPixiApp(width,height, container){
     //Create the app:
     const app = new PIXI.Application({
       antialias: true,
-      resizeTo: window,
+      resizeTo: container,
       transparent: true
     })
     //app Settings
