@@ -9,10 +9,18 @@
     background-color: black;
     transition: left 0.5s ease-in-out;
     color: #66ccff;
+    
 }
 
 .nav-container {
-    position: relative;
+  
+}
+
+#left-navbar > canvas {
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:-1;
 }
 
 #left-nav-arrow {

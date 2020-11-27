@@ -12,18 +12,20 @@ import { AiFillFacebook } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
 import { AiFillMail } from "react-icons/ai"
 import here from "../../pics/here.png"
-import { Timeline } from "gsap/gsap-core";
+import createNewPixiApp from "../../helpers/createNewPixiApp"
+import * as PIXI from "pixi.js"
 
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
 const links = ["home", "about", "projects", "technologies", "havefun"];
 
-export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio, dir }) {
+export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio, treeSprites }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const [arrow, setArrow] = useState(null);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const arrowRef = useRef();
+    const midNavRef = useRef();
     useEffect(() => {
         gsap.to(arrowRef.current, { x: 10, yoyo: true, repeat: -1, duration: 0.2 })
     }, [])
@@ -33,8 +35,52 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
     }, [isNavLarge])
 
     useEffect(() => {
-        // handleMenuClick(linkRefs.homeLinkRef, hereRef, prevLinkClicked, setPrevLinkClicked)
-    }, [])
+        const {
+            app,
+            loader,
+            Sprite,
+            Container,
+            ratio
+          } = createNewPixiApp(170, midNavRef.current.scrollHeight, midNavRef.current);
+          //app.renderer.backgroundColor= 0xFF00FF
+      const firstContainer = new Container();
+      treeSprites._normalTreeSprite.anchor.set(0.5);
+      treeSprites._normalTreeSprite.width = app.renderer.view.width;
+      treeSprites._normalTreeSprite.scale.set(0.5)
+      treeSprites._normalTreeSprite.position.set(app.renderer.view.width/2, app.renderer.view.height/2);
+      treeSprites._blurredTreeSprite.anchor.set(0.5);
+      treeSprites._blurredTreeSprite.scale.set(0.5)
+      treeSprites._blurredTreeSprite.width = app.renderer.view.width;
+      treeSprites._blurredTreeSprite.position.set(app.renderer.view.width/2, app.renderer.view.height/2);
+      const treeFilter = new PIXI.filters.DisplacementFilter(treeSprites._blurredTreeSprite, 0);
+      firstContainer.filters = [treeFilter]
+      firstContainer.addListener("mousemove", onPointerMove);
+      firstContainer.addListener("touchmove", onPointerMove)
+      firstContainer.addChild(treeSprites._normalTreeSprite)
+      app.stage.addChild(firstContainer);
+      function onPointerMove(e) {
+         
+        setTilt(15, +e.pageX, +e.pageY, treeFilter);
+      }
+      function setTilt(maxTilt, mouseX, mouseY, displacementFilter) {
+          
+        var midpointX = app.renderer.width / 2,
+          midpointY = app.renderer.height / 2,
+          posX = midpointX - mouseX,
+          posY = midpointY - mouseY,
+          // consider the ratio of the current position of the mouse to the center of the screen and multiply by the maximum shift
+          valX = (posX / midpointX) * maxTilt,
+          valY = (posY / midpointY) * maxTilt;
+       
+        displacementFilter.scale.x = valX;
+        displacementFilter.scale.y = valY;
+      }
+   midNavRef.current.addEventListener("pointermove", onPointerMove)
+    return () => {
+
+    }
+
+  }, [])
 
     function handleMoveTo(targetRef) {
         gsap.to(window, { duration: 1, scrollTo: { x: 0, y: targetRef.current } })
@@ -46,7 +92,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
     }
 
     return (
-        <Row id="left-navbar" style={{ left: isNavLarge ? 0 : "-170px" }} className=" m-0">
+        <Row id="left-navbar" ref={midNavRef} style={{ left: isNavLarge ? 0 : "-170px" }} className=" m-0">
             <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
                 <div id="nav-controls" className="">
                     <AudioButton handleAudio={handleAudio} />

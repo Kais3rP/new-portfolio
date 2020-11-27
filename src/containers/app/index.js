@@ -14,6 +14,7 @@ import { gsap, TimelineMax } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrollToPlugin } from "gsap/ScrollToPlugin"
 import { PixiPlugin } from "gsap/PixiPlugin"
+import createNewPixiApp from "../../helpers/createNewPixiApp"
 import water from "../../pics/water.jpg"
 import water2 from "../../pics/water2.jpg"
 import ripple from "../../pics/ripple.png"
@@ -121,53 +122,22 @@ export default function App() {
     return () => { clearTimeout(rippleTimeout) }
   }, [isReady])
 
-  //Effect that loads the assets and sets the basic app containers
+  //Effect that creates the pixi App, loads the assets and sets the basic app containers
   useEffect(() => {
     console.log("loading assets effect...")
-function createNewPixiApp(width,height){
-  const size = [width, height];
-  const loader = PIXI.Loader.shared;
-  const Sprite = PIXI.Sprite;
-  const Container = PIXI.Container;
-  const ratio = size[0] / size[1];
 
-  //Create the app:
-  const app = new PIXI.Application({
-    antialias: true,
-    resizeTo: window,
-    transparent: true
-  })
-  //app Settings
-  app.renderer.autoResize = true;
-  app.renderer.view.style.touchAction = 'auto';
-  app.renderer.plugins.interaction.autoPreventDefault = false;
-  app.renderer.resize(size[0], size[1]);
-
-  return {app, size, loader, Sprite, Container, ratio}
-}
-    //Aliases
-    const size = [window.visualViewport.width, window.visualViewport.height + 30];
-    const loader = PIXI.Loader.shared;
-    const Sprite = PIXI.Sprite;
-    const Container = PIXI.Container;
-    const ratio = size[0] / size[1];
-
-    //Create the app:
-    const app = new PIXI.Application({
-      antialias: true,
-      resizeTo: window,
-      transparent: true
-    })
+const {
+  app,
+  loader,
+  Sprite,
+  Container,
+  ratio
+} =  createNewPixiApp(window.visualViewport.width, window.visualViewport.height + 30, containerRef.current)
+   
     const firstContainer = new Container();
     const secondContainer = new Container();
     const thirdContainer = new Container();
-    //Append the stage to the ref of the container div
-    containerRef.current.appendChild(app.view)
-    //app Settings
-    app.renderer.autoResize = true;
-    app.renderer.view.style.touchAction = 'auto';
-    app.renderer.plugins.interaction.autoPreventDefault = false;
-    app.renderer.resize(size[0], size[1]);
+    
     //Assets loader
     loader
       .add("water", water)
@@ -558,47 +528,7 @@ function createNewPixiApp(width,height){
 
   }, [hasLoaded])
 
-  //Third Container Setting
-  useEffect(() => {
-    console.log("Third Animation init")
-    if (hasLoaded) {
-      _normalTreeSprite.anchor.set(0.5);
-      _normalTreeSprite.width = window.innerWidth;
-      _normalTreeSprite.height = window.innerHeight;
-      _normalTreeSprite.scale.set(1.3)
-      _normalTreeSprite.position.set(window.innerWidth / 2, window.innerHeight * 2);
-      _blurredTreeSprite.anchor.set(0.5);
-      _blurredTreeSprite.scale.set(1.3)
-      _blurredTreeSprite.width = window.innerWidth;
-      _blurredTreeSprite.height = window.innerHeight;
-      _blurredTreeSprite.position.set(window.innerWidth / 2, window.innerHeight * 2);
-      const treeFilter = new PIXI.filters.DisplacementFilter(_blurredTreeSprite, 0);
-      _thirdContainer.filters = [treeFilter]
-
-      _thirdContainer.addListener("mousemove", onPointerMove);
-      _thirdContainer.addListener("touchmove", onPointerMove)
-
-      function onPointerMove(eventData) {
-        setTilt(15, eventData.data.global.x, eventData.data.global.y, treeFilter);
-      }
-      function setTilt(maxTilt, mouseX, mouseY, displacementFilter) {
-        var midpointX = app.renderer.innerWidth / 2,
-          midpointY = app.renderer.innerHeight / 2,
-          posX = midpointX - mouseX,
-          posY = midpointY - mouseY,
-          // consider the ratio of the current position of the mouse to the center of the screen and multiply by the maximum shift
-          valX = (posX / midpointX) * maxTilt,
-          valY = (posY / midpointY) * maxTilt;
-        console.log(valX, valY)
-        displacementFilter.scale.x = valX;
-        displacementFilter.scale.y = valY;
-      }
-    }
-    return () => {
-
-    }
-
-  }, [hasLoaded])
+ 
 
   function handleRippleAnimation(e) {
     console.log("redrawing ripple")
@@ -741,7 +671,9 @@ function createNewPixiApp(width,height){
                 projectsRef,
                 technologiesRef,
                 havefunRef
-              }} />
+              }} 
+                treeSprites={{_blurredTreeSprite, _normalTreeSprite}}
+              />
             <RightNavbar />
             <div id="home-window" ref={homeRef}></div>
             <MainWindowsHoc myRef={aboutRef} >
