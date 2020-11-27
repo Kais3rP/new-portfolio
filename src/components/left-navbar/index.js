@@ -20,7 +20,7 @@ gsap.registerPlugin(ScrollToPlugin);
 const links = ["home", "about", "projects", "technologies", "havefun"];
 
 export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio, dir }) {
-    const [isNavLarge, setIsNavLarge] = useState(true);
+    const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const [arrow, setArrow] = useState(null);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const arrowRef = useRef();

@@ -17,7 +17,7 @@ gsap.registerPlugin(ScrollToPlugin);
 
 
 export default function RightNavbar({  }) {
-    const [isNavLarge, setIsNavLarge] = useState(true);
+    const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
 
     const arrowRef = useRef();
     useEffect(() => {
@@ -38,7 +38,7 @@ export default function RightNavbar({  }) {
         <Row id="right-navbar" style={{ right: isNavLarge ? 0 : "-170px" }} className="m-0">
             <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
                 <div id="right-nav-controls" className="">
-                    <AudioButton  />
+                   
                 </div>
                 <Arrow id="right-nav-arrow" onClick={() => { setIsNavLarge(isLarge => !isLarge) }} myRef={arrowRef} />
             </Col>
