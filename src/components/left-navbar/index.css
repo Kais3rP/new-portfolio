@@ -26,14 +26,16 @@
 }
 
 
-
+#nav-controls {
+    height: 10%;
+}
 #nav-menu {
     height: 70%;
     position: relative;
 }
 
 #nav-contacts {
-    height: 10%;
+    height: 20%;
     font-size: 25px;
 }
 
@@ -46,20 +48,31 @@
 }
 
 @media Screen and (max-width:768px){
-    #nav-controls {
-        height: 10%;
-    }
+
     #nav-menu {
-        height: 70%;
-        font-size:1rem;
-        
-    }
-    
-    #nav-contacts {
-        height: 10%;
+        font-size:1rem;       
     }
     
     #here-img {
     visibility:visible;
     }
+}
+
+@media Screen and (max-height:300px){
+
+    #nav-controls {
+        height: 50%;
+    }
+    #nav-menu {
+        height: 0%;
+        font-size:0;
+    }
+    
+    #nav-contacts {
+        height: 50%;
+        font-size: 25px;
+    }
+    #here-img {
+        display:none;
+        }
 }
