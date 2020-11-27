@@ -25,7 +25,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
     const [arrow, setArrow] = useState(null);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const arrowRef = useRef();
-    const midNavRef = useRef();
+    const navCanvasContainerRef = useRef();
     useEffect(() => {
         gsap.to(arrowRef.current, { x: 10, yoyo: true, repeat: -1, duration: 0.2 })
     }, [])
@@ -37,11 +37,8 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
     useEffect(() => {
         const {
             app,
-            loader,
-            Sprite,
             Container,
-            ratio
-          } = createNewPixiApp(170, midNavRef.current.scrollHeight, midNavRef.current);
+          } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
           //app.renderer.backgroundColor= 0xFF00FF
       const firstContainer = new Container();
       treeSprites._normalTreeSprite.anchor.set(0.5);
@@ -54,8 +51,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
       treeSprites._blurredTreeSprite.position.set(app.renderer.view.width/2, app.renderer.view.height/2);
       const treeFilter = new PIXI.filters.DisplacementFilter(treeSprites._blurredTreeSprite, 0);
       firstContainer.filters = [treeFilter]
-      firstContainer.addListener("mousemove", onPointerMove);
-      firstContainer.addListener("touchmove", onPointerMove)
+      firstContainer.addListener("pointer", onPointerMove);
       firstContainer.addChild(treeSprites._normalTreeSprite)
       app.stage.addChild(firstContainer);
       function onPointerMove(e) {
@@ -75,7 +71,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
         displacementFilter.scale.x = valX;
         displacementFilter.scale.y = valY;
       }
-   midNavRef.current.addEventListener("pointermove", onPointerMove)
+   navCanvasContainerRef.current.addEventListener("pointermove", onPointerMove)
     return () => {
 
     }
@@ -92,7 +88,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
     }
 
     return (
-        <Row id="left-navbar" ref={midNavRef} style={{ left: isNavLarge ? 0 : "-170px" }} className=" m-0">
+        <Row id="left-navbar" ref={navCanvasContainerRef} style={{ left: isNavLarge ? 0 : "-170px" }} className=" m-0">
             <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
                 <div id="nav-controls" className="">
                     <AudioButton handleAudio={handleAudio} />

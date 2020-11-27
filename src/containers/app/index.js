@@ -282,8 +282,8 @@ const {
         .to(allFishes.map(fish => fish.fish), 10, { x: () => mousePos.x, y: (idx, target) => target.position.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
       window.addEventListener("resize", handleResize);
       window.addEventListener("scroll", handleScroll);
-      _firstContainer.addListener("pointermove", handleMouseMove);
-      _firstContainer.addListener("pointerdown", handleWaterClick);
+      window.addEventListener("pointermove", handleMouseMove);
+      window.addEventListener("pointerdown", handleWaterClick);
       //Animate @ 60FPS
       app.ticker.add(moveWater);
       app.ticker.add(rotateFish);
@@ -315,8 +315,8 @@ const {
 
       
       function handleMouseMove(e) {
-        mousePos.x = e.data.global.x;
-        mousePos.y = e.data.global.y;
+        mousePos.x = e.x;
+        mousePos.y = e.y;
         fishFollowTl?.invalidate();
         fishFollowTl?.restart();
 
@@ -426,13 +426,17 @@ const {
       }
 
       function handleWaterClick(e) {
-        console.log("canvas clicked")
+        console.log("window clicked")
+        let isReadyLocal;
+        setIsReady(isReady => { isReadyLocal = isReady; return isReady});
+        console.log(isReadyLocal)
+        if (!isReadyLocal) return;
         const newRippleSprite = new PIXI.Sprite(PIXI.Loader.shared.resources.ripple.texture);
         _firstContainer.addChild(newRippleSprite);
         newRippleSprite.anchor.set(0.5);
         newRippleSprite.scale.set(0.05);
-        newRippleSprite.position.x = e.data.global.x;
-        newRippleSprite.position.y = e.data.global.y;
+        newRippleSprite.position.x = e.x;
+        newRippleSprite.position.y = e.y;
         const newRippleFilter = new PIXI.filters.DisplacementFilter(newRippleSprite);
         newRippleFilter.scale.set(100);
         _firstContainer.filters = [..._firstContainer.filters, newRippleFilter];
@@ -442,8 +446,8 @@ const {
         _dropSound.play()
         //Animate fishes on mobile views where there is no mouse move animation
         if (window.innerWidth < 800){
-        mousePos.x = e.data.global.x;
-        mousePos.y = e.data.global.y;
+        mousePos.x = e.x;
+        mousePos.y = e.y;
         fishFollowTl?.invalidate();
         fishFollowTl?.restart();
 
@@ -529,13 +533,6 @@ const {
   }, [hasLoaded])
 
  
-
-  function handleRippleAnimation(e) {
-    console.log("redrawing ripple")
-    _rippleSprite.position.x = e.pageX;
-    _rippleSprite.position.y = e.pageY;
-    rippleAnimation?.restart();
-  }
 
   function handleWaterSpeed() {
     setWaterSpeed(10)
@@ -663,8 +660,6 @@ const {
               }}
               handleMenuLinks={handleMenuLinks}
               handleAudio={handleAudio}
-              handleWaterSpeed={handleWaterSpeed}
-              handleRippleAnimation={handleRippleAnimation}
               targetRefs={{
                 homeRef,
                 aboutRef,
@@ -674,7 +669,7 @@ const {
               }} 
                 treeSprites={{_blurredTreeSprite, _normalTreeSprite}}
               />
-            <RightNavbar />
+            <RightNavbar testSprite={_normalTreeSprite} />
             <div id="home-window" ref={homeRef}></div>
             <MainWindowsHoc myRef={aboutRef} >
               <About />
