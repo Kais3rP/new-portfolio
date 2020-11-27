@@ -14,6 +14,7 @@ import { AiFillMail } from "react-icons/ai"
 import here from "../../pics/here.png"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
 import * as PIXI from "pixi.js"
+import { CRTFilter } from "@pixi/filter-crt"
 
 
 gsap.registerPlugin(CSSRulePlugin);
@@ -39,42 +40,29 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
             app,
             Container,
           } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
-          //app.renderer.backgroundColor= 0xFF00FF
-      const firstContainer = new Container();
-      treeSprites._normalTreeSprite.anchor.set(0.5);
-      treeSprites._normalTreeSprite.width = app.renderer.view.width;
-      treeSprites._normalTreeSprite.scale.set(0.5)
-      treeSprites._normalTreeSprite.position.set(app.renderer.view.width/2, app.renderer.view.height/2);
-      treeSprites._blurredTreeSprite.anchor.set(0.5);
-      treeSprites._blurredTreeSprite.scale.set(0.5)
-      treeSprites._blurredTreeSprite.width = app.renderer.view.width;
-      treeSprites._blurredTreeSprite.position.set(app.renderer.view.width/2, app.renderer.view.height/2);
-      const treeFilter = new PIXI.filters.DisplacementFilter(treeSprites._blurredTreeSprite, 0);
-      firstContainer.filters = [treeFilter]
-      firstContainer.addListener("pointer", onPointerMove);
-      firstContainer.addChild(treeSprites._normalTreeSprite)
-      app.stage.addChild(firstContainer);
-      function onPointerMove(e) {
-         
-        setTilt(15, +e.pageX, +e.pageY, treeFilter);
-      }
-      function setTilt(maxTilt, mouseX, mouseY, displacementFilter) {
-          
-        var midpointX = app.renderer.width / 2,
-          midpointY = app.renderer.height / 2,
-          posX = midpointX - mouseX,
-          posY = midpointY - mouseY,
-          // consider the ratio of the current position of the mouse to the center of the screen and multiply by the maximum shift
-          valX = (posX / midpointX) * maxTilt,
-          valY = (posY / midpointY) * maxTilt;
-       
-        displacementFilter.scale.x = valX;
-        displacementFilter.scale.y = valY;
-      }
-   navCanvasContainerRef.current.addEventListener("pointermove", onPointerMove)
-    return () => {
-
-    }
+    
+          const firstContainer = new Container();
+          const rect = new PIXI.Graphics();
+          rect.beginFill(0x111111);
+          rect.lineStyle(5, 0x000000);
+          rect.drawRect(0, 0, app.renderer.view.width, app.renderer.view.height);
+          const filter = new CRTFilter();
+          firstContainer.filters = [filter]
+          firstContainer.addListener("pointermove", onPointerMove);
+          firstContainer.addChild(rect)
+          app.stage.addChild(firstContainer);
+          app.ticker.add(() => {
+              filter.seed = Math.random();
+              filter.time += 0.5;
+          })
+          function onPointerMove(e) {
+  
+          }
+  
+          navCanvasContainerRef.current.addEventListener("pointermove", onPointerMove)
+          return () => {
+  
+          }
 
   }, [])
 

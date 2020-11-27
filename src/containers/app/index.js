@@ -22,6 +22,8 @@ import clouds from "../../pics/clouds.jpg"
 import fish from "../../pics/fish.png"
 import fish2 from "../../pics/fish2.png"
 import fish3 from "../../pics/fish3.png"
+import fish3_1 from "../../pics/fish3_1.png"
+import fish3_2 from "../../pics/fish3_2.png"
 import fish4 from "../../pics/fish4.png"
 import fish5 from "../../pics/fish5.png"
 import tree from "../../pics/tree.png"
@@ -147,6 +149,8 @@ const {
       .add("fish", fish)
       .add("fish2", fish2)
       .add("fish3", fish3)
+      .add("fish3_1", fish3_1)
+      .add("fish3_2", fish3_2)
       .add("fish4", fish4)
       .add("fish5", fish5)
       .add("normal_tree", treeNormal)
@@ -174,6 +178,8 @@ const {
       const fishSprite = new Sprite(resources.fish.texture);
       const fish2Sprite = new Sprite(resources.fish2.texture);
       const fish3Sprite = new Sprite(resources.fish3.texture);
+      const fish3_1Sprite = new Sprite(resources.fish3_1.texture);
+      const fish3_2Sprite = new Sprite(resources.fish3_2.texture);
       const fish4Sprite = new Sprite(resources.fish4.texture);
       const fish5Sprite = new Sprite(resources.fish5.texture);
       const normalTreeSprite = new Sprite(resources.normal_tree.texture);
@@ -209,6 +215,7 @@ const {
         },
         {
           fish: fish3Sprite,
+          fishAnim: [resources.fish3.texture, resources.fish3_1.texture, resources.fish3_2.texture],
           direction: "right",
           startX: -window.innerWidth / 10,
           startY: window.innerHeight / 3
@@ -274,21 +281,25 @@ const {
       app.stage.filterArea = app.screen;
       app.stage.addChild(_firstContainer);
       _firstContainer.interactive = true;
-      _firstContainer.addChild(_rippleSprite, _waterSprite, _cloudsSprite, _titleText)
-      for (let fish of allFishes)
-        _firstContainer.addChild(fish.fish)
+      let animatedFishSprite = new PIXI.AnimatedSprite(allFishes[2].fishAnim);
+      _firstContainer.addChild(_rippleSprite, _waterSprite, _cloudsSprite, _titleText, animatedFishSprite)
+      /*for (let fish of allFishes)
+        _firstContainer.addChild(fish.fish)*/
+       // _firstContainer.addChild(allFishes[2].fish)
+      
       //Fishes animations to follow the mouse pointer and to run back away to the starting positions 
       let fishFollowTl = new TimelineMax({})
-        .to(allFishes.map(fish => fish.fish), 10, { x: () => mousePos.x, y: (idx, target) => target.position.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
+        .to(allFishes.map(fish => fish.fish), 10, { x: () => mousePos.x, y: () => mousePos.y, ease: "M0,0 C0.476,0.134 0,-0.014 0.774,0.294 0.865,0.33 0.738,0.78 1,0.986 " })
       window.addEventListener("resize", handleResize);
       window.addEventListener("scroll", handleScroll);
       window.addEventListener("pointermove", handleMouseMove);
       window.addEventListener("pointerdown", handleWaterClick);
       //Animate @ 60FPS
       app.ticker.add(moveWater);
-      app.ticker.add(rotateFish);
+      app.ticker.add(animateFish);
       //This handles the rotation of the fishes toward the mouse pointer
-      function rotateFish() {
+      function animateFish() {
+        //rotate on mouse move
         for (let fish of allFishes) {
           if (fish.direction === "left") {
             let dx = fish.fish.position.x - mousePos.x;
@@ -300,6 +311,8 @@ const {
             fish.fish.rotation = Math.atan2(dy, dx)
           }
         }
+        //create animated "gif"
+
       }
 
       //Little trick to read the updated speed state without rerender
