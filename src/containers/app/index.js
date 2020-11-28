@@ -218,7 +218,7 @@ export default function App() {
         fontFamily: "Helvetica",
         fontSize: 60,
         fontVariant: "small-caps",
-        letterSpacing: 0,
+        letterSpacing: 5,
         miterLimit: 20,
         stroke: "#000",
         strokeThickness: 9,
