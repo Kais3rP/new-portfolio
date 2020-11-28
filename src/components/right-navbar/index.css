@@ -1,7 +1,8 @@
 #right-navbar {
     top: 0;
     right: 0;
-    border-left: 3px outset #ff6600;
+    box-shadow: 0px 3px 8px #ff6600, inset 0px 2px 10px #ff6600;
+    border-left: 2px outset #ff6600;
     height: 100%;
     width: 170px;
     position: fixed;
