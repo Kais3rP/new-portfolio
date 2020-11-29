@@ -64,7 +64,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
           }
           window.addEventListener("resize", handleResize)
           return () => {
-          
+          window.removeEventListener("resize", handleResize)
         }
   }, [])
 

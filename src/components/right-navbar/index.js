@@ -41,20 +41,21 @@ export default function RightNavbar({  }) {
         rect.drawRect(0, 0, app.renderer.view.width, app.renderer.view.height);
         const filter = new CRTFilter();
         firstContainer.filters = [filter]
-        firstContainer.addListener("pointermove", onPointerMove);
         firstContainer.addChild(rect)
         app.stage.addChild(firstContainer);
         app.ticker.add(() => {
             filter.seed = Math.random();
             filter.time += 0.5;
         })
-        function onPointerMove(e) {
-
-        }
-
-        navCanvasContainerRef.current.addEventListener("pointermove", onPointerMove)
-        return () => {
-
+        
+        function handleResize(e) {
+            console.log("resizing...")           
+              app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight+30);
+              rect.height = window.innerHeight+30;
+          }
+          window.addEventListener("resize", handleResize)
+          return () => {
+          window.removeEventListener("resize", handleResize)
         }
 
     }, [])
