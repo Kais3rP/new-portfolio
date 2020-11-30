@@ -26,7 +26,7 @@ export default function Loading({ loadProgress, setIsReady }) {
             },
             onUpdate: function () {
                 let delta = +this.progress().toFixed(2);
-                console.log("delta", delta);
+               
                 if (delta === 0)
                     fallRef.current.play();
                 if (delta === 0.4)

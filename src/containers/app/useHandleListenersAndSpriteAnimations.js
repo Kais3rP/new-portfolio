@@ -66,17 +66,18 @@ export default function useHandleListenersAndSpritesAnimation(
             _cloudsSprite.anchor.set(0.5);
             _cloudsSprite.scale.set((window.innerWidth / 1000), window.innerHeight / 1000);
             _cloudsSprite.position.set(0);
-            _cloudsSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.MIRROREDREPEAT;
-            const cloudsFilter = new PIXI.filters.DisplacementFilter(_cloudsSprite, window.innerWidth < 800 ? 20 : 50);
+            _cloudsSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+            const cloudsFilter = new PIXI.filters.DisplacementFilter(_cloudsSprite, window.innerWidth < 800 ? 50 : 50);
             _rippleSprite.anchor.set(0.5);
             _rippleSprite.scale.set(0.05);
             _rippleSprite.position.set(0, 0)
             const rippleFilter = new PIXI.filters.DisplacementFilter(_rippleSprite);
             rippleFilter.scale.set(100);
             _firstContainer.filters = [cloudsFilter, rippleFilter]
-            const rippleTl = new TimelineMax({ onComplete: () => { }, repeat: 0 })
+            const rippleTl = new TimelineMax()
                 .to(_rippleSprite.scale, 3, { x: 2, y: 2 })
                 .to(rippleFilter.scale, 3, { x: 2, y: 2 })
+                .pause()
             setRippleAnimation(rippleTl);
 
             //Setting fishes sprites 
@@ -139,8 +140,8 @@ export default function useHandleListenersAndSpritesAnimation(
             function moveWater(delta) {
                 setWaterSpeed(
                     speed => {
-                        _cloudsSprite.x += speed * delta;
-                        _cloudsSprite.y += speed * delta * 2;
+                        _cloudsSprite.x += 2 * delta;
+                        _cloudsSprite.y += 2 * delta * 2;
                         return speed
                     }
                 )
@@ -176,7 +177,6 @@ export default function useHandleListenersAndSpritesAnimation(
             }
 
             function handleScroll(e) {
-                console.log("inside handleScroll", aboutRef.current)
                 const pageRanges = {
                     home: window.pageYOffset < window.innerHeight,
                     about: window.pageYOffset < window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight,
@@ -260,15 +260,15 @@ export default function useHandleListenersAndSpritesAnimation(
 
 
             function handleResize(e) {
-                console.log("resizing...", app.renderer)
+             
                 app.renderer.resize(e.target.innerWidth, e.target.innerHeight + 30);
             }
 
             function handleWaterClick(e) {
-                console.log("window clicked")
+                
                 let isReadyLocal;
                 setIsReady(isReady => { isReadyLocal = isReady; return isReady });
-                console.log(isReadyLocal)
+               
                 if (!isReadyLocal) return;
                 const newRippleSprite = new PIXI.Sprite(PIXI.Loader.shared.resources.ripple.texture);
                 _firstContainer.addChild(newRippleSprite);
@@ -279,7 +279,7 @@ export default function useHandleListenersAndSpritesAnimation(
                 const newRippleFilter = new PIXI.filters.DisplacementFilter(newRippleSprite);
                 newRippleFilter.scale.set(100);
                 _firstContainer.filters = [..._firstContainer.filters, newRippleFilter];
-                new TimelineMax({ onComplete: () => { }, repeat: 0 })
+                new TimelineMax()
                     .to(newRippleSprite.scale, 3, { x: 2, y: 2 })
                     .to(newRippleFilter.scale, 3, { x: 2, y: 2 })
                 _dropSound.play()
@@ -326,7 +326,7 @@ export default function useHandleListenersAndSpritesAnimation(
                 color: "#ff6600",
                 y: containerHeight - diffPositionLinkContainer - 30, ease: "bounce"
             })
-        console.log("is ball deflating ?", isBallDeflating)
+       
         if (window.innerWidth > 768) //Animates Im here only for big screens
             setIsBallDeflating(isBallDeflating => {
                 if (!isBallDeflating)
@@ -343,7 +343,7 @@ export default function useHandleListenersAndSpritesAnimation(
     }
 
     function handleArrowDownClick() {
-        console.log(_currentWindow)
+       
         if (isBottom)
             gsap.to(window, { duration: 1, scrollTo: { x: 0, y: 0 } })
         else
@@ -365,7 +365,7 @@ export default function useHandleListenersAndSpritesAnimation(
     }
 
     function handleArrowUpClick() {
-        console.log(_currentWindow)
+        
         if (isBottom)
             gsap.to(window, { duration: 1, scrollTo: { x: 0, y: 0 } })
         else
@@ -388,18 +388,18 @@ export default function useHandleListenersAndSpritesAnimation(
             })
     }
     function deflate() {
-        console.log("deflating:", hereRef.current.getBoundingClientRect().width)
+      
         new TimelineMax({ onStart: () => { setIsBallDeflating(true) }, onComplete: () => { setIsBallDeflating(false) } })
             .to(hereRef.current, { scale: 1, bottom: "43px", duration: 3.5, ease: "elastic" })
     }
 
     function inflate() {
-        console.log("inflating:", hereRef.current.getBoundingClientRect().width)
+        
         new TimelineMax()
             .to(hereRef.current, { scale: "+=0.3", bottom: "+=10px", duration: 0.7, visibility: "visible", modifiers: { scaleX: checkScaleX } })
 
         function checkScaleX(scale) {
-            console.log(scale)
+          
             if (+scale >= 2.1) {
                 this.kill();
                 deflate();

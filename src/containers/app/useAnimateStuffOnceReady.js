@@ -5,7 +5,7 @@ import { gsap, TimelineMax } from "gsap"
 export default function useAnimateStuffOnceReady(isReady, homeRef, arrowDownRef, havefunRef, arrowUpRef, handleMenuLinks, homeLinkRef, previousLinkRef, rippleAnimation, _dropSound, _rippleSprite   ){
 
   useEffect(() => {
-    console.log("test ref inside app component", homeRef.current)
+  
     let rippleTimeout;
     if (isReady) {
       //Play the ripple continuous animation

@@ -3,27 +3,13 @@ import * as PIXI from "pixi.js"
 import * as PIXISound from "pixi-sound"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
 import water from "../../pics/water.jpg"
-import water2 from "../../pics/water2.jpg"
 import ripple from "../../pics/ripple.png"
 import clouds from "../../pics/clouds.jpg"
-import fish from "../../pics/fish.png"
-import fish2 from "../../pics/fish2.png"
-import fish3 from "../../pics/fish3.png"
-import fish3_1 from "../../pics/fish3_1.png"
-import fish3_2 from "../../pics/fish3_2.png"
 import fish4 from "../../pics/fish4.png"
 import fish4_1 from "../../pics/fish4_1.png"
 import fish4_2 from "../../pics/fish4_2.png"
 import fish4_3 from "../../pics/fish4_3.png"
 import fish4_4 from "../../pics/fish4_4.png"
-import fish5 from "../../pics/fish5.png"
-import treeNormal from "../../pics/tree_normal.png"
-import treeBlur from "../../pics/blurred_tree.png"
-import about from "../../pics/ABOUT.svg"
-import projects from "../../pics/PROJECTS.svg"
-import technologies from "../../pics/TECHNOLOGIES.svg"
-import havefun from "../../pics/HAVE_FUN.svg"
-import welcome from "../../pics/WELCOME.svg"
 import flowSound from "../../sound/flow.wav"
 import dropSound from "../../sound/drop.wav"
 
@@ -81,9 +67,10 @@ if (!container) return;
     //Sprites creation
     const waterSprite = new Sprite(resources.water.texture);
     const rippleSprite = new Sprite(resources.ripple.texture);
+    resources.clouds.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT; //It's important that the wrap modeis initialized before the sprite creation and upload
     const cloudsSprite = new Sprite(resources.clouds.texture);
+    console.log(resources.clouds.texture.baseTexture.isPowerOfTwo)
 
-    //const swanSprite = new Sprite(resources.swan.texture);
     const style = new PIXI.TextStyle({
       dropShadow: true,
       dropShadowAngle: 14,

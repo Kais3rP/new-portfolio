@@ -36,8 +36,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
     }, [isNavLarge])
 
     useEffect(() => {
-       
-        const {
+              const {
             app,
             Container,
           } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
@@ -58,7 +57,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
           })
  
           function handleResize(e) {
-            console.log("resizing...")           
+                    
               app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight+30);
               rect.height = window.innerHeight+30;
           }
