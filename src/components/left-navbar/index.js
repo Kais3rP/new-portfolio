@@ -44,7 +44,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
           const firstContainer = new Container();
           const rect = new PIXI.Graphics();
           rect.scale.set(1);
-          rect.beginFill(0x111111);
+          rect.beginFill(0x222222);
           rect.lineStyle(5, 0x000000);
           rect.drawRect(0, 0, navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.clientHeight);
           const filter = new CRTFilter();

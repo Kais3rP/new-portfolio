@@ -5,7 +5,7 @@ import { gsap, TimelineMax } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrollToPlugin } from "gsap/ScrollToPlugin"
 import { PixiPlugin } from "gsap/PixiPlugin"
-
+import { GodrayFilter } from "@pixi/filter-godray"
 
 export default function useHandleListenersAndSpritesAnimation(
     hasLoaded,
@@ -68,12 +68,14 @@ export default function useHandleListenersAndSpritesAnimation(
             _cloudsSprite.position.set(0);
             _cloudsSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
             const cloudsFilter = new PIXI.filters.DisplacementFilter(_cloudsSprite, window.innerWidth < 800 ? 50 : 50);
+            const raysFilter = new GodrayFilter();
+
             _rippleSprite.anchor.set(0.5);
             _rippleSprite.scale.set(0.05);
             _rippleSprite.position.set(0, 0)
             const rippleFilter = new PIXI.filters.DisplacementFilter(_rippleSprite);
             rippleFilter.scale.set(100);
-            _firstContainer.filters = [cloudsFilter, rippleFilter]
+            _firstContainer.filters = [cloudsFilter, rippleFilter, raysFilter]
             const rippleTl = new TimelineMax()
                 .to(_rippleSprite.scale, 3, { x: 2, y: 2 })
                 .to(rippleFilter.scale, 3, { x: 2, y: 2 })
@@ -119,6 +121,7 @@ export default function useHandleListenersAndSpritesAnimation(
 
             //Animate @ 60FPS
             app.ticker.add(moveWater);
+            app.ticker.add(moveRays)
             app.ticker.add(animateFish);
             //This handles the rotation of the fishes toward the mouse pointer
             function animateFish() {
@@ -146,7 +149,9 @@ export default function useHandleListenersAndSpritesAnimation(
                     }
                 )
             }
-
+            function moveRays(){
+            raysFilter.time += 0.05;
+            }
 
             //EVENT LISTENERS
 

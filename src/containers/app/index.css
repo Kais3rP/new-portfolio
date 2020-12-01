@@ -41,6 +41,13 @@
     height:100vh;
 }
 
+.code-container { 
+    width:98%;
+    border-radius:20px;
+    z-index:-1 !important;
+    color:white !important;
+}
+
 .navbar {
     height: 100%;
     width: 170px;

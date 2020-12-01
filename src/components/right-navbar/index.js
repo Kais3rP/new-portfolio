@@ -36,7 +36,7 @@ export default function RightNavbar({  }) {
 
         const firstContainer = new Container();
         const rect = new PIXI.Graphics();
-        rect.beginFill(0x111111);
+        rect.beginFill(0x222222);
         rect.lineStyle(5, 0x000000);
         rect.drawRect(0, 0, app.renderer.view.width, app.renderer.view.height);
         const filter = new CRTFilter();

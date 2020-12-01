@@ -5,24 +5,92 @@ import "./index.css";
 import { gsap, TimelineMax } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import bg from "../../pics/fishnet.png"
+import createNewPixiApp from "../../helpers/createNewPixiApp"
+import * as PIXI from "pixi.js"
+import { CRTFilter } from "@pixi/filter-crt"
 
 gsap.registerPlugin(ScrollTrigger);
 
 
 const MainWindowsHoc = React.memo(function ({ myRef, children }) {
+    const [_app, setApp] = useState(null);
  useEffect(()=>{
     if(myRef) 
        new TimelineMax({scrollTrigger: { trigger: myRef.current, toggleActions: 'restart reset restart reset' }})
-  .to(myRef.current,3,{rotationY:360, ease:"Back.easeOut",
-        })
-   
-
-
+  .to(myRef.current,3,{rotationY:360, ease:"Back.easeOut"})
  },[])  
  
+ useEffect(() => {
+    const localRef = myRef.current;
+    const {
+        app,
+        Container,
+    } = createNewPixiApp(localRef.clientWidth, localRef.scrollHeight, localRef);
+    setApp(app);
+let distortion = 0.5;
+const firstContainer = new Container();
+const rect = new PIXI.Graphics();
+rect.scale.set(1);
+rect.beginFill(0x222222);
+rect.lineStyle(5, 0x000000);
+rect.drawRect(0, 0, myRef.current.clientWidth, myRef.current.clientHeight);
+const filter = new CRTFilter();
+firstContainer.filters = [filter]
+firstContainer.addChild(rect)
+app.stage.addChild(firstContainer);
+filter.lineWidth = 5;
+filter.noise=0.5;
+filter.vignetting = 1;
+filter.curvature=0.7;
+    app.ticker.add(updateCRTFilter)
+
+    /*const turnOnTl = new TimelineMax()
+                    .to(crtFilter, 1, {vignetting: 0, ease:"ease-in"})
+                    .pause()
+                    const turnOffTl = new TimelineMax()
+                    .to0(crtFilter, 1, {vignetting: 1, ease:"ease-in"})
+                    .pause()*/
+    function updateCRTFilter(){
+       // console.log(distortion)
+      
+        filter.seed = Math.random();
+        filter.time += 2;
+    }
+
+    function handleResize(e) {
+        console.log("resizing...")           
+          app.renderer.resize(localRef.innerWidth, window.innerHeight+30);
+          localRef.height = window.innerHeight+30;
+      }
+    
+      function handlePointermove(e){
+        distortion = Math.random();      
+      }
+      function handlePointerEnter(e){
+        //if (turnOffTl.isActive()) turnOffTl.invalidate()
+        //turnOnTl.restart()
+        distortion = 1;
+      }
+      function handlePointerLeave(e){
+          // (turnOnTl.isActive()) turnOnTl.invalidate()
+        //turnOffTl.restart()
+     
+      }
+      
+      window.addEventListener("resize", handleResize)
+      localRef.addEventListener("pointermove", handlePointermove)
+      localRef.addEventListener("pointerenter", handlePointerEnter)
+      localRef.addEventListener("pointerleave", handlePointerLeave)
+      return () => {
+      window.removeEventListener("resize", handleResize)
+      localRef.removeEventListener("pointermove", handlePointermove)
+    }
+
+}, [myRef])
+
     return (
-        <Row className="justify-content-center align-items-center">
-            <Col lg={6} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-center p-20`} style={{backgroundImage:`url(${bg})`}} >
+        <Row   className="justify-content-center align-items-center">
+            <Col lg={6} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-5`} >
                 {children}
             </Col>
         </Row>
