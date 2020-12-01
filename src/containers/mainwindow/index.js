@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom"
 import "./index.css";
 import { gsap, TimelineMax } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import bg from "../../pics/fishnet.png"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
 import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
@@ -13,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 
 const MainWindowsHoc = React.memo(function ({ myRef, children }) {
-    const [_app, setApp] = useState(null);
+   
  useEffect(()=>{
     if(myRef) 
        new TimelineMax({scrollTrigger: { trigger: myRef.current, toggleActions: 'restart reset restart reset' }})
@@ -26,7 +24,6 @@ const MainWindowsHoc = React.memo(function ({ myRef, children }) {
         app,
         Container,
     } = createNewPixiApp(localRef.clientWidth, localRef.scrollHeight, localRef);
-    setApp(app);
 let distortion = 0.5;
 const firstContainer = new Container();
 const rect = new PIXI.Graphics();
@@ -34,13 +31,14 @@ rect.scale.set(1);
 rect.beginFill(0x222222);
 rect.lineStyle(5, 0x000000);
 rect.drawRect(0, 0, myRef.current.clientWidth, myRef.current.clientHeight);
+
 const filter = new CRTFilter();
-firstContainer.filters = [filter]
 firstContainer.addChild(rect)
+firstContainer.filters = [filter]
+
 app.stage.addChild(firstContainer);
 filter.lineWidth = 5;
-filter.noise=0.5;
-filter.vignetting = 1;
+filter.noise=0.1;
 filter.curvature=0.7;
     app.ticker.add(updateCRTFilter)
 

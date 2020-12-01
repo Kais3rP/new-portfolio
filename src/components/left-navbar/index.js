@@ -43,6 +43,8 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
           setApp(app);
           const firstContainer = new Container();
           const rect = new PIXI.Graphics();
+         
+          rect.position.set(0,0)
           rect.scale.set(1);
           rect.beginFill(0x222222);
           rect.lineStyle(5, 0x000000);
