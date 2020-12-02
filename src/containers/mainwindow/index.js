@@ -26,7 +26,7 @@ const MainWindowsHoc = React.memo(function ({ myRef, children }) {
 const firstContainer = new Container();
 const rect = new PIXI.Graphics();
 rect.scale.set(1);
-rect.alpha = 0.2;
+rect.alpha = 0.3;
 rect.beginFill(0x222222);
 rect.lineStyle(5, 0x000000);
 rect.drawRect(0, 0, myRef.current.clientWidth, myRef.current.clientHeight+30);

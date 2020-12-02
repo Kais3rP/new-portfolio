@@ -7,6 +7,10 @@ import io from "../../pics/io.jpg"
 
 export default function About() {
 
+  useEffect(()=>{
+
+  },[])
+
   return (
     <Row >
       <Col className="w-100 d-flex flex-column justify-content-around align-items-center">
@@ -26,6 +30,7 @@ export default function About() {
         </TypeIt></div>
       
         <img id="my-pic" src={io} alt="My photo"></img>
+        <img id="my-pic-mask" src={io} alt="My photo"></img>
       </Col>
     </Row>
 

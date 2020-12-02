@@ -9,6 +9,8 @@ import stompSound from "../../sound/stomp.mp3"
 
 
 export default function Loading({ loadProgress, setIsReady }) {
+
+    const [hasLogoBeenClicked, setHasLogoBeenClicked] = useState(false);
     const logoRef = useRef();
     const buttonRef = useRef();
     const buttonTextRef = useRef();
@@ -19,47 +21,29 @@ export default function Loading({ loadProgress, setIsReady }) {
     const progressDataRef = useRef();
     const [animations, setAnimations] = useState({});
 
+    useEffect(()=>{
+if (loadProgress === 100) gsap.to(progressDataRef.current, {opacity:0, duration:3})
+    },[loadProgress])
+
     useEffect(() => {
-        const resize = new TimelineMax({
-            onComplete: () => {
-                setIsReady(true)
-            },
-            onUpdate: function () {
-                let delta = +this.progress().toFixed(2);
-               
-                if (delta === 0)
-                    fallRef.current.play();
-                if (delta === 0.4)
-                    stompRef.current.play();
-                if (delta === 0.62)
-                    stompRef.current.pause();
-            }
-        })
-            .to(buttonRef.current, 1, { width: 0, height:0, fontSize: 0, boxShadow: "0px 0px 0px 0px #ff6600", border: "none", padding: 0, ease: "power2.out" })
-            .to(buttonRef.current, 0.8, { y: (i, target) => -(window.innerHeight - target.getBoundingClientRect().y + 80), ease: "bounce" })
-            .to(buttonTextRef.current, 3, { fontSize: "100rem", opacity: 0, ease: "expo" })
-            .pause()
         const moveLogo = new TimelineMax({ repeat: -1, yoyo: true })
             .to(logoContainerRef.current, 1, { scale: "+=0.1", boxShadow: "0px 0px 1px 1px #ff6600, inset 0px 0px 15px #ff6600" })
-        const fadeLogo = new TimelineMax({})
+        const fadeLogo = new TimelineMax({onComplete: () => {
+            setIsReady(true)
+        },
+        onStart: function () {
+            fallRef.current.play();
+        }})
             .to(logoContainerRef.current, 4.8, { scale: 20, opacity: 0 })
             .pause()
         const fadeBg = new TimelineMax({ delay: 2 })
             .to(loadColRef.current, 2.8, { opacity: 0 })
             .pause()
-        const skewLogo = new TimelineMax({ repeat: -1, yoyo: true })
-        const glowingButton = new TimelineMax({ repeat: -1, yoyo: true })
-            //.to(buttonRef.current, { boxShadow: "0px 0px 15px 10px  #ff6600" })
-            .pause()
 
-        setAnimations({ moveLogo, resize, fadeLogo, fadeBg, glowingButton })
+
+        setAnimations({ moveLogo, fadeLogo, fadeBg })
     }, [])
 
-    //small effect on 100% load
-    useEffect(() => {
-        if (loadProgress === 100)
-            animations.glowingButton.play()
-}, [loadProgress])
 
     return (
         <Row className="justify-content-center align-items-center">
@@ -74,6 +58,13 @@ export default function Loading({ loadProgress, setIsReady }) {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 185.78 200.51"
                         ref={logoRef}
+                        onClick={() => {
+                        if (loadProgress !== 100) return;
+                        setHasLogoBeenClicked(true)
+                        animations.fadeLogo.play()
+                        animations.fadeBg.play()
+                        
+                    }}
                     >
                         <defs>
                             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -97,7 +88,7 @@ export default function Loading({ loadProgress, setIsReady }) {
                 </div>
 
 
-                <div
+              {/*  <div
                     id="start-button"
                     ref={buttonRef}
                     onClick={() => {
@@ -111,11 +102,14 @@ export default function Loading({ loadProgress, setIsReady }) {
                     <h3 ref={buttonTextRef}>{loadProgress !== 100 ? "LOADING..." : "PUSH"}</h3>
 
                 </div>
-                {/*}  <div id="progress-data" ref={progressDataRef}>
-                    <h5 id="progress">{loadProgress} % </h5>
-                    <h4>{loadProgress !== 100 ? "Loading..." : "Done!"}</h4>
-                </div>
                 */}
+                  
+                    <div id="bar" ref={progressDataRef} className={hasLogoBeenClicked && "d-none"}>
+                    <h5 id="progress">{loadProgress} % </h5>
+                    <div id="inside-bar" style={{width:loadProgress+"%"}}></div>
+                    </div>
+
+                
             </Col>
         </Row>
 
