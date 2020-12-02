@@ -150,7 +150,7 @@ export default function useHandleListenersAndSpritesAnimation(
                 )
             }
             function moveRays(){
-            raysFilter.time += 0.05;
+            raysFilter.time += 0.03;
             }
 
             //EVENT LISTENERS
