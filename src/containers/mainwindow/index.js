@@ -22,7 +22,7 @@ const MainWindowsHoc = React.memo(function ({ myRef, children }) {
         app,
         Container,
     } = createNewPixiApp(myRef.current.clientWidth, myRef.current.clientHeight, localRef);
-let distortion = 0.5;
+
 const firstContainer = new Container();
 const rect = new PIXI.Graphics();
 rect.scale.set(1);
@@ -36,52 +36,31 @@ firstContainer.addChild(rect)
 firstContainer.filters = [filter]
 
 app.stage.addChild(firstContainer);
-filter.lineWidth = 5;
+filter.curvature=10;
+filter.lineWidth = 0.5;
 filter.noise=0.1;
 filter.curvature=0.7;
+filter.lineContrast=1.5;
 app.ticker.add(updateCRTFilter)
-
-    /*const turnOnTl = new TimelineMax()
-                    .to(crtFilter, 1, {vignetting: 0, ease:"ease-in"})
-                    .pause()
-                    const turnOffTl = new TimelineMax()
-                    .to0(crtFilter, 1, {vignetting: 1, ease:"ease-in"})
-                    .pause()*/
-    function updateCRTFilter(){
-       // console.log(distortion)     
+   
+    function updateCRTFilter(delta){
         filter.seed = Math.random();
-        filter.time += 2;
+            filter.time += 5;
     }
 
-  /* function handleResize(e) {
-        console.log("resizing content window...")
-        console.log(localRef)   
-        console.log(localRef.clientWidth, localRef.clientHeight)        
-          app.renderer.resize(localRef.clientWidth, localRef.clientHeight+30);
-          //localRef.height = window.innerHeight+30;
-      }*/
-    
-      function handlePointermove(e){
-        distortion = Math.random();      
-      }
       function handlePointerEnter(e){
-        //if (turnOffTl.isActive()) turnOffTl.invalidate()
-        //turnOnTl.restart()
-        distortion = 1;
+        filter.noiseSize = 1.2;  
       }
       function handlePointerLeave(e){
-          // (turnOnTl.isActive()) turnOnTl.invalidate()
-        //turnOffTl.restart()
-     
+        filter.noiseSize = 1;      
       }
       
-      //window.addEventListener("resize", handleResize)
-      localRef.addEventListener("pointermove", handlePointermove)
+
       localRef.addEventListener("pointerenter", handlePointerEnter)
       localRef.addEventListener("pointerleave", handlePointerLeave)
       return () => {
-      //window.removeEventListener("resize", handleResize)
-      localRef.removeEventListener("pointermove", handlePointermove)
+        localRef.removeEventListener("pointerenter", handlePointerEnter)
+        localRef.removeEventListener("pointerleave", handlePointerLeave)
     }
 
 }, [myRef])

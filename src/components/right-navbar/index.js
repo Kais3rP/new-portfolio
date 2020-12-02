@@ -40,6 +40,9 @@ export default function RightNavbar({  }) {
         rect.lineStyle(5, 0x000000);
         rect.drawRect(0, 0, app.renderer.view.width, app.renderer.view.height);
         const filter = new CRTFilter();
+        filter.lineWidth = 0;
+        filter.noise = 0.2;
+        filter.noiseSize = 1;
         firstContainer.filters = [filter]
         firstContainer.addChild(rect)
         app.stage.addChild(firstContainer);

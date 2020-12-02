@@ -36,38 +36,41 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
     }, [isNavLarge])
 
     useEffect(() => {
-              const {
+        const {
             app,
             Container,
-          } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
-          setApp(app);
-          const firstContainer = new Container();
-          const rect = new PIXI.Graphics();
-         
-          rect.position.set(0,0)
-          rect.scale.set(1);
-          rect.beginFill(0x222222);
-          rect.lineStyle(5, 0x000000);
-          rect.drawRect(0, 0, navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.clientHeight);
-          const filter = new CRTFilter();
-          firstContainer.filters = [filter]
-          firstContainer.addChild(rect)
-          app.stage.addChild(firstContainer);
-          app.ticker.add(() => {
-              filter.seed = Math.random();
-              filter.time += 0.5;
-          })
- 
-          function handleResize(e) {
-                    
-              app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight+30);
-              rect.height = window.innerHeight+30;
-          }
-          window.addEventListener("resize", handleResize)
-          return () => {
-          window.removeEventListener("resize", handleResize)
+        } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
+        setApp(app);
+        const firstContainer = new Container();
+        const rect = new PIXI.Graphics();
+
+        rect.position.set(0, 0)
+        rect.scale.set(1);
+        rect.beginFill(0x222222);
+        rect.lineStyle(5, 0x000000);
+        rect.drawRect(0, 0, navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.clientHeight);
+        const filter = new CRTFilter();
+        filter.lineWidth = 0;
+        filter.noise = 0.2;
+        filter.noiseSize = 1;
+        firstContainer.filters = [filter]
+        firstContainer.addChild(rect)
+        app.stage.addChild(firstContainer);
+        app.ticker.add(() => {
+            filter.seed = Math.random();
+            filter.time += 0.5;
+        })
+
+        function handleResize(e) {
+
+            app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight + 30);
+            rect.height = window.innerHeight + 30;
         }
-  }, [])
+        window.addEventListener("resize", handleResize)
+        return () => {
+            window.removeEventListener("resize", handleResize)
+        }
+    }, [])
 
     function handleMoveTo(targetRef) {
         gsap.to(window, { duration: 1, scrollTo: { x: 0, y: targetRef.current } })

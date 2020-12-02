@@ -1,0 +1,12 @@
+#my-pic {
+    object-fit: cover;
+    width: 90%;
+    height: 79%;
+clip-path: circle(35% at 60% 50%);
+padding:0 !important;
+margin:0 !important;
+}
+
+#about-text {
+    height:19%;
+}
