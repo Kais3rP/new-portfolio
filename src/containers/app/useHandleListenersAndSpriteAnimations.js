@@ -158,7 +158,7 @@ export default function useHandleListenersAndSpritesAnimation(
             window.addEventListener("resize", handleResize);
             window.addEventListener("scroll", handleScroll);
             window.addEventListener("pointermove", handleMouseMove);
-            window.addEventListener("pointerdown", handleWaterClick);
+            _firstContainer.addListener("pointerdown", handleWaterClick);
 
             function handleMouseMove(e) {
                 mousePos.x = e.x;
@@ -270,7 +270,7 @@ export default function useHandleListenersAndSpritesAnimation(
             }
 
             function handleWaterClick(e) {
-                
+                console.log(e)
                 let isReadyLocal;
                 setIsReady(isReady => { isReadyLocal = isReady; return isReady });
                
@@ -279,8 +279,8 @@ export default function useHandleListenersAndSpritesAnimation(
                 _firstContainer.addChild(newRippleSprite);
                 newRippleSprite.anchor.set(0.5);
                 newRippleSprite.scale.set(0.05);
-                newRippleSprite.position.x = e.x;
-                newRippleSprite.position.y = e.y;
+                newRippleSprite.position.x = e.data.global.x;
+                newRippleSprite.position.y = e.data.global.y;
                 const newRippleFilter = new PIXI.filters.DisplacementFilter(newRippleSprite);
                 newRippleFilter.scale.set(100);
                 _firstContainer.filters = [..._firstContainer.filters, newRippleFilter];
@@ -290,8 +290,8 @@ export default function useHandleListenersAndSpritesAnimation(
                 _dropSound.play()
                 //Animate fishes on mobile views where there is no mouse move animation
                 if (window.innerWidth < 800) {
-                    mousePos.x = e.x;
-                    mousePos.y = e.y;
+                    mousePos.x = e.data.global.x;
+                    mousePos.y = e.data.global.y;
                     fishFollowTl?.invalidate();
                     fishFollowTl?.restart();
 
