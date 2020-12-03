@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Row, Col } from "react-bootstrap";
 import TypeIt from "typeit-react";
 import "./index.css";
-import io from "../../pics/io.jpg"
+import me from "../../pics/me.png"
 import { gsap, TimelineMax } from "gsap";
 
 
@@ -14,6 +14,7 @@ export default function About() {
     const moveFilter = new TimelineMax()
       .to(maskRef.current, 0.2, { width: () => maskWidth })
       .pause()
+   
     picContainerRef.current.addEventListener("mousemove", handleMouseMove);
     function handleMouseMove(e) {
        maskWidth = Math.floor(e.clientX - e.currentTarget.getBoundingClientRect().x) + "px";
@@ -46,7 +47,7 @@ export default function About() {
           </TypeIt>
         </div>
         <div ref={picContainerRef} id="pic-container" >
-          <img id="my-pic" src={io} alt="My photo"></img>
+          <img id="my-pic" src={me} alt="My photo"></img>
           <div ref={maskRef} id="filter"></div>
          
         </div>

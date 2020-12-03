@@ -1,12 +1,15 @@
 #pic-container {
     width: 99%;
     position: relative;
+    display:flex;
+    justify-content: center;
+   padding-top:50px;
+ 
 }
 
 #my-pic {
     object-fit: cover;
-    width: 100%;
-    clip-path: circle(33% at 60% 50%);
+    width: 90%;
     padding: 0 !important;
     margin: 0 !important;
     filter: grayscale(1);
