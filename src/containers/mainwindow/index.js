@@ -55,7 +55,11 @@ app.ticker.add(updateCRTFilter)
         filter.noiseSize = 1;      
       }
       
-
+      function handleResize(){
+        rect.width = localRef.clientWidth;
+        rect.height = localRef.scrollHeight;
+      }
+      window.addEventListener("resize", handleResize)
       localRef.addEventListener("pointerenter", handlePointerEnter)
       localRef.addEventListener("pointerleave", handlePointerLeave)
       return () => {
@@ -67,7 +71,7 @@ app.ticker.add(updateCRTFilter)
 
     return (
         <Row className="justify-content-center align-items-center">
-            <Col xs={6} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-5`}>
+            <Col xs={12} lg={6} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-5`}>
 {children}
             </Col>
         </Row>

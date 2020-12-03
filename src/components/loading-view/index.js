@@ -22,7 +22,9 @@ export default function Loading({ loadProgress, setIsReady }) {
     const [animations, setAnimations] = useState({});
 
     useEffect(()=>{
-if (loadProgress === 100) gsap.to(progressDataRef.current, {opacity:0, duration:3})
+if (loadProgress === 100) new TimelineMax()
+                                .to(progressDataRef.current, {opacity:0, duration:3})
+                                
     },[loadProgress])
 
     useEffect(() => {
@@ -87,24 +89,8 @@ if (loadProgress === 100) gsap.to(progressDataRef.current, {opacity:0, duration:
                     </svg>
                 </div>
 
-
-              {/*  <div
-                    id="start-button"
-                    ref={buttonRef}
-                    onClick={() => {
-                        if (loadProgress !== 100) return;
-                        animations.resize.play()
-                        animations.fadeLogo.play()
-                        animations.fadeBg.play()
-                        
-                    }}>
-
-                    <h3 ref={buttonTextRef}>{loadProgress !== 100 ? "LOADING..." : "PUSH"}</h3>
-
-                </div>
-                */}
                   
-                    <div id="bar" ref={progressDataRef} className={hasLogoBeenClicked && "d-none"}>
+                    <div id="bar" ref={progressDataRef}>
                     <h5 id="progress">{loadProgress} % </h5>
                     <div id="inside-bar" style={{width:loadProgress+"%"}}></div>
                     </div>
