@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Row, Col } from "react-bootstrap";
 import "./index.css";
 import { gsap, TimelineMax } from "gsap";
@@ -6,24 +6,121 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import createNewPixiApp from "../../helpers/createNewPixiApp"
 import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
+import Word from "./Word"
+
+const words = [
+  `Error: Permission denied to access property "x" `,
+  `InternalError: too much recursion`,
+  `RangeError: argument is not a valid code point `,
+  `RangeError: invalid array length`,
+  `RangeError: invalid date `,
+  `RangeError: precision is out of range `,
+  `RangeError: radix must be an integer `,
+  `RangeError: repeat count must be less than infinity `,
+  `RangeError: repeat count must be non-negative `,
+  `ReferenceError: "x" is not defined `,
+  `ReferenceError: assignment to undeclared variable "x" `,
+  `ReferenceError: can't access lexical declaration 'X' before initialization `,
+  `ReferenceError: deprecated caller or arguments usage `,
+  `ReferenceError: invalid assignment left-hand side`,
+  `ReferenceError: reference to undefined property "x" `,
+  `SyntaxError: "0"-prefixed octal literals and octal escape seq. are deprecated `,
+  `SyntaxError: "use strict" not allowed in function with non-simple parameters `,
+  `SyntaxError: "x" is a reserved identifier `,
+  `SyntaxError: JSON.parse: bad parsing `,
+  `SyntaxError: Malformed formal parameter `,
+  `SyntaxError: Unexpected token`,
+  `SyntaxError: a declaration in the head of a for-of loop can't have an initializer `,
+  `SyntaxError: applying the 'delete' operator to an unqualified name is deprecated `,
+  `SyntaxError: for-in loop head declarations may not have initializers `,
+  `SyntaxError: function statement requires a name `,
+  `SyntaxError: identifier starts immediately after numeric literal `,
+  `SyntaxError: illegal character `,
+  `SyntaxError: invalid regular expression flag "x" `,
+  `SyntaxError: missing ) after argument list `,
+  `SyntaxError: missing ) after condition `,
+  `SyntaxError: missing : after property id `,
+  `SyntaxError: missing ; before statement`,
+  `SyntaxError: missing = in const declaration `,
+  `SyntaxError: missing ] after element list `,
+  `SyntaxError: missing formal parameter `,
+  `SyntaxError: missing name after . operator `,
+  `SyntaxError: missing variable name `,
+  `SyntaxError: missing } after function body `,
+  `SyntaxError: missing } after property list `,
+  `SyntaxError: redeclaration of formal parameter "x" `,
+  `SyntaxError: return not in function `,
+  `SyntaxError: test for equality (==) mistyped as assignment (=)? `,
+  `SyntaxError: unterminated string literal `,
+  `TypeError: "x" has no properties `,
+  `TypeError: "x" is (not) "y"`,
+  `TypeError: "x" is not a constructor `,
+  `TypeError: "x" is not a function `,
+  `TypeError: "x" is not a non-null object `,
+  `TypeError: "x" is read-only `,
+  `TypeError: 'x' is not iterable `,
+  `TypeError: More arguments needed `,
+  `TypeError: Reduce of empty array with no initial value `,
+  `TypeError: X.prototype.y called on incompatible type `,
+  `TypeError: can't access dead object `,
+  `TypeError: can't access property "x" of "y" `,
+  `TypeError: can't assign to property "x" on "y": not an object `,
+  `TypeError: can't define property "x": "obj" is not extensible `,
+  `TypeError: can't delete non-configurable array element `,
+  `TypeError: can't redefine non-configurable property "x" `,
+  `TypeError: cannot use 'in' operator to search for 'x' in 'y' `,
+  `TypeError: cyclic object value `,
+  `TypeError: invalid 'instanceof' operand 'x' `,
+  `TypeError: invalid Array.prototype.sort argument `,
+  `TypeError: invalid arguments `,
+  `TypeError: invalid assignment to const "x" `,
+  `TypeError: property "x" is non-configurable and can't be deleted `,
+  `TypeError: setting getter-only property "x" `,
+  `TypeError: variable "x" redeclares argument `,
+  `URIError: malformed URI sequence `,
+  `Warning: -file- is being assigned a //# sourceMappingURL, but already has one `,
+  `Warning: 08/09 is not a legal ECMA-262 octal constant `,
+  `Warning: Date.prototype.toLocaleFormat is deprecated `,
+  `Warning: JavaScript 1.6's for-each-in loops are deprecated `,
+  `Warning: String.x is deprecated; use String.prototype.x instead `,
+  `Warning: expression closures are deprecated `,
+  `Warning: unreachable code after return statement `]
 
 gsap.registerPlugin(ScrollTrigger);
 
 
 const MainWindowsHoc = React.memo(function ({ myRef, children }) {
-
+const [wordsArr, setWordsArr] = useState([]);
   useEffect(() => {
     if (myRef)
       new TimelineMax({ scrollTrigger: { trigger: myRef.current, toggleActions: 'play none none none' } })
         .to(myRef.current, 5, { css: { opacity: 1 }, ease: "Back.easeOut" })
 
     const localRef = myRef.current;
+    const width = myRef.current.clientWidth;
+    const height = myRef.current.clientHeight;
     const {
       app,
       Container,
-    } = createNewPixiApp(myRef.current.clientWidth, myRef.current.clientHeight, localRef);
-
+    } = createNewPixiApp(width, height, localRef);
+    
     const firstContainer = new Container();
+    
+    //Monitor Words animation
+
+    const wordsArr = [];
+
+    for (let i = 0; i < words.length; i++) {     
+      const x = Math.floor(Math.random()*(width-200))
+      const y = Math.floor(Math.random()*(height-30))
+      const text = words[Math.floor(Math.random()*words.length)]
+      wordsArr.push({x,y,text})
+    }
+    
+    setWordsArr(wordsArr);
+    
+    
+    
     const rect = new PIXI.Graphics();
     rect.scale.set(1);
     rect.alpha = 0.3;
@@ -32,8 +129,8 @@ const MainWindowsHoc = React.memo(function ({ myRef, children }) {
     rect.drawRect(0, 0, myRef.current.clientWidth, myRef.current.clientHeight + 30);
 
     const filter = new CRTFilter();
-    firstContainer.addChild(rect)
-    firstContainer.filters = [filter]
+    firstContainer.addChild(rect);
+    firstContainer.filters = [filter];
 
     app.stage.addChild(firstContainer);
     filter.curvature = 10;
@@ -73,9 +170,11 @@ const MainWindowsHoc = React.memo(function ({ myRef, children }) {
     <Row className="justify-content-center align-items-center">
       <Col xs={12} lg={6} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-5`}>
         {children}
+        {wordsArr.map(data => <Word position={{x:data.x, y:data.y}} text={data.text} />)}
       </Col>
     </Row>
   )
 })
+
 
 export default MainWindowsHoc

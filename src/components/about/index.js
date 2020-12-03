@@ -6,6 +6,7 @@ import io from "../../pics/io.jpg"
 import { gsap, TimelineMax } from "gsap";
 
 
+
 export default function About() {
 
   useEffect(() => {
@@ -15,13 +16,14 @@ export default function About() {
       .pause()
     picContainerRef.current.addEventListener("mousemove", handleMouseMove);
     function handleMouseMove(e) {
-      console.log(Math.floor(e.clientX - e.currentTarget.getBoundingClientRect().x) + "px" )
        maskWidth = Math.floor(e.clientX - e.currentTarget.getBoundingClientRect().x) + "px";
       if (moveFilter.isActive()) moveFilter.invalidate()
       moveFilter.restart()
     }
   }
     , [])
+
+
   const picContainerRef = useRef();
   const maskRef = useRef();
 
