@@ -87,15 +87,12 @@ if (loadProgress === 100) new TimelineMax()
                             d="M159.5,46.5a16,16,0,0,1-1,6c-3.54,9.37-16.32,14.9-32,15v-35c15.55-2.86,28.42.42,32,8A11.78,11.78,0,0,1,159.5,46.5ZM96.5,2.1C97,54,97,106,96.5,157.5a44,44,0,0,0,18,4v39a20,20,0,0,0,3,0,20.26,20.26,0,0,0,9-3V96.5c2,.18,34.06,2.67,51-21a50.19,50.19,0,0,0,9-27,37.45,37.45,0,0,0-3-18c-10.11-22.45-45-33.65-87-28"
                             transform="translate(-8.22 -0.42)" />
                     </svg>
-                </div>
-
-                  
-                    <div id="bar" ref={progressDataRef}>
+                </div>                  
+                  {/*}  <div id="bar" ref={progressDataRef}>
                     <h5 id="progress">{loadProgress} % </h5>
                     <div id="inside-bar" style={{width:loadProgress+"%"}}></div>
-                    </div>
-
-                
+                    </div>   
+                    */}            
             </Col>
         </Row>
 

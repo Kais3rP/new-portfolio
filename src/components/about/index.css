@@ -23,19 +23,9 @@
     top: 0;
     left: 0;
     mix-blend-mode: darken;
-   
+    border-right:4px inset rgba(0,0,0,0.3);
 }
 
-#filter::after {
-    content:"";
-    width:4px;
-    height:100%;
-    background-color:black ;
-    opacity:0.5;
-    position:absolute;
-    right:0;
-    mix-blend-mode: darken;
-}
 #about-text {
     width: 100%;
 }

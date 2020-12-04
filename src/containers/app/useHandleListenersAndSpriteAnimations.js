@@ -182,12 +182,15 @@ export default function useHandleListenersAndSpritesAnimation(
             }
 
             function handleScroll(e) {
+               
+                const viewPosition = window.pageYOffset + window.innerHeight;
+                console.log(currentWindow, previousWindow, viewPosition, aboutRef.current.offsetTop, aboutRef.current.scrollHeight)
                 const pageRanges = {
-                    home: window.pageYOffset < window.innerHeight,
-                    about: window.pageYOffset < window.innerHeight + aboutRef.current.scrollHeight && window.pageYOffset >= window.innerHeight,
-                    projects: window.pageYOffset < window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight,
-                    technologies: window.pageYOffset < window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight,
-                    havefun: window.pageYOffset < window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight + havefunRef.current.scrollHeight && window.pageYOffset >= window.innerHeight + aboutRef.current.scrollHeight + projectsRef.current.scrollHeight + technologiesRef.current.scrollHeight
+                    home: viewPosition <= window.innerHeight +100,
+                    about: viewPosition > homeRef.current.offsetTop + homeRef.current.scrollHeight +100  && viewPosition <= aboutRef.current.offsetTop + aboutRef.current.scrollHeight +100 ,
+                    projects: viewPosition > aboutRef.current.offsetTop + aboutRef.current.scrollHeight +100   && viewPosition <= projectsRef.current.offsetTop + projectsRef.current.scrollHeight +100 ,
+                    technologies: viewPosition > projectsRef.current.offsetTop + projectsRef.current.scrollHeight +100  && viewPosition <= technologiesRef.current.offsetTop + technologiesRef.current.scrollHeight +100 ,
+                    havefun: viewPosition > technologiesRef.current.offsetTop + technologiesRef.current.scrollHeight +100  && viewPosition <= havefunRef.current.offsetTop + havefunRef.current.scrollHeight +100,
                 }
 
                 setScroll(window.pageYOffset);

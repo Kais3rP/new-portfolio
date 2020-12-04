@@ -11,11 +11,13 @@ export default function About() {
 
   useEffect(() => {
     let maskWidth = 0;
+    const windowWidth = window.innerWidth;
     const moveFilter = new TimelineMax()
       .to(maskRef.current, 0.2, { width: () => maskWidth })
       .pause()
-   
+   if (windowWidth > 900)
     picContainerRef.current.addEventListener("mousemove", handleMouseMove);
+
     function handleMouseMove(e) {
        maskWidth = Math.floor(e.clientX - e.currentTarget.getBoundingClientRect().x) + "px";
       if (moveFilter.isActive()) moveFilter.invalidate()
@@ -48,7 +50,7 @@ export default function About() {
         </div>
         <div ref={picContainerRef} id="pic-container" >
           <img id="my-pic" src={me} alt="My photo"></img>
-          <div ref={maskRef} id="filter"></div>
+          <div ref={maskRef} id="filter" className="d-none d-md-block"></div>
          
         </div>
 

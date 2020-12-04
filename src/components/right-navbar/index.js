@@ -7,6 +7,7 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { CSSRulePlugin } from "gsap/CSSRulePlugin";
 import Arrow from "../arrow/index"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
+import setTvEffect from "../../helpers/setTvEffect"
 import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
 
@@ -36,20 +37,9 @@ export default function RightNavbar({  }) {
 
         const firstContainer = new Container();
         const rect = new PIXI.Graphics();
-        rect.beginFill(0x222222);
-        rect.lineStyle(5, 0x000000);
-        rect.drawRect(0, 0, app.renderer.view.width, app.renderer.view.height);
         const filter = new CRTFilter();
-        filter.lineWidth = 0;
-        filter.noise = 0.2;
-        filter.noiseSize = 1;
-        firstContainer.filters = [filter]
-        firstContainer.addChild(rect)
-        app.stage.addChild(firstContainer);
-        app.ticker.add(() => {
-            filter.seed = Math.random();
-            filter.time += 0.5;
-        })
+        if (window.innerWidth > 900)
+        setTvEffect(app,rect,1,filter,firstContainer, navCanvasContainerRef,0.5,0, 0, 0.5, 0.2, 1)
         
         function handleResize(e) {
             console.log("resizing...")           

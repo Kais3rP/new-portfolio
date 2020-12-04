@@ -13,6 +13,7 @@ import { AiFillTwitterCircle } from "react-icons/ai"
 import { AiFillMail } from "react-icons/ai"
 import here from "../../pics/here.png"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
+import setTvEffect from "../../helpers/setTvEffect"
 import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
 
@@ -43,24 +44,11 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
         setApp(app);
         const firstContainer = new Container();
         const rect = new PIXI.Graphics();
-
-        rect.position.set(0, 0)
-        rect.scale.set(1);
-        rect.beginFill(0x222222);
-        rect.lineStyle(5, 0x000000);
-        rect.drawRect(0, 0, navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.clientHeight);
         const filter = new CRTFilter();
-        filter.lineWidth = 0;
-        filter.noise = 0.2;
-        filter.noiseSize = 1;
-        firstContainer.filters = [filter]
-        firstContainer.addChild(rect)
-        app.stage.addChild(firstContainer);
-        app.ticker.add(() => {
-            filter.seed = Math.random();
-            filter.time += 0.5;
-        })
+        if (window.innerWidth > 900)
+       setTvEffect(app,rect,1,filter,firstContainer, navCanvasContainerRef,0.5, 0, 0, 0.5, 0.2, 1)
 
+     
         function handleResize(e) {
 
             app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight + 30);
