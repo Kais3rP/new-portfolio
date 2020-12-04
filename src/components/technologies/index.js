@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Row, Col } from "react-bootstrap";
 import { gsap, TimelineMax } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./index.css";
 import TypeIt from "typeit-react";
 import html5 from "../../pics/icons/html5.svg"
@@ -12,9 +13,10 @@ import node from "../../pics/icons/node.svg"
 import react from "../../pics/icons/react.svg"
 import redux from "../../pics/icons/redux.svg"
 import webpack from "../../pics/icons/webpack.svg"
-let icons = [html5, css3, git2, js, mongo, node, react, redux, webpack]
+gsap.registerPlugin(ScrollTrigger);
+let icons = [html5, css3, js, mongo, node, react, redux, webpack, git2]
 
-export default function Technologies({ technologiesRef }) {
+export default function Technologies({ myRef }) {
   const htmlRef = useRef();
   const cssRef = useRef();
   const gitRef = useRef();
@@ -28,12 +30,13 @@ export default function Technologies({ technologiesRef }) {
   const myIcons =  icons.map((icon, idx) => ({ icon, ref: refs[idx] }))
 
   useEffect(() => {
-    new TimelineMax()
-    .to(refs.map(ref => ref.current),1, {y:(idx, target) => idx*120} )
+    new TimelineMax({ scrollTrigger: { trigger: myRef.current, toggleActions: 'restart none none reset' } })
+    .to(refs.map(ref => ref.current),2, {y:(idx, target) => idx*20 , ease:"elastic"} )
   }, [])
+
   return (
     <Row className="w-100">
-      <Col className="w-100 d-flex flex-column">
+      <Col className="w-100 d-flex flex-column technologies-container">
         <TypeIt options={{
           waitUntilVisible: true
         }}>
@@ -42,14 +45,15 @@ export default function Technologies({ technologiesRef }) {
           </div>
           <div className="w-100 d-flex ml-4 mt-2">
             <p style={{ color: "#ff6600" }}>
-              "These is the stack of technologies I currently use and am proficient in:"
+              "This is the stack of technologies I currently use and am proficient in:"
            </p>
           </div>
         </TypeIt>
-        {myIcons.map(icon =>(
-          <div key={icon.icon} ref={icon.ref} style={{ position: "absolute", top: 0, left: 0 }}>
-            <img style={{ width: "100px" }} src={icon.icon}></img>
-          </div>))}
+        {myIcons.map(icon =>(        
+          <div id="tech-icons-container" key={icon.icon} ref={icon.ref}>
+            <img style={{ height: "70px" }} src={icon.icon}></img>
+          </div>
+          ))}
       </Col>
     </Row>
   )

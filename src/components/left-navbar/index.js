@@ -45,8 +45,8 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
         const firstContainer = new Container();
         const rect = new PIXI.Graphics();
         const filter = new CRTFilter();
-        if (window.innerWidth > 900)
-       setTvEffect(app,rect,1,filter,firstContainer, navCanvasContainerRef,0.5, 0, 0, 0.5, 0.2, 1)
+        //if (window.innerWidth > 900)
+       setTvEffect(app,rect,1,filter,firstContainer, navCanvasContainerRef,0.5, 0, 0, 0.1, 0.1, 1)
 
      
         function handleResize(e) {

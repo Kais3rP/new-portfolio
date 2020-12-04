@@ -142,16 +142,16 @@ export default function App() {
             <RightNavbar />
             <div id="home-window" ref={homeRef}></div>
             <MainWindowsHoc myRef={aboutRef} >
-              <About />
+               <About /> 
             </MainWindowsHoc>
             <MainWindowsHoc myRef={projectsRef} >
-              <Projects />
+             <Projects  /> 
             </MainWindowsHoc>
             <MainWindowsHoc myRef={technologiesRef} >
-              <Technologies />
+             <Technologies  myRef={technologiesRef}/> 
             </MainWindowsHoc>
             <MainWindowsHoc myRef={havefunRef} >
-              <HaveFun />
+            <HaveFun  /> 
             </MainWindowsHoc>
           </> : <LoadingView setIsReady={setIsReady} loadProgress={loadProgress} />}
         </Col>

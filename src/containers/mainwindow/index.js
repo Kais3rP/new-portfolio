@@ -8,6 +8,7 @@ import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
 import Word from "./Word"
 import setTvEffect from "../../helpers/setTvEffect"
+import uuid from "react-uuid"
 
 const words = [
   `Error: Permission denied to access property "x" `,
@@ -92,7 +93,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const MainWindowsHoc = React.memo(function ({ myRef, children }) {
 const [wordsArr, setWordsArr] = useState([]);
+const [wordsIds, setWordsIds] = useState([]);
   useEffect(() => {
+
     const windowWidth = window.innerWidth;
     if (myRef)
       new TimelineMax({ scrollTrigger: { trigger: myRef.current, toggleActions: 'play none none none' } })
@@ -104,30 +107,27 @@ const [wordsArr, setWordsArr] = useState([]);
     const {
       app,
       Container,
-    } = createNewPixiApp(width, height, localRef);
-    
-    const firstContainer = new Container();
-    
+    } = createNewPixiApp(width, height, localRef);    
+    const firstContainer = new Container();    
     //Monitor Words animation
-
     const wordsArr = [];
+    const wordsIds = []
   if (windowWidth > 900){
     for (let i = 0; i < words.length; i++) {     
       const x = Math.floor(Math.random()*(width-200))
       const y = Math.floor(Math.random()*(height-30))
       const text = words[Math.floor(Math.random()*words.length)]
       wordsArr.push({x,y,text})
-    }
+      wordsIds.push(uuid())
+    }    
     
     setWordsArr(wordsArr);
-  } 
-    
-    
+    setWordsIds(wordsIds)
+  }     
     const rect = new PIXI.Graphics();
- 
     const filter = new CRTFilter();
-    if (window.innerWidth > 900)
-    setTvEffect(app,rect,0.3,filter,firstContainer, myRef,5, 10, 0.5, 0.1, 0.2, 1.5)
+    //if (window.innerWidth > 900)
+    setTvEffect(app,rect,0.3,filter,firstContainer, myRef,5, 10, 0.5, 0, 0, 3)
 
     function handlePointerEnter(e) {
       filter.noiseSize = 1.2;
@@ -154,7 +154,7 @@ const [wordsArr, setWordsArr] = useState([]);
     <Row className="justify-content-center align-items-center">
       <Col xs={12} lg={6} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
         {children}
-        {wordsArr.map(data => <Word position={{x:data.x, y:data.y}} text={data.text} />)}
+        {wordsArr.map((data,i) => <Word key={wordsIds[i]} position={{x:data.x, y:data.y}} text={data.text} />)}
       </Col>
     </Row>
   )

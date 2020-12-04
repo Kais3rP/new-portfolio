@@ -52,7 +52,6 @@ if (loadProgress === 100) new TimelineMax()
             <Col ref={loadColRef} className=" loading-col d-flex flex-column justify-content-center align-items-center full-height main-theme">
                 <audio ref={fallRef} src={fallSound}></audio>
                 <audio ref={stompRef} src={stompSound}></audio>
-
                 <div ref={logoContainerRef} className="loader-container">
                     <svg
                         id="logo"
@@ -64,8 +63,7 @@ if (loadProgress === 100) new TimelineMax()
                         if (loadProgress !== 100) return;
                         setHasLogoBeenClicked(true)
                         animations.fadeLogo.play()
-                        animations.fadeBg.play()
-                        
+                        animations.fadeBg.play()                       
                     }}
                     >
                         <defs>

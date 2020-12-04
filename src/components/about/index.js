@@ -15,8 +15,9 @@ export default function About() {
     const moveFilter = new TimelineMax()
       .to(maskRef.current, 0.2, { width: () => maskWidth })
       .pause()
+   //Picture animation only on laptop+ screens   
    if (windowWidth > 900)
-    picContainerRef.current.addEventListener("mousemove", handleMouseMove);
+    picContainerRef.current.addEventListener("pointermove", handleMouseMove);
 
     function handleMouseMove(e) {
        maskWidth = Math.floor(e.clientX - e.currentTarget.getBoundingClientRect().x) + "px";
