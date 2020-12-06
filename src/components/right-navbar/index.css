@@ -40,3 +40,6 @@
     pointer-events: none;
   }
   
+  #nav-controls {
+    height: 10%;
+}

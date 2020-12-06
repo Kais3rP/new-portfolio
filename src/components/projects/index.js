@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Row, Col, Carousel } from "react-bootstrap";
+import React, { useState, useEffect, useRef } from "react"
+import { Row, Col, Carousel } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import "./index.css";
-import TypeIt from "typeit-react";
+import "./index.css"
+import TypeIt from "typeit-react"
+import { useSprings, animated } from 'react-spring'
+import { useGesture } from 'react-use-gesture'
 import timer from "../../pics/projects/app-timer.png"
 import chat from "../../pics/projects/chat.png"
 import chrono from "../../pics/projects/chrono.png"
@@ -30,19 +32,19 @@ export default function Projects({ projectsRef }) {
           waitUntilVisible: true
         }}>
           <div className="d-flex ml-4 mt-2">
-            <p style={{ color: "#66ccff" }}>this.projects()</p>
+            <p style={{ fontSize:"1.2rem", color: "#66ccff" }}>this.projects()</p>
           </div>
           <div className="w-100 d-flex ml-4 mt-2">
-            <p style={{ color: "#ff6600" }}>
+            <p style={{ fontSize:"1rem", color: "#ff6600" }}>
               "Here are some projects I worked on, they are classified by categories, front end / full stack projects, proof of concepts, and games"
            </p>
           </div>
         </TypeIt>
-        <TypeIt options={{
+        {/*<TypeIt options={{
           waitUntilVisible: true
         }}>
           <div className="d-flex ml-4 mt-2">
-            <p style={{ color: "#66ccff" }}>Full Projects:</p>
+            <p style={{ fontSize:"1rem", color: "#66ccff" }}>Full Projects:</p>
           </div>
         </TypeIt>
         <Carousel className="mt-4">
@@ -56,7 +58,7 @@ export default function Projects({ projectsRef }) {
           waitUntilVisible: true
         }}>
           <div className="d-flex ml-4 mt-2">
-            <p style={{ color: "#66ccff" }}>Proof of concepts/Libraries:</p>
+            <p style={{ fontSize:"1rem", color: "#66ccff" }}>Proof of concepts/Libraries:</p>
           </div>
         </TypeIt>
         <Carousel className="mt-4">
@@ -70,7 +72,7 @@ export default function Projects({ projectsRef }) {
           waitUntilVisible: true
         }}>
           <div className="d-flex ml-4 mt-2">
-            <p style={{ color: "#66ccff" }}>Games:</p>
+            <p style={{ fontSize:"1rem", color: "#66ccff" }}>Games:</p>
           </div>
         </TypeIt>
         <Carousel className="mt-4">
@@ -79,7 +81,11 @@ export default function Projects({ projectsRef }) {
               <img className="carousel-pic" src={pic.pic} alt="project"></img>
             </a>
           </Carousel.Item>)}
-        </Carousel>
+        </Carousel>*/}
+        <div className="carousel-container">
+        <Viewpager />
+       </div>
+       
       </Col>
     </Row>
 
@@ -87,10 +93,22 @@ export default function Projects({ projectsRef }) {
   )
 }
 
+
+const pages = [
+  'https://images.pexels.com/photos/62689/pexels-photo-62689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+  'https://images.pexels.com/photos/296878/pexels-photo-296878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+  'https://images.pexels.com/photos/1509428/pexels-photo-1509428.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+  'https://images.pexels.com/photos/351265/pexels-photo-351265.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+  'https://images.pexels.com/photos/924675/pexels-photo-924675.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+]
 function Viewpager() {
   const index = useRef(0)
+  const pages = proj.map( proj => proj.pic)
+  console.log(pages)
   const [props, set] = useSprings(pages.length, i => ({ x: i * window.innerWidth, sc: 1, display: 'block' }))
-  const bind = useGesture(({ down, delta: [xDelta], direction: [xDir], distance, cancel }) => {
+  const bind = useGesture({
+    onDrag: ({ down, delta: [xDelta], direction: [xDir], distance, cancel }) => {
+    console.log("pressing carousel", down, xDelta, xDir, distance)
     if (down && distance > window.innerWidth / 2)
       cancel((index.current = clamp(index.current + (xDir > 0 ? -1 : 1), 0, pages.length - 1)))
     set(i => {
@@ -99,10 +117,18 @@ function Viewpager() {
       const sc = down ? 1 - distance / window.innerWidth / 2 : 1
       return { x, sc, display: 'block' }
     })
-  })
-  return props.map(({ x, display, sc }, i) => (
+  }
+})
+  return (
+  props.map(({ x, display, sc }, i) => (
     <animated.div {...bind()} key={i} style={{ display, transform: x.interpolate(x => `translate3d(${x}px,0,0)`) }}>
       <animated.div style={{ transform: sc.interpolate(s => `scale(${s})`), backgroundImage: `url(${pages[i]})` }} />
-    </animated.div>
+    </animated.div>  
   ))
+  )
 }
+
+function clamp(int, boundA, boundB){
+  return int < boundA ? boundA :
+  int > boundB ? boundB : int
+  }

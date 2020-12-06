@@ -4,8 +4,9 @@ body,
 #root {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
   user-select: none;
+touch-action:none;
 }
 
 body {
@@ -16,7 +17,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Fira Code', monospace !important;
     overflow-x: hidden;
-    /*touch-action: none;*/
+    
    
 }
 

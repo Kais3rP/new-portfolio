@@ -40,10 +40,10 @@ export default function About() {
             speed: 10
           }}>
             <div className="d-flex ml-4 mt-2">
-              <p style={{ color: "#66ccff" }}>this.about()</p>
+              <p style={{ fontSize:"1.2rem", color: "#66ccff" }}>this.about()</p>
             </div>
             <div className="w-100 d-flex ml-4 mt-2">
-              <p style={{ color: "#ff6600" }}>
+              <p style={{ fontSize: "1rem",color: "#ff6600" }}>
                 "My name is Cesare and I'm a Web Developer"
          </p>
             </div>

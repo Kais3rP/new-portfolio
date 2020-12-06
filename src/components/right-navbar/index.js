@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Row, Col } from "react-bootstrap";
+import React, { useState, useEffect, useRef, useCallback } from "react"
+import { Row, Col } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import "./index.css";
-import { gsap, TimelineMax } from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { CSSRulePlugin } from "gsap/CSSRulePlugin";
+import "./index.css"
+import { gsap, TimelineMax } from "gsap"
+import { ScrollToPlugin } from "gsap/ScrollToPlugin"
+import { CSSRulePlugin } from "gsap/CSSRulePlugin"
 import Arrow from "../arrow/index"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
 import setTvEffect from "../../helpers/setTvEffect"
 import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
-import { useSpring, animated } from "react-spring";
-import { useDrag } from "react-use-gesture";
+import { useSpring, animated } from "react-spring"
+import { useDrag } from "react-use-gesture"
+import AudioButton from "../button/AudioButton"
 
 
 gsap.registerPlugin(CSSRulePlugin);
@@ -19,8 +20,10 @@ gsap.registerPlugin(ScrollToPlugin);
 
 const width = 495;
 const windowWidth = window.innerWidth;
-export default function RightNavbar({ }) {
-    const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
+
+export default function RightNavbar({ handleAudio }) {
+    const [isNavLarge, setIsNavLarge] = useState(false);
+    const [moveNavTl, setMoveNavTl] = useState(null);
     const navCanvasContainerRef = useRef();
     const [props, set] = useSpring(() => ({
         right: -width,
@@ -47,14 +50,22 @@ export default function RightNavbar({ }) {
         });
     });
 
-    const arrowRef = useRef();
-    useEffect(() => {
-        gsap.to(arrowRef.current, { x: -10, yoyo: true, repeat: -1, duration: 0.2 })
-    }, [])
-
-    useEffect(() => {
-        gsap.to(arrowRef.current, { rotate: isNavLarge ? 270 : 90 })
-    }, [isNavLarge])
+    
+    useEffect(()=>{
+        console.log("closed/opened nav",isNavLarge, moveNavTl)
+        if (window.innerWidth < 800) return;
+    if (!moveNavTl){
+         //set the nav tl
+         const moveNavTl = new TimelineMax({repeat:-1, yoyo:true})
+         .to(navCanvasContainerRef.current, 0.5, { x:-5, boxShadow:"0px -1px 20px 10px #ff6600, inset 0px 2px 10px #ff6600" })                
+         setMoveNavTl(moveNavTl)
+    }
+    if (isNavLarge){
+        moveNavTl?.pause();
+        //moveNavTl?.clear();
+    }
+    else moveNavTl?.restart()
+    },[isNavLarge, moveNavTl])
 
     useEffect(() => {
         const {
@@ -88,7 +99,9 @@ export default function RightNavbar({ }) {
             style={props} className="m-0 h-100">
                 <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
    
-                
+                <div id="nav-controls" className="">
+                        <AudioButton handleAudio={handleAudio} />
+                    </div>
                 </Col>
             </AnimatedRow>
     )

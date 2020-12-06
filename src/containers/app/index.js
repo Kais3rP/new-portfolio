@@ -130,7 +130,6 @@ export default function App() {
                 arrowLinkRef
               }}
               handleMenuLinks={handleMenuLinks}
-              handleAudio={handleAudio}
               targetRefs={{
                 homeRef,
                 aboutRef,
@@ -140,7 +139,7 @@ export default function App() {
               }}
 
             />
-            <RightNavbar />
+            <RightNavbar handleAudio={handleAudio} />
             <div id="home-window" ref={homeRef}></div>
             <MainWindowsHoc myRef={aboutRef} >
                <About /> 
