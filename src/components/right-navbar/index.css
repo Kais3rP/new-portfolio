@@ -9,6 +9,7 @@
     background-color: black;
     color: #66ccff;
     cursor: -webkit-grab;
+    will-change: transform;
 }
 
 

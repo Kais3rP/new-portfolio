@@ -6,7 +6,8 @@ body,
   padding: 0;
   overflow-x: hidden;
   user-select: none;
-touch-action:none;
+  overscroll-behavior: none;
+
 }
 
 body {
@@ -17,8 +18,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Fira Code', monospace !important;
     overflow-x: hidden;
-    
-   
+    touch-action:none;
+    overscroll-behavior: none;
 }
 
 .main-theme {

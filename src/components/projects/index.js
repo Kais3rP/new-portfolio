@@ -94,13 +94,6 @@ export default function Projects({ projectsRef }) {
 }
 
 
-const pages = [
-  'https://images.pexels.com/photos/62689/pexels-photo-62689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-  'https://images.pexels.com/photos/296878/pexels-photo-296878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-  'https://images.pexels.com/photos/1509428/pexels-photo-1509428.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-  'https://images.pexels.com/photos/351265/pexels-photo-351265.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-  'https://images.pexels.com/photos/924675/pexels-photo-924675.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
-]
 function Viewpager() {
   const index = useRef(0)
   const pages = proj.map( proj => proj.pic)
@@ -113,7 +106,7 @@ function Viewpager() {
       cancel((index.current = clamp(index.current + (xDir > 0 ? -1 : 1), 0, pages.length - 1)))
     set(i => {
       if (i < index.current - 1 || i > index.current + 1) return { display: 'none' }
-      const x = (i - index.current) * window.innerWidth + (down ? xDelta : 0)
+      const x = (i - index.current) * window.innerWidth + (down ? xDir > 0 ? +distance : -distance : 0)
       const sc = down ? 1 - distance / window.innerWidth / 2 : 1
       return { x, sc, display: 'block' }
     })

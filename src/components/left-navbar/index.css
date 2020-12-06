@@ -9,6 +9,8 @@
     background-color: black;
     color: #66ccff;
     cursor: -webkit-grab;
+    overscroll-behavior: none;
+    will-change: transform;
 }
 #left-navbar:active {
     cursor: -webkit-grabbing;
