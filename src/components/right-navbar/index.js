@@ -10,15 +10,42 @@ import createNewPixiApp from "../../helpers/createNewPixiApp"
 import setTvEffect from "../../helpers/setTvEffect"
 import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
+import { useSpring, animated } from "react-spring";
+import { useDrag } from "react-use-gesture";
 
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
 
-
-export default function RightNavbar({  }) {
+const width = 495;
+const windowWidth = window.innerWidth;
+export default function RightNavbar({ }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const navCanvasContainerRef = useRef();
+    const [props, set] = useSpring(() => ({
+        right: -width,
+        immediate: 2
+    }));
+    const bind = useDrag(({ down, direction, distance }) => {
+        distance = distance * (-direction[0]);
+        console.log(distance)
+        if (distance > 0 && !down) setIsNavLarge(true);
+        if (distance <= 0 && !down) setIsNavLarge(false);
+        set({
+            right: isNavLarge
+                ? down
+                    ? distance - (width - (1 / 3 * width))
+                    : distance > 0
+                        ? -(width - (1 / 3 * width))
+                        : -width
+                : down
+                    ? distance - width
+                    : distance > 100
+                        ? -(width - (1 / 3 * width))
+                        : -width,
+            immediate: name => down && name === "x"
+        });
+    });
 
     const arrowRef = useRef();
     useEffect(() => {
@@ -39,16 +66,16 @@ export default function RightNavbar({  }) {
         const rect = new PIXI.Graphics();
         const filter = new CRTFilter();
         //if (window.innerWidth > 900)
-        setTvEffect(app,rect,1,filter,firstContainer, navCanvasContainerRef,0.5,0, 0, 0.1, 0.1, 1)
-        
+        setTvEffect(app, rect, 1, filter, firstContainer, navCanvasContainerRef, 0.5, 0, 0, 0.1, 0.1, 1)
+
         function handleResize(e) {
-            console.log("resizing...")           
-              app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight+30);
-              rect.height = window.innerHeight+30;
-          }
-          window.addEventListener("resize", handleResize)
-          return () => {
-          window.removeEventListener("resize", handleResize)
+            console.log("resizing...")
+            app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight + 30);
+            rect.height = window.innerHeight + 30;
+        }
+        window.addEventListener("resize", handleResize)
+        return () => {
+            window.removeEventListener("resize", handleResize)
         }
 
     }, [])
@@ -56,13 +83,15 @@ export default function RightNavbar({  }) {
 
 
     return (
-        <Row ref={navCanvasContainerRef} id="right-navbar" style={{ right: isNavLarge ? 0 : "-170px" }} className="m-0">
-            <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
-                <div id="right-nav-controls" className="">
-
-                </div>
-                <Arrow id="right-nav-arrow" onClick={() => { setIsNavLarge(isLarge => !isLarge) }} myRef={arrowRef} />
-            </Col>
-        </Row>
+            <AnimatedRow ref={navCanvasContainerRef}  id="right-navbar"
+            {...bind()}
+            style={props} className="m-0 h-100">
+                <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
+   
+                
+                </Col>
+            </AnimatedRow>
     )
 }
+
+const AnimatedRow = animated(Row);

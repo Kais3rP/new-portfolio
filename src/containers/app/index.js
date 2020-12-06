@@ -21,6 +21,7 @@ import useLoadAssets from "./useLoadAssets"
 import useHandleListenersAndSpritesAnimation from "./useHandleListenersAndSpriteAnimations"
 import useAnimateStuffOnceReady from "./useAnimateStuffOnceReady";
 
+
 //Registering GSAP plugins
 window.PIXI = PIXI;
 gsap.registerPlugin(ScrollTrigger)

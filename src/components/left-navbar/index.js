@@ -16,32 +16,52 @@ import createNewPixiApp from "../../helpers/createNewPixiApp"
 import setTvEffect from "../../helpers/setTvEffect"
 import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
+import { useSpring, animated } from "react-spring";
+import { useDrag } from "react-use-gesture";
 
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
 const links = ["home", "about", "projects", "technologies", "havefun"];
+const width = 510;
+const AnimatedRow = animated(Row);
 
 export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio, treeSprites }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
-    const [_app, setApp] = useState(null);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
-    const arrowRef = useRef();
     const navCanvasContainerRef = useRef();
-    useEffect(() => {
-        gsap.to(arrowRef.current, { x: 10, yoyo: true, repeat: -1, duration: 0.2 })
-    }, [])
-
-    useEffect(() => {
-        gsap.to(arrowRef.current, { rotate: isNavLarge ? 90 : 270 })
-    }, [isNavLarge])
+    const [props, set] = useSpring(() => ({
+        left: -width,
+        immediate: 2
+    }));
+    const bind = useDrag(({ down, direction, distance }) => {
+        distance = distance * (direction[0]);
+        console.log(distance)
+        if (distance > 0 && !down) setIsNavLarge(true);
+        if (distance <= 0 && !down) setIsNavLarge(false);
+        set({
+            left: isNavLarge
+                ? down
+                    ? distance - (width - (1 / 3 * width))
+                    : distance > 0
+                        ? -(width - (1 / 3 * width))
+                        : -width
+                : down
+                    ? distance - width
+                    : distance > 100
+                        ? -(width - (1 / 3 * width))
+                        : -width,
+            immediate: name => down && name === "x"
+        });
+    });
+  
 
     useEffect(() => {
         const {
             app,
             Container,
         } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
-        setApp(app);
+       
         const firstContainer = new Container();
         const rect = new PIXI.Graphics();
         const filter = new CRTFilter();
@@ -70,8 +90,11 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
     }
 
     return (
-        <Row id="left-navbar" ref={navCanvasContainerRef} style={{ left: isNavLarge ? 0 : "-170px" }} className=" m-0">
-            <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
+        <AnimatedRow ref={navCanvasContainerRef}  id="left-navbar" 
+        {...bind()}
+        style={props} className="m-0 h-100">
+            <Col className="d-flex justify-content-end m-0 p-0" >
+                <div id="nav-container" className=" d-flex flex-column justify-content-between align-items-center">
                 <div id="nav-controls" className="">
                     <AudioButton handleAudio={handleAudio} />
                 </div>
@@ -102,8 +125,8 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs, handleAudio,
                     </div>
                     <p style={{ fontSize: "10px" }}>Copyright © 2020 Cesare Polonara, All rights reserved.</p>
                 </div>
-                <Arrow id="left-nav-arrow" onClick={() => { setIsNavLarge(isLarge => !isLarge) }} myRef={arrowRef} />
+                </div>
             </Col>
-        </Row>
+        </AnimatedRow>
     )
 }

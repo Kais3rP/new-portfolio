@@ -15,12 +15,12 @@ export default function About() {
     const moveFilter = new TimelineMax()
       .to(maskRef.current, 0.2, { width: () => maskWidth })
       .pause()
-   //Picture animation only on laptop+ screens   
-   if (windowWidth > 900)
-    picContainerRef.current.addEventListener("pointermove", handleMouseMove);
+    //Picture animation only on laptop+ screens   
+    if (windowWidth > 900)
+      picContainerRef.current.addEventListener("pointermove", handleMouseMove);
 
     function handleMouseMove(e) {
-       maskWidth = Math.floor(e.clientX - e.currentTarget.getBoundingClientRect().x) + "px";
+      maskWidth = Math.floor(e.clientX - e.currentTarget.getBoundingClientRect().x) + "px";
       if (moveFilter.isActive()) moveFilter.invalidate()
       moveFilter.restart()
     }
@@ -52,7 +52,7 @@ export default function About() {
         <div ref={picContainerRef} id="pic-container" >
           <img id="my-pic" src={me} alt="My photo"></img>
           <div ref={maskRef} id="filter" className="d-none d-md-block"></div>
-         
+
         </div>
 
       </Col>
