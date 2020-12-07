@@ -97,9 +97,9 @@ const [wordsIds, setWordsIds] = useState([]);
   useEffect(() => {
 
     const windowWidth = window.innerWidth;
-    if (myRef)
+    /*if (myRef)
       new TimelineMax({ scrollTrigger: { trigger: myRef.current, toggleActions: 'play none none none' } })
-        .to(myRef.current, 5, { css: { opacity: 1 }, ease: "Back.easeOut" })
+        .to(myRef.current, 5, { css: { opacity: 1 }, ease: "Back.easeOut" })*/
 
     const localRef = myRef.current;
     const width = myRef.current.clientWidth;
@@ -127,7 +127,7 @@ const [wordsIds, setWordsIds] = useState([]);
     const rect = new PIXI.Graphics();
     const filter = new CRTFilter();
     //if (window.innerWidth > 900)
-    setTvEffect(app,rect,0.3,filter,firstContainer, myRef,5, 10, 0.5, 0, 0, 3)
+    setTvEffect(app,rect,0.2,filter,firstContainer, myRef,5, 10, 0.5, 0, 0, 5)
 
     function handlePointerEnter(e) {
       filter.noiseSize = 1.2;
@@ -152,7 +152,7 @@ const [wordsIds, setWordsIds] = useState([]);
 
   return (
     <Row className="justify-content-center align-items-center">
-      <Col xs={12} lg={6} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
+      <Col xs={12} lg={8} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
         {children}
         {wordsArr.map((data,i) => <Word key={wordsIds[i]} position={{x:data.x, y:data.y}} text={data.text} />)}
       </Col>

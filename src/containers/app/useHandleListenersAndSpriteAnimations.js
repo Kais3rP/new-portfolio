@@ -182,9 +182,8 @@ export default function useHandleListenersAndSpritesAnimation(
             }
 
             function handleScroll(e) {
-               
+               setIsBottom(bool => console.log(bool, document.body.scrollHeight,window.pageYOffset));
                 const viewPosition = window.pageYOffset + window.innerHeight;
-                console.log(currentWindow, previousWindow, viewPosition, aboutRef.current.offsetTop, aboutRef.current.scrollHeight)
                 const pageRanges = {
                     home: viewPosition <= window.innerHeight +100,
                     about: viewPosition > homeRef.current.offsetTop + homeRef.current.scrollHeight +100  && viewPosition <= aboutRef.current.offsetTop + aboutRef.current.scrollHeight +100 ,
@@ -194,7 +193,7 @@ export default function useHandleListenersAndSpritesAnimation(
                 }
 
                 setScroll(window.pageYOffset);
-                if (document.body.scrollHeight - window.pageYOffset <= 100)
+                if (document.body.scrollHeight - window.pageYOffset <= window.innerHeight)
                     setIsBottom(true)
                 else
                     setIsBottom(false)
@@ -351,11 +350,12 @@ export default function useHandleListenersAndSpritesAnimation(
     }
 
     function handleArrowDownClick() {
-       
+       console.log(isBottom)
         if (isBottom)
-            gsap.to(window, { duration: 1, scrollTo: { x: 0, y: 0 } })
+            gsap.to(window, { duration: 1, scrollTo: { y: homeRef.current } })
         else
-            gsap.to(window, {
+            gsap.to(window, { duration:1, scrollTo: { y:"+="+window.innerHeight}})
+           /* gsap.to(window, {
                 duration: 1,
                 scrollTo: {
                     x: 0,
@@ -369,12 +369,13 @@ export default function useHandleListenersAndSpritesAnimation(
                                     havefunRef.current :
                                     0
                 }
-            })
+            })*/
+           
     }
 
     function handleArrowUpClick() {
         
-        if (isBottom)
+       /* if (isBottom)
             gsap.to(window, { duration: 1, scrollTo: { x: 0, y: 0 } })
         else
             gsap.to(window, {
@@ -393,7 +394,8 @@ export default function useHandleListenersAndSpritesAnimation(
                                         technologiesRef.current :
                                         0
                 }
-            })
+            })*/
+            gsap.to(window, { duration:1, scrollTo: { y:"-="+window.innerHeight}})
     }
     function deflate() {
       
