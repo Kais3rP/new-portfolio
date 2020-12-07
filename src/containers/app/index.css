@@ -4,6 +4,7 @@
     left: 0;
     z-index: 0 !important;
     isolation: isolate;
+    touch-action:none;
 }
 
 

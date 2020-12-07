@@ -94,16 +94,16 @@ export default function Projects({ projectsRef }) {
            </p>
           </div>
         </TypeIt>
-        <Viewpager pics={proj} Icon={TouchIcon} style={iconsStyle} />
-        <Viewpager pics={poc} Icon={TouchIcon} style={iconsStyle} />
-        <Viewpager pics={games} Icon={TouchIcon} style={iconsStyle} />
+        <Viewpager pics={proj} Icon={TouchIcon} style={iconsStyle} className={"carousel-container"} />
+        <Viewpager pics={poc} Icon={TouchIcon} style={iconsStyle} className={"carousel-container"}/>
+        <Viewpager pics={games} Icon={TouchIcon} style={iconsStyle} className={"carousel-container"}/>
       </Col>
     </Row>
   )
 }
 
 
-function Viewpager({ pics, Icon, style }) {
+function Viewpager({ pics, Icon, style, className }) {
 
   const containerStyle = {
     position: "relative",
@@ -116,7 +116,8 @@ function Viewpager({ pics, Icon, style }) {
     display: "flex",
     flexDirection:"column",
     justifyContent: "start",
-    alignItems: "center"
+    alignItems: "center",
+    
   }
   const outerDivStyle = {
     position: "absolute",
@@ -149,8 +150,7 @@ function Viewpager({ pics, Icon, style }) {
   const index = useRef(0)
   const [props, set] = useSprings(pics.length, i => ({ x: i * window.innerWidth, sc: 1, display: 'block' }))
   const bind = useGesture({
-    onDrag: ({ down, delta: [xDelta], direction: [xDir], distance, cancel }) => {
-      console.log("pressing carousel", down, xDelta, xDir, distance)
+    onDrag: ({ down, direction: [xDir], distance, cancel }) => {
       if (down && distance > window.innerWidth / 2)
         cancel((index.current = clamp(index.current + (xDir > 0 ? -1 : 1), 0, pics.length - 1)))
       set(i => {
@@ -163,7 +163,7 @@ function Viewpager({ pics, Icon, style }) {
   })
 
   return (
-    <div style={containerStyle}>
+    <div className={className} style={containerStyle}>
       <div style={{marginTop:"100px"}} className="d-flex">
         <Icon Icon={SwipeLeft} direction={"left"} isRotation={true} style={style}></Icon>
         <Icon Icon={SwipeRight} direction={"right"} isRotation={true} style={style}></Icon>

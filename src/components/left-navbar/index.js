@@ -15,22 +15,24 @@ import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
 import { animated } from "react-spring";
 import useDragElement from "../../custom-hooks/useDragElement"
+import TouchIcon from "../pointer-animations/TouchIcon"
+import MoveRight from "../pointer-animations/MoveRight"
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
 const links = ["home", "about", "projects", "technologies", "havefun"];
-const width = 510;
+const width = 530;
 const AnimatedRow = animated(Row);
 
 export default function LeftNavbar({ linkRefs, hereRef, targetRefs }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
-    const [moveNavTl, setMoveNavTl] = useState(null);
+    //const [moveNavTl, setMoveNavTl] = useState(null);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const navCanvasContainerRef = useRef();
 
-    const { bind, props } = useDragElement(isNavLarge, setIsNavLarge, width);
+    const [ bind, props ] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
 
-    useEffect(() => {
+  /*  useEffect(() => {
         console.log("closed/opened nav", isNavLarge, moveNavTl)
         if (window.innerWidth < 800) return;
         if (!moveNavTl) {
@@ -43,7 +45,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs }) {
             moveNavTl?.pause();
         }
         else moveNavTl?.restart()
-    }, [isNavLarge, moveNavTl])
+    }, [isNavLarge, moveNavTl])*/
 
 
     //Setting PIXI 
@@ -84,6 +86,7 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs }) {
             style={props} className="m-0 h-100">
             <Col className="d-flex justify-content-end m-0 p-0" >
                 <div id="nav-container" className=" d-flex flex-column justify-content-between align-items-center">
+                  {!isNavLarge && <TouchIcon Icon={MoveRight} direction={"right"} isRotation={false} style={{width:"80px"}} pos={{x:100, y:window.innerHeight/2 - 20}}  /> }
                     <ul id="nav-menu" className=" d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
                             <li key={link} ref={linkRefs[`${link}LinkRef`]}

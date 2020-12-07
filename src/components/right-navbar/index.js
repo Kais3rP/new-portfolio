@@ -1,55 +1,29 @@
 import React, { useState, useEffect, useRef, useCallback } from "react"
 import { Row, Col } from "react-bootstrap"
-import { Link } from "react-router-dom"
 import "./index.css"
 import { gsap, TimelineMax } from "gsap"
 import { ScrollToPlugin } from "gsap/ScrollToPlugin"
 import { CSSRulePlugin } from "gsap/CSSRulePlugin"
-import Arrow from "../arrow/index"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
 import setTvEffect from "../../helpers/setTvEffect"
 import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
-import { useSpring, animated } from "react-spring"
-import { useDrag } from "react-use-gesture"
 import AudioButton from "../button/AudioButton"
-
+import { animated } from "react-spring";
+import useDragElement from "../../custom-hooks/useDragElement"
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
 
-const width = 495;
+const width = 510;
+const AnimatedRow = animated(Row);
 const windowWidth = window.innerWidth;
 
 export default function RightNavbar({ handleAudio }) {
     const [isNavLarge, setIsNavLarge] = useState(false);
     const [moveNavTl, setMoveNavTl] = useState(null);
     const navCanvasContainerRef = useRef();
-    const [props, set] = useSpring(() => ({
-        right: -width,
-        immediate: 2
-    }));
-    const bind = useDrag(({ down, direction, distance }) => {
-        distance = distance * (-direction[0]);
-        console.log(distance)
-        if (distance > 0 && !down) setIsNavLarge(true);
-        if (distance <= 0 && !down) setIsNavLarge(false);
-        set({
-            right: isNavLarge
-                ? down
-                    ? distance - (width - (1 / 3 * width))
-                    : distance > 0
-                        ? -(width - (1 / 3 * width))
-                        : -width
-                : down
-                    ? distance - width
-                    : distance > 100
-                        ? -(width - (1 / 3 * width))
-                        : -width,
-            immediate: name => down && name === "x"
-        });
-    });
-
+    const [ bind, props ] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
     
     useEffect(()=>{
         console.log("closed/opened nav",isNavLarge, moveNavTl)
@@ -107,4 +81,3 @@ export default function RightNavbar({ handleAudio }) {
     )
 }
 
-const AnimatedRow = animated(Row);
