@@ -91,16 +91,16 @@ const words = [
 gsap.registerPlugin(ScrollTrigger);
 
 
-const MainWindowsHoc = React.memo(function ({ myRef, children }) {
+const MainWindowsHoc = React.memo(function ({ myRef, children, setCurrentLocation }) {
 const [wordsArr, setWordsArr] = useState([]);
 const [wordsIds, setWordsIds] = useState([]);
+
   useEffect(() => {
-
+  //Setting location
+  const location = /\w+$/.exec(window.location.href)[0]
+  setCurrentLocation(location)
+//Setting up PIXI canvas
     const windowWidth = window.innerWidth;
-    /*if (myRef)
-      new TimelineMax({ scrollTrigger: { trigger: myRef.current, toggleActions: 'play none none none' } })
-        .to(myRef.current, 5, { css: { opacity: 1 }, ease: "Back.easeOut" })*/
-
     const localRef = myRef.current;
     const width = myRef.current.clientWidth;
     const height = myRef.current.clientHeight;
@@ -146,6 +146,13 @@ const [wordsIds, setWordsIds] = useState([]);
     return () => {
       localRef.removeEventListener("pointerenter", handlePointerEnter)
       localRef.removeEventListener("pointerleave", handlePointerLeave)
+    //Clean all the PIXI WebGL assets on unmount during react router navigation
+      app.destroy({
+        children: true,
+        texture: true,
+        baseTexture: true}
+  ); 
+     
     }
 
   }, [myRef])

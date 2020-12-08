@@ -76,9 +76,7 @@ export default function Projects({ projectsRef }) {
   return (
     <Row className="w-100">
       <Col className="w-100 d-flex flex-column align-items-start">
-        <TypeIt options={{
-          waitUntilVisible: true
-        }}>
+        <TypeIt>
           <div className="d-flex ml-4 mt-2">
             <p style={{ fontSize: "1.2rem", color: "#66ccff" }}>this.projects()</p>
           </div>

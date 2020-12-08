@@ -35,15 +35,12 @@ export default function About() {
     <Row className="w-100">
       <Col className="w-100 d-flex flex-column justify-content-around align-items-center">
         <div className="about-text">
-          <TypeIt options={{
-            waitUntilVisible: true,
-            speed: 10
-          }}>
+          <TypeIt>
             <div className="d-flex ml-4 mt-2">
-              <p style={{ fontSize:"1.2rem", color: "#66ccff" }}>this.about()</p>
+              <p style={{ fontSize: "1.2rem", color: "#66ccff" }}>this.about()</p>
             </div>
             <div className="w-100 d-flex ml-4 mt-2">
-              <p style={{ fontSize: "1rem",color: "#ff6600" }}>
+              <p style={{ fontSize: "1rem", color: "#ff6600" }}>
                 "My name is Cesare and I'm a Web Developer"
          </p>
             </div>

@@ -20,30 +20,11 @@ export default function useHandleListenersAndSpritesAnimation(
     _firstContainer,
     _titleText,
     _flowSound,
-    {
-        homeLinkRef,
-        aboutLinkRef,
-        projectsLinkRef,
-        technologiesLinkRef,
-        havefunLinkRef,
-        arrowLinkRef,
-        previousLinkRef
-    }, {
-        homeRef,
-        aboutRef,
-        projectsRef,
-        technologiesRef,
-        havefunRef,
-        hereRef
-    }) {
+    linkRefs) {
 
-    const [waterSpeed, setWaterSpeed] = useState(2);
-    const [scroll, setScroll] = useState(0);
-    const [isBottom, setIsBottom] = useState(false);
-    const [_previousWindow, set_PreviousWindow] = useState("home");
-    const [_currentWindow, set_CurrentWindow] = useState("home");
     const [isBallDeflating, setIsBallDeflating] = useState(false);
     const [rippleAnimation, setRippleAnimation] = useState(null);
+
 
 
     //Handling listeners resize, scroll, pointermove, and click events
@@ -52,9 +33,6 @@ export default function useHandleListenersAndSpritesAnimation(
             x: 0,
             y: 0
         }
-
-        let currentWindow = "";
-        let previousWindow = "";
 
         if (hasLoaded) {
 
@@ -139,24 +117,18 @@ export default function useHandleListenersAndSpritesAnimation(
                 }
             }
 
-            //Little trick to read the updated speed state without rerender
             function moveWater(delta) {
-                setWaterSpeed(
-                    speed => {
-                        _cloudsSprite.x += 2 * delta;
-                        _cloudsSprite.y += 2 * delta * 2;
-                        return speed
-                    }
-                )
+                _cloudsSprite.x += 2 * delta;
+                _cloudsSprite.y += 2 * delta * 2;
             }
-            function moveRays(){
-            raysFilter.time += 0.03;
+
+            function moveRays() {
+                raysFilter.time += 0.03;
             }
 
             //EVENT LISTENERS
 
             window.addEventListener("resize", handleResize);
-            window.addEventListener("scroll", handleScroll);
             window.addEventListener("pointermove", handleMouseMove);
             _firstContainer.addListener("pointerdown", handleWaterClick);
 
@@ -181,93 +153,9 @@ export default function useHandleListenersAndSpritesAnimation(
                 }
             }
 
-            function handleScroll(e) {
-               setIsBottom(bool => console.log(bool, document.body.scrollHeight,window.pageYOffset));
-                const viewPosition = window.pageYOffset + window.innerHeight;
-                const pageRanges = {
-                    home: viewPosition <= window.innerHeight +100,
-                    about: viewPosition > homeRef.current.offsetTop + homeRef.current.scrollHeight +100  && viewPosition <= aboutRef.current.offsetTop + aboutRef.current.scrollHeight +100 ,
-                    projects: viewPosition > aboutRef.current.offsetTop + aboutRef.current.scrollHeight +100   && viewPosition <= projectsRef.current.offsetTop + projectsRef.current.scrollHeight +100 ,
-                    technologies: viewPosition > projectsRef.current.offsetTop + projectsRef.current.scrollHeight +100  && viewPosition <= technologiesRef.current.offsetTop + technologiesRef.current.scrollHeight +100 ,
-                    havefun: viewPosition > technologiesRef.current.offsetTop + technologiesRef.current.scrollHeight +100  && viewPosition <= havefunRef.current.offsetTop + havefunRef.current.scrollHeight +100,
-                }
-
-                setScroll(window.pageYOffset);
-                if (document.body.scrollHeight - window.pageYOffset <= window.innerHeight)
-                    setIsBottom(true)
-                else
-                    setIsBottom(false)
-
-                //Current window
-                if (pageRanges.home) {
-                    currentWindow = "home"
-                    set_CurrentWindow("home")
-                    if (previousWindow !== currentWindow) {
-                        _titleText.text = "WELCOME"
-                        if (previousWindow === "about") {
-                            handleMenuLinks(homeLinkRef, previousLinkRef);
-                        }
-                        previousWindow = "home"
-                        set_PreviousWindow("home")
-                    }
-                }
-
-                if (pageRanges.about) {
-                    currentWindow = "about"
-                    set_CurrentWindow("about")
-                    if (previousWindow !== currentWindow) {
-                        _titleText.text = "ABOUT ME"
-                        if (previousWindow === "home" || previousWindow === "projects") {
-                            handleMenuLinks(aboutLinkRef, previousLinkRef);
-                        }
-                        previousWindow = "about"
-                        set_PreviousWindow("about")
-                    }
-                }
-
-                if (pageRanges.projects) {
-                    currentWindow = "projects"
-                    set_CurrentWindow("projects")
-                    if (previousWindow !== currentWindow) {
-                        _titleText.text = "MY PROJECTS"
-                        if (previousWindow === "about" || previousWindow === "technologies") {
-                            handleMenuLinks(projectsLinkRef, previousLinkRef);
-                        }
-                        previousWindow = "projects"
-                        set_PreviousWindow("projects")
-                    }
-                }
-
-                if (pageRanges.technologies) {
-                    currentWindow = "technologies"
-                    set_CurrentWindow("technologies")
-                    if (previousWindow !== currentWindow) {
-                        _titleText.text = "TECHNOLOGIES I USE";
-                        if (previousWindow === "projects" || previousWindow === "havefun") {
-                            handleMenuLinks(technologiesLinkRef, previousLinkRef);
-                        }
-                        previousWindow = "technologies"
-                        set_PreviousWindow("technologies")
-                    }
-                }
-
-                if (pageRanges.havefun) {
-                    currentWindow = "havefun"
-                    set_CurrentWindow("havefun")
-                    if (previousWindow !== currentWindow) {
-                        _titleText.text = "HAVE FUN"
-                        if (previousWindow === "technologies") {
-                            handleMenuLinks(havefunLinkRef, previousLinkRef);
-                        }
-                        previousWindow = "havefun"
-                        set_PreviousWindow("havefun")
-                    }
-                }
-            }
-
 
             function handleResize(e) {
-             
+
                 app.renderer.resize(e.target.innerWidth, e.target.innerHeight + 30);
             }
 
@@ -275,7 +163,7 @@ export default function useHandleListenersAndSpritesAnimation(
                 console.log(e)
                 let isReadyLocal;
                 setIsReady(isReady => { isReadyLocal = isReady; return isReady });
-               
+
                 if (!isReadyLocal) return;
                 const newRippleSprite = new PIXI.Sprite(PIXI.Loader.shared.resources.ripple.texture);
                 _firstContainer.addChild(newRippleSprite);
@@ -312,104 +200,58 @@ export default function useHandleListenersAndSpritesAnimation(
                     }
                 }
             }
+
+
+
+
             return () => {
                 window.removeEventListener("resize", handleResize)
-                window.removeEventListener("scroll", handleScroll)
             }
         }
     }, [hasLoaded])
 
-    function handleMenuLinks(target, prevTarget, optionalCb) {
-        if (optionalCb) optionalCb();
-        const containerHeight = target.current.parentNode.getBoundingClientRect().height;
-        const diffPositionLinkContainer = target.current.getBoundingClientRect().y - target.current.parentNode.getBoundingClientRect().y;
-        if (target.current !== prevTarget) {
+
+    function handleMenuLinks(target, prevTarget) {
+console.log(target, prevTarget)
+        
+        target = linkRefs[target + "LinkRef"].current
+        prevTarget = linkRefs[prevTarget + "LinkRef"].current
+  
+       const containerHeight = target.parentNode.getBoundingClientRect().height;
+        const diffPositionLinkContainer = target.getBoundingClientRect().y - target.parentNode.getBoundingClientRect().y;
             const linkRaise = new TimelineMax()
-                .to(prevTarget.current, 1, { color: "#66ccff", y: 0, duration: 1, ease: "bounce" })
-            prevTarget.current = target.current;
-        }
+         .to(prevTarget, 1, { color: "#66ccff", y: 0, duration: 1, ease: "bounce" })
+ 
+
         const linkFall = new TimelineMax()
-            .to(target.current, 1, {
+            .to(target, 1, {
                 color: "#ff6600",
                 y: containerHeight - diffPositionLinkContainer - 30, ease: "bounce"
             })
-       
-        if (window.innerWidth > 768) //Animates Im here only for big screens
+
+
+        if (window.innerWidth > 768) //Animates "Im here only" for big screens
             setIsBallDeflating(isBallDeflating => {
                 if (!isBallDeflating)
                     inflate();
                 return isBallDeflating
             })
 
-
     }
 
-    function handleWaterSpeed() {
-        setWaterSpeed(10)
-        setTimeout(() => { setWaterSpeed(2) }, 1000)
-    }
 
-    function handleArrowDownClick() {
-       console.log(isBottom)
-        if (isBottom)
-            gsap.to(window, { duration: 1, scrollTo: { y: homeRef.current } })
-        else
-            gsap.to(window, { duration:1, scrollTo: { y:"+="+window.innerHeight}})
-           /* gsap.to(window, {
-                duration: 1,
-                scrollTo: {
-                    x: 0,
-                    y: _currentWindow === "home" ?
-                        aboutRef.current :
-                        _currentWindow === "about" ?
-                            projectsRef.current :
-                            _currentWindow === "projects" ?
-                                technologiesRef.current :
-                                _currentWindow === "technologies" ?
-                                    havefunRef.current :
-                                    0
-                }
-            })*/
-           
-    }
-
-    function handleArrowUpClick() {
-        
-       /* if (isBottom)
-            gsap.to(window, { duration: 1, scrollTo: { x: 0, y: 0 } })
-        else
-            gsap.to(window, {
-                duration: 1,
-                scrollTo: {
-                    x: 0,
-                    y: _currentWindow === "home" ?
-                        homeRef.current :
-                        _currentWindow === "about" ?
-                            homeRef.current :
-                            _currentWindow === "projects" ?
-                                aboutRef.current :
-                                _currentWindow === "technologies" ?
-                                    projectsRef.current :
-                                    _currentWindow === "havefun" ?
-                                        technologiesRef.current :
-                                        0
-                }
-            })*/
-            gsap.to(window, { duration:1, scrollTo: { y:"-="+window.innerHeight}})
-    }
     function deflate() {
-      
+
         new TimelineMax({ onStart: () => { setIsBallDeflating(true) }, onComplete: () => { setIsBallDeflating(false) } })
-            .to(hereRef.current, { scale: 1, bottom: "43px", duration: 3.5, ease: "elastic" })
+            .to(linkRefs.hereRef.current, { scale: 1, bottom: "43px", duration: 3.5, ease: "elastic" })
     }
 
     function inflate() {
-        
+
         new TimelineMax()
-            .to(hereRef.current, { scale: "+=0.3", bottom: "+=10px", duration: 0.7, visibility: "visible", modifiers: { scaleX: checkScaleX } })
+            .to(linkRefs.hereRef.current, { scale: "+=0.3", bottom: "+=10px", duration: 0.7, visibility: "visible", modifiers: { scaleX: checkScaleX } })
 
         function checkScaleX(scale) {
-          
             if (+scale >= 2.1) {
                 this.kill();
                 deflate();
@@ -427,7 +269,7 @@ export default function useHandleListenersAndSpritesAnimation(
             _flowSound.pause();
         }
     }
-    return { handleArrowDownClick, handleArrowUpClick, handleMenuLinks, setRippleAnimation, handleWaterSpeed, handleAudio, rippleAnimation }
+    return { handleMenuLinks, setRippleAnimation, handleAudio, rippleAnimation }
 }
 
 

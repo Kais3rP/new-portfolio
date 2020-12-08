@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom"
+import { NavLink, useLocation, useHistory } from "react-router-dom"
 import "./index.css";
 import { gsap, TimelineMax } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -24,12 +24,16 @@ const links = ["home", "about", "projects", "technologies", "havefun"];
 const width = 530;
 const AnimatedRow = animated(Row);
 
-export default function LeftNavbar({ linkRefs, hereRef, targetRefs }) {
+
+
+export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, currentLocation }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const navCanvasContainerRef = useRef();
 
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
+
+
 
     //Setting PIXI 
     useEffect(() => {
@@ -54,21 +58,17 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs }) {
         }
     }, [])
 
-    function handleMoveTo(targetRef) {
-        gsap.to(window, { duration: 1, scrollTo: { x: 0, y: targetRef.current } })
-    }
-
     function animateLink(e) {
- 
-        if (!currentLinkAnim)
-            setCurrentlinkAnim(new TimelineMax({ repeat: -1, yoyo: true }).to(e.target, 0.2, { scale: 1.2, ease: "linear" }))
+
+     /*   if (!currentLinkAnim)
+            setCurrentlinkAnim(new TimelineMax({ repeat: -1, yoyo: true }).to(e.target, 0.2, { scale: 1.2, ease: "linear" }))*/
     }
 
     function stopAnimateLink(e) {
-
+/*
         gsap.set(e.target, { scale: 1 });
         currentLinkAnim?.kill();
-        setCurrentlinkAnim(null)
+        setCurrentlinkAnim(null)  */
     }
 
     return (
@@ -86,19 +86,24 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs }) {
                             Icon={MoveRight}
                             direction={"right"}
                             isRotation={false}
-                            style={{ width: "80px", position: "absolute", fill:"#66ccff" }}
+                            style={{ width: "80px", position: "absolute", fill: "#66ccff" }}
                             pos={{ x: 100, y: window.innerHeight / 2 - 20 }} />}
                     <ul id="nav-menu" className=" d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
-                            <li key={link} ref={linkRefs[`${link}LinkRef`]}
-                                onPointerDown={(e) => {
-                                    handleMoveTo(targetRefs[`${link}Ref`]);
-                                }} className="p-3">
-                                <a href="#" onMouseEnter={animateLink}
-                                    onMouseLeave={stopAnimateLink}>
-                                    <h6>{`.${link}()`}</h6>
-                                </a>
-                            </li>))}
+                            <NavLink  isActive={(match, location) => {                                                  
+                             if (match && removeSlash(location.pathname) !== currentLocation) {  
+                                 handleMenuLinks(removeSlash(location.pathname),currentLocation);  
+                             }                       
+                            }} to={link}
+                          
+                                key={link} ref={linkRefs[`${link}LinkRef`]}>
+                                <li                                   
+                                    className="p-3">
+                                    <h6 onMouseEnter={animateLink}
+                                        onMouseLeave={stopAnimateLink}>
+                                        {`.${link}()`}</h6>
+                                </li>
+                            </NavLink>))}
                         <img id="here-img" ref={hereRef} src={here} alt="You are here" />
                     </ul>
                     <div id="nav-contacts" className="align-self-start d-flex flex-column justify-content-around">
@@ -113,4 +118,9 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs }) {
             </Col>
         </AnimatedRow>
     )
+}
+
+
+function removeSlash(str){
+    return /\w+/.exec(str)[0]
 }

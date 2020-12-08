@@ -4,7 +4,6 @@ import { TimelineMax } from "gsap"
 export default function TouchIcon({ Icon, direction, isRotation, style, pos }) {
     const svgRef = useRef();
     useEffect(() => {
-      console.log(pos)
       new TimelineMax({ repeat: -1 })
       .set(svgRef.current, { transform:`translateX(${pos ? pos.x : 0}px) translateY(${pos ? pos.y : 0}px)`,opacity:1})
       .to(svgRef.current, 1.5, {

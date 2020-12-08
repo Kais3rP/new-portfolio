@@ -13,10 +13,9 @@ export default function HaveFun({ havefunRef }) {
         <Row className="w-100">
         <Col className="w-100 d-flex flex-column">
           <TypeIt  options={{
-            waitUntilVisible: true
           }}>
             <div className="d-flex ml-4 mt-2">
-              <p style={{ color: "#66ccff" }}>this.projects()</p>
+              <p style={{ color: "#66ccff" }}>this.haveFun()</p>
             </div>
             <div className="w-100 d-flex ml-4 mt-2">
               <p style={{ color: "#ff6600" }}>

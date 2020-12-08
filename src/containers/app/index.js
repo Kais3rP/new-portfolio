@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap"
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import LeftNavbar from "../../components/left-navbar/index"
 import RightNavbar from "../../components/right-navbar/index"
 import './index.css'
+import Home from "../../components/home/Home"
 import About from "../../components/about/index"
 import Projects from "../../components/projects/index"
 import HaveFun from "../../components/havefun/index"
@@ -34,6 +35,7 @@ export default function App() {
 
   const [isReady, setIsReady] = useState(false);
   const [container, setContainer] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(/\w+$/.exec(window.location.href) ? /\w+$/.exec(window.location.href)[0] : "home");
 
 
   const homeRef = useRef();
@@ -41,16 +43,13 @@ export default function App() {
   const projectsRef = useRef();
   const technologiesRef = useRef();
   const havefunRef = useRef();
-  const arrowDownRef = useRef();
-  const arrowUpRef = useRef();
   const homeLinkRef = useRef();
   const aboutLinkRef = useRef();
   const projectsLinkRef = useRef();
   const technologiesLinkRef = useRef();
   const havefunLinkRef = useRef();
-  const arrowLinkRef = useRef();
   const hereRef = useRef();
-  const previousLinkRef = useRef()
+
 
 
  
@@ -70,8 +69,6 @@ export default function App() {
   } = useLoadAssets(container)
 
   const {
-    handleArrowDownClick,
-    handleArrowUpClick,
     handleMenuLinks,
     handleAudio,
     rippleAnimation
@@ -94,20 +91,10 @@ export default function App() {
       projectsLinkRef,
       technologiesLinkRef,
       havefunLinkRef,
-      arrowLinkRef,
-      previousLinkRef
-    },
-    {
-
-      homeRef,
-      aboutRef,
-      projectsRef,
-      technologiesRef,
-      havefunRef,
       hereRef
     })
 
- useAnimateStuffOnceReady(isReady, homeRef, arrowDownRef, havefunRef, arrowUpRef, handleMenuLinks, homeLinkRef, previousLinkRef, rippleAnimation, _dropSound, _rippleSprite)
+ useAnimateStuffOnceReady(isReady, rippleAnimation, _dropSound, _rippleSprite)
 
 
 
@@ -117,8 +104,6 @@ export default function App() {
         <Col>
           <div className="main-theme" id="container" ref={setContainer}></div>
           {isReady ? <>
-            <Arrow id="arrow-down" onClick={handleArrowDownClick} myRef={arrowDownRef} />
-            <Arrow id="arrow-up" onClick={handleArrowUpClick} myRef={arrowUpRef} />
             <LeftNavbar
               hereRef={hereRef}
               linkRefs={{
@@ -127,37 +112,42 @@ export default function App() {
                 projectsLinkRef,
                 technologiesLinkRef,
                 havefunLinkRef,
-                arrowLinkRef
               }}
               handleMenuLinks={handleMenuLinks}
-              targetRefs={{
-                homeRef,
-                aboutRef,
-                projectsRef,
-                technologiesRef,
-                havefunRef
-              }}
-
+              currentLocation={currentLocation}
             />
             <RightNavbar handleAudio={handleAudio} />
-            <div id="home-window" ref={homeRef}></div>
-            <MainWindowsHoc myRef={aboutRef} >
+            <Switch>
+            <Route exact path="/about">
+            <MainWindowsHoc myRef={aboutRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} >
                <About /> 
             </MainWindowsHoc>
-            <MainWindowsHoc myRef={projectsRef} >
+            </Route>
+            <Route exact path="/projects">
+            <MainWindowsHoc myRef={projectsRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation}>
              <Projects  /> 
             </MainWindowsHoc>
-            <MainWindowsHoc myRef={technologiesRef} >
-             <Technologies  myRef={technologiesRef}/> 
+            </Route>
+            <Route exact path="/technologies">
+            <MainWindowsHoc myRef={technologiesRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} >
+             <Technologies  /> 
             </MainWindowsHoc>
-            <MainWindowsHoc myRef={havefunRef} >
+            </Route>
+            <Route exact path="/havefun">
+            <MainWindowsHoc myRef={havefunRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} >
             <HaveFun  /> 
             </MainWindowsHoc>
+            </Route>
+            <Route exact path="/home">
+          <Home myRef={homeRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} />
+            </Route>    
+            <Route exact path="/">
+          <Home myRef={homeRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} />
+            </Route>          
+            </Switch>
           </> : <LoadingView setIsReady={setIsReady} loadProgress={loadProgress} />}
         </Col>
       </Row>
     </Container>
   );
 }
-
-

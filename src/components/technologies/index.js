@@ -16,7 +16,7 @@ import webpack from "../../pics/icons/webpack.svg"
 gsap.registerPlugin(ScrollTrigger);
 let icons = [html5, css3, js, mongo, node, react, redux, webpack, git2]
 
-export default function Technologies({ myRef }) {
+export default function Technologies() {
   const htmlRef = useRef();
   const cssRef = useRef();
   const gitRef = useRef();
@@ -30,18 +30,16 @@ export default function Technologies({ myRef }) {
   const myIcons =  icons.map((icon, idx) => ({ icon, ref: refs[idx] }))
 
   useEffect(() => {
-    new TimelineMax({ scrollTrigger: { trigger: myRef.current, toggleActions: 'restart none none reset' } })
+    new TimelineMax({ })
     .to(refs.map(ref => ref.current),2, {y:(idx, target) => idx*20 , ease:"elastic"} )
   }, [])
 
   return (
     <Row className="w-100">
       <Col className="w-100 d-flex flex-column technologies-container">
-        <TypeIt options={{
-          waitUntilVisible: true
-        }}>
+        <TypeIt>
           <div className="d-flex ml-4 mt-2">
-            <p style={{ color: "#66ccff" }}>this.projects()</p>
+            <p style={{ color: "#66ccff" }}>this.technologies()</p>
           </div>
           <div className="w-100 d-flex ml-4 mt-2">
             <p style={{ color: "#ff6600" }}>

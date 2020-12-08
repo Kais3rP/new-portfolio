@@ -21,6 +21,10 @@ body {
     overscroll-behavior: none;
 }
 
+a {
+    outline:0 !important;
+}
+
 .main-theme {
     background-color: #000000;
     /*#1A0315;*/

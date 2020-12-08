@@ -124,6 +124,14 @@ if (!container) return;
     set_flowSound(flowSound)
     set_dropSound(dropSound)
   }
+  return () => {
+    //Clean all the PIXI WebGL assets on unmount 
+    app.destroy({
+      children: true,
+      texture: true,
+      baseTexture: true}
+); 
+  }
 }, [container])
 
 return ({
