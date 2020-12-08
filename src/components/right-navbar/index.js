@@ -24,8 +24,8 @@ const windowWidth = window.innerWidth;
 export default function RightNavbar({ handleAudio }) {
     const [isNavLarge, setIsNavLarge] = useState(true);
     const navCanvasContainerRef = useRef();
-    const [ bind, props ] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
-    
+    const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
+
 
     useEffect(() => {
         const {
@@ -51,25 +51,34 @@ export default function RightNavbar({ handleAudio }) {
 
 
 
-    return (
-            <AnimatedRow ref={navCanvasContainerRef}  id="right-navbar"
-            {...bind()}
-            style={props} className="m-0 h-100">
-                <Col className=" d-flex justify-content-start m-0 p-0" >
-                <div id="nav-right-container" className="d-flex flex-column justify-content-start align-items-center">
-                {!isNavLarge &&
-                        <TouchIcon
-                            Icon={MoveLeft}
-                            direction={"left"}
-                            isRotation={false}
-                            style={{ width: "80px", position: "absolute", fill:"#66ccff" }}
-                            pos={{ x: -100, y: window.innerHeight / 2 - 20 }} />}
-                <div id="nav-controls" className="">
-                        <AudioButton handleAudio={handleAudio} />
-                    </div>
-                    </div>
-                </Col>
-            </AnimatedRow>
-    )
-}
-
+    return ( <
+        AnimatedRow ref = { navCanvasContainerRef }
+        id = "right-navbar" {...bind() }
+        style = { props }
+        className = "m-0 h-100" >
+        <
+        Col className = " d-flex justify-content-start m-0 p-0" >
+        <
+        div id = "nav-right-container"
+        className = "d-flex flex-column justify-content-start align-items-center" > {!isNavLarge &&
+            <
+            TouchIcon
+            Icon = { MoveLeft }
+            direction = { "left" }
+            isRotation = { false }
+            style = {
+                { width: "80px", position: "absolute", fill: "#66ccff" } }
+            pos = {
+                { x: -100, y: window.innerHeight / 2 - 20 } }
+            />} <
+            div id = "nav-controls"
+            className = "" >
+            <
+            AudioButton handleAudio = { handleAudio }
+            /> <
+            /div> <
+            /div> <
+            /Col> <
+            /AnimatedRow>
+        )
+    }

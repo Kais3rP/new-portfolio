@@ -6,12 +6,12 @@ export default function TouchIcon({ Icon, direction, isRotation, style, pos }) {
     useEffect(() => {
       console.log(pos)
       new TimelineMax({ repeat: -1 })
-      .set(svgRef.current, { transform:`translateX(${pos ? pos.x : 0}px) translateY(${pos ? pos.y : 0}px)`,opacity:0})
+      .set(svgRef.current, { transform:`translateX(${pos ? pos.x : 0}px) translateY(${pos ? pos.y : 0}px)`,opacity:1})
       .to(svgRef.current, 1.5, {
         x: direction === "right" ? "+=60px" : "-=60px",
         y: pos ? pos.y : 0,
         transform: isRotation ? `rotate(${direction === "right" ? "+20deg" : "-20deg"})` : "",
-        opacity:1,
+        opacity:0,
         ease:"ease-out"
       });
     }, []);
