@@ -3,7 +3,7 @@
     box-shadow: 0px 3px 8px #ff6600, inset 0px 2px 10px #ff6600;
     border-left: 2px outset #ff6600;
     height: 100%;
-    width: 520px;
+    width: 530px;
     position: fixed;
     z-index: 30;
     background-color: black;
@@ -12,6 +12,11 @@
     will-change: transform;
 }
 
+#nav-right-container {
+  width:170px !important;
+  height:100%;
+  touch-action: none;
+}
 
 #right-nav-arrow {
     fill: white;
@@ -37,9 +42,6 @@
     box-shadow: 0px 15px 30px -5px rgba(0, 0, 0, 0.4);
   }
   
-  #right-navbar > * {
-    pointer-events: none;
-  }
   
   #nav-controls {
     height: 10%;

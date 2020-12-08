@@ -11,35 +11,21 @@ import { CRTFilter } from "@pixi/filter-crt"
 import AudioButton from "../button/AudioButton"
 import { animated } from "react-spring";
 import useDragElement from "../../custom-hooks/useDragElement"
+import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
+import MoveLeft from "../../reusable/pointer-animations/MoveLeft"
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
 
-const width = 510;
+const width = 528;
 const AnimatedRow = animated(Row);
 const windowWidth = window.innerWidth;
 
 export default function RightNavbar({ handleAudio }) {
-    const [isNavLarge, setIsNavLarge] = useState(false);
-    const [moveNavTl, setMoveNavTl] = useState(null);
+    const [isNavLarge, setIsNavLarge] = useState(true);
     const navCanvasContainerRef = useRef();
     const [ bind, props ] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
     
-    useEffect(()=>{
-        console.log("closed/opened nav",isNavLarge, moveNavTl)
-        if (window.innerWidth < 800) return;
-    if (!moveNavTl){
-         //set the nav tl
-         const moveNavTl = new TimelineMax({repeat:-1, yoyo:true})
-         .to(navCanvasContainerRef.current, 0.5, { x:-5, boxShadow:"0px -1px 20px 10px #ff6600, inset 0px 2px 10px #ff6600" })                
-         setMoveNavTl(moveNavTl)
-    }
-    if (isNavLarge){
-        moveNavTl?.pause();
-        //moveNavTl?.clear();
-    }
-    else moveNavTl?.restart()
-    },[isNavLarge, moveNavTl])
 
     useEffect(() => {
         const {
@@ -50,11 +36,9 @@ export default function RightNavbar({ handleAudio }) {
         const firstContainer = new Container();
         const rect = new PIXI.Graphics();
         const filter = new CRTFilter();
-        //if (window.innerWidth > 900)
         setTvEffect(app, rect, 1, filter, firstContainer, navCanvasContainerRef, 0.5, 0, 0, 0.1, 0.1, 1)
 
         function handleResize(e) {
-            console.log("resizing...")
             app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight + 30);
             rect.height = window.innerHeight + 30;
         }
@@ -71,10 +55,18 @@ export default function RightNavbar({ handleAudio }) {
             <AnimatedRow ref={navCanvasContainerRef}  id="right-navbar"
             {...bind()}
             style={props} className="m-0 h-100">
-                <Col className="nav-container d-flex flex-column justify-content-between align-items-center" >
-   
+                <Col className=" d-flex justify-content-start m-0 p-0" >
+                <div id="nav-right-container" className="d-flex flex-column justify-content-start align-items-center">
+                {!isNavLarge &&
+                        <TouchIcon
+                            Icon={MoveLeft}
+                            direction={"left"}
+                            isRotation={false}
+                            style={{ width: "80px", position: "absolute", fill:"#66ccff" }}
+                            pos={{ x: -100, y: window.innerHeight / 2 - 20 }} />}
                 <div id="nav-controls" className="">
                         <AudioButton handleAudio={handleAudio} />
+                    </div>
                     </div>
                 </Col>
             </AnimatedRow>

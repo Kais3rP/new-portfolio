@@ -15,8 +15,8 @@ import * as PIXI from "pixi.js"
 import { CRTFilter } from "@pixi/filter-crt"
 import { animated } from "react-spring";
 import useDragElement from "../../custom-hooks/useDragElement"
-import TouchIcon from "../pointer-animations/TouchIcon"
-import MoveRight from "../pointer-animations/MoveRight"
+import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
+import MoveRight from "../../reusable/pointer-animations/MoveRight"
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
@@ -26,27 +26,10 @@ const AnimatedRow = animated(Row);
 
 export default function LeftNavbar({ linkRefs, hereRef, targetRefs }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
-    //const [moveNavTl, setMoveNavTl] = useState(null);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const navCanvasContainerRef = useRef();
 
-    const [ bind, props ] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
-
-  /*  useEffect(() => {
-        console.log("closed/opened nav", isNavLarge, moveNavTl)
-        if (window.innerWidth < 800) return;
-        if (!moveNavTl) {
-            //set the nav tl
-            const moveNavTl = new TimelineMax({ repeat: -1, yoyo: true })
-                .to(navCanvasContainerRef.current, 0.5, { x: 5, boxShadow: "0px -1px 20px 10px #ff6600, inset 0px 2px 10px #ff6600" })
-            setMoveNavTl(moveNavTl)
-        }
-        if (isNavLarge) {
-            moveNavTl?.pause();
-        }
-        else moveNavTl?.restart()
-    }, [isNavLarge, moveNavTl])*/
-
+    const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
 
     //Setting PIXI 
     useEffect(() => {
@@ -75,34 +58,46 @@ export default function LeftNavbar({ linkRefs, hereRef, targetRefs }) {
         gsap.to(window, { duration: 1, scrollTo: { x: 0, y: targetRef.current } })
     }
 
-    function animateLink(link) {
+    function animateLink(e) {
+ 
         if (!currentLinkAnim)
-            setCurrentlinkAnim(new TimelineMax({ repeat: -1, yoyo: true }).to(link, 0.2, { scale: 1.2, ease: "linear" }))
+            setCurrentlinkAnim(new TimelineMax({ repeat: -1, yoyo: true }).to(e.target, 0.2, { scale: 1.2, ease: "linear" }))
+    }
+
+    function stopAnimateLink(e) {
+
+        gsap.set(e.target, { scale: 1 });
+        currentLinkAnim?.kill();
+        setCurrentlinkAnim(null)
     }
 
     return (
-        <AnimatedRow ref={navCanvasContainerRef} id="left-navbar"
+        <AnimatedRow
+            ref={navCanvasContainerRef}
+            id="left-navbar"
             {...bind()}
             style={props} className="m-0 h-100">
             <Col className="d-flex justify-content-end m-0 p-0" >
-                <div id="nav-container" className=" d-flex flex-column justify-content-between align-items-center">
-                  {!isNavLarge && <TouchIcon Icon={MoveRight} direction={"right"} isRotation={false} style={{width:"80px"}} pos={{x:100, y:window.innerHeight/2 - 20}}  /> }
+                <div
+                    id="nav-left-container"
+                    className=" d-flex flex-column justify-content-between align-items-center">
+                    {!isNavLarge &&
+                        <TouchIcon
+                            Icon={MoveRight}
+                            direction={"right"}
+                            isRotation={false}
+                            style={{ width: "80px", position: "absolute", fill:"#66ccff" }}
+                            pos={{ x: 100, y: window.innerHeight / 2 - 20 }} />}
                     <ul id="nav-menu" className=" d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
                             <li key={link} ref={linkRefs[`${link}LinkRef`]}
                                 onPointerDown={(e) => {
                                     handleMoveTo(targetRefs[`${link}Ref`]);
                                 }} className="p-3">
-                                <Link onMouseEnter={(e) => {
-                                    animateLink(e.target)
-                                }}
-                                    onMouseLeave={(e) => {
-                                        gsap.set(e.target, { scale: 1 });
-                                        currentLinkAnim?.kill();
-                                        setCurrentlinkAnim(null)
-                                    }} to="/">
+                                <a href="#" onMouseEnter={animateLink}
+                                    onMouseLeave={stopAnimateLink}>
                                     <h6>{`.${link}()`}</h6>
-                                </Link>
+                                </a>
                             </li>))}
                         <img id="here-img" ref={hereRef} src={here} alt="You are here" />
                     </ul>

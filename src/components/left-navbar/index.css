@@ -16,13 +16,12 @@
     cursor: -webkit-grabbing;
     box-shadow: 0px 15px 30px -5px rgba(0, 0, 0, 0.4);
   }
-  #nav-container {
+  #nav-left-container {
       width:170px !important;
       height:100%;
+      touch-action: none;
   }
-  #left-navbar > * {
-    
-  }
+
 
 #left-navbar > canvas {
     position:absolute;
@@ -52,6 +51,7 @@
 #nav-contacts {
     height: 20%;
     font-size: 25px;
+    touch-action: none;
 }
 
 #here-img {
