@@ -21,6 +21,11 @@ body {
     overscroll-behavior: none;
 }
 
+/*This is needed in order to show the main windows with absolute Row. FOr some reason relative position column, prevent them from being shown */
+[class*='col'] {
+    position: static;
+}
+
 a {
     outline:0 !important;
 }

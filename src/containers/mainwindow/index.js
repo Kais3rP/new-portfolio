@@ -105,10 +105,11 @@ const [wordsIds, setWordsIds] = useState([]);
     const localRef = myRef.current;
     const width = myRef.current.clientWidth;
     const height = myRef.current.clientHeight;
+    console.log("width:",width, myRef.current, myRef.current.getBoundingClientRect().width)
     const {
       app,
       Container,
-    } = createNewPixiApp(width, height, localRef);    
+    } = createNewPixiApp(300, height, localRef);    
     const firstContainer = new Container();    
     //Monitor Words animation
     const wordsArr = [];
@@ -159,9 +160,9 @@ const [wordsIds, setWordsIds] = useState([]);
   }, [myRef])
 
   return (
-    <AnimatedRow {...bind()} style={{...springProps}} className="justify-content-center align-items-center">
-      <Col xs={12} lg={8} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
-        {children}
+    <AnimatedRow  {...bind()} style={{...springProps, pointerEvents:"none"}} className="window-container w-100 justify-content-center align-items-center">
+      <Col  xs={12} lg={8} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>    
+        {children}   
         {wordsArr.map((data,i) => <Word key={wordsIds[i]} position={{x:data.x, y:data.y}} text={data.text} />)}
       </Col>
     </AnimatedRow>

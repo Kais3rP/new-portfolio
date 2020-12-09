@@ -53,8 +53,8 @@ export default function App() {
   const havefunLinkRef = useRef();
   const hereRef = useRef();
 
-
   const width = window.innerWidth;
+  const widthThreshold = width/3;
 
 
 
@@ -103,13 +103,20 @@ export default function App() {
   //Prepare Router switch animation bheaviour
   const location = useLocation();
   const history = useHistory();
-  const [bind, springProps, isScrollingLeft] = useDragRouterElement(
+  const [bind, springProps, isScrollingLeft, setIsScrollingLeft] = useDragRouterElement(
     location,
     history
   );
+  //Manages the scroll direction when the location changes
+  useEffect(() => {
+    if (location.pathname === "/home" || location.pathname === "/")
+      setIsScrollingLeft(true)
+    if (location.pathname === "/havefun")
+      setIsScrollingLeft(false)
+  }, [location, setIsScrollingLeft])
 
   return (
-    <Container className="main-theme" fluid>
+    <Container className=" main-container main-theme" fluid>
       <Row>
         <Col>
           <div className="main-theme" id="container" ref={setContainer}></div>
@@ -131,38 +138,32 @@ export default function App() {
             <CSSTransition
           in={true}
           key={location.key}
-          timeout={2000}
+          timeout={700}
           onEnter={(el, isApp) => {
-            new TimelineMax({
-             
-            })
+            new TimelineMax({})
               .set(el, {
-                transform: (idx, el) =>
-                  `translateX(${
-                    isScrollingLeft
-                      ? width
-                      : -(el.getBoundingClientRect().width)
-                  }px)`
+                position:"absolute",
+                left: (idx, el) =>
+                  isScrollingLeft ? width : -el.getBoundingClientRect().width,
+                transform: "scale(0.7)"
               })
-              .to(el, 2, { transform: `translateX(${0}px)` });
+              .to(el, 0.7, { left: 0, transform: "scale(1)" });
           }}
           onExit={el => {
             new TimelineMax()
               .set(el, {
-                position:"absolute",
-                top:0,
-                left:0,
-                transform: (idx, el) =>`translateX(${
-                  isScrollingLeft ? 0:0
-                }px)`
+                position: "absolute",
+                top: 0,
+                left: (idx, el) => (isScrollingLeft ? -widthThreshold : widthThreshold),
+                transform: "scale(0.8)"
               })
-              .to(el, 2, {
-                transform: (idx, el) =>
-                  `translateX(${
-                    isScrollingLeft
-                      ? - el.getBoundingClientRect().width
-                      : el.getBoundingClientRect().width
-                  }px)`
+              .to(el, 0.7, {
+                top:0,
+                left: (idx, el) =>
+                  isScrollingLeft
+                    ? -el.getBoundingClientRect().width - widthThreshold
+                    : el.getBoundingClientRect().width + widthThreshold,
+                transform: "scale(0.8)"
               });
           }}
         >
@@ -194,11 +195,11 @@ export default function App() {
                     <Home bind={bind} springProps={springProps} myRef={homeRef} />
                   </Route>
                 </Switch>
-                </CSSTransition>
-      </TransitionGroup>
+              </CSSTransition>
+            </TransitionGroup>
           </> : <LoadingView setIsReady={setIsReady} loadProgress={loadProgress} />}
         </Col>
-          </Row>
+      </Row>
     </Container>
   );
 }

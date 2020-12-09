@@ -5,76 +5,72 @@ import removeSlash from "../helpers/removeSlashFromPathname"
 
 export default function useDragRouterElement(location, history) {
     //react-spring + gesture
-
-    const [isScrollingLeft, setisScrollingLeft] = useState(false);
+    const widthThreshold = window.innerWidth/3;
+    const [isScrollingLeft, setisScrollingLeft] = useState(true);
     const [currentPos, setCurrentPos] = useState([0,0]);
-    const [props, set] = useSpring(() => ({
-      transform: `translate(0px, 0px)`,
-      immediate: 2
-    }));
-  
-    function moveElementX([mx, my], down, [currX,currY]) {
-      //console.log("inside movement", mx, my,currX, currY);
-     console.log("mx,my",mx,my,  "currX:",currX)
-      set({
-        transform: `translate(${mx+currX  }px,${my +  currY }px)`,
-        immediate: name => down && name === "xy"
-      });
-     //  if (my >= 70 || my <= -70)
-     /* set({
-      transform: `translate(0px,${my + currY}px)`,
-        immediate: name => down && name === "xy"
-      });*/
-    }
-  
-    const bind = useDrag(({ down, event, direction, previous, movement, offset, cancel }) => {
-      const elementWidth = event.target.getBoundingClientRect().width;
-      moveElementX(movement, down, currentPos);
-      if (!down) setCurrentPos(curr => [curr[0]+movement[0], curr[1]+movement[1]]);
-       
-       const xDir = direction[0]
-      if (xDir < 0) setisScrollingLeft(true);
-      if (xDir > 0) setisScrollingLeft(false);
-      //Manage location change on certain conditions
-      /*console.log(
-        "isScrollingLeft",
-        isScrollingLeft,
-        "distance:",
-        direction,
-        "scrolled:",
-        window.innerHeight + currentPos,
-        "currentPos:",
-        currentPos
-      );*/
-      if (
-        false
-      ) {
-        if (
-          (location.pathname === "/1" && xDir >= 0) ||
-          (location.pathname === "/5" && xDir <= 0)
-        )
-          return;
-        history.push(
-          "/" +
-            calculateNextPage(
-              removeSlash(location.pathname)
-                ? removeSlash(location.pathname)[0]
-                : 1,
-              xDir
-            )
-        );
-        setCurrentPos([0,0]);
-      
+   
+      const [props, set] = useSpring(() => ({
+        transform: `scale(1)`,
+        top: 0,
+        left: 0,
+        immediate: 2
+      }));
+    
+      function moveElement({
+        movement: [mx, my],
+        down,
+        currentPos: [currX, currY],
+        event
+      }) {
+    
+       //if (currX === 0) event.target.style.left = 0;
+        set({
+          left: down
+            ? mx
+            : 0,
+          top: my + currY,
+          transform: `scale(${down ? 0.85 : 1}
+          )`,
+          immediate: name => down && name === "left"
+        });
       }
-    }, {lockDirection:true});
-  
-    return [bind, props, isScrollingLeft, currentPos];
-  }
+    
+      const bind = useDrag(
+        ({ down, event, direction, previous, movement, offset, cancel }) => {
+          moveElement({ movement, down, currentPos, location, cancel, event });
+    
+          if (!down)
+            setCurrentPos(curr => [curr[0] + movement[0], curr[1] + movement[1]]);
+    
+          const xDir = direction[0];
+          //console.log("xDir",xDir)
+          setisScrollingLeft(xDir > 0 ? false : true);
+          if ((movement[0] > widthThreshold || movement[0] < -widthThreshold) && !down) {
+       if (
+         (location.pathname === "/home" && xDir >= 0) ||
+         (location.pathname === "/havefun" && xDir <= 0)
+       )
+         return;
+       history.push(
+         "/" +
+           calculateNextPage(
+               removeSlash(location.pathname)
+               ,
+             xDir
+           )
+       );
+       setCurrentPos([0,0]);
+     
+     }
+   }, {lockDirection:true});
+ 
+   return [bind, props, isScrollingLeft, setisScrollingLeft, currentPos];
+ }
 
 function calculateNextPage(path, dir) {
-    console.log(path, dir);
+ 
 
-    return (path === "home" || path === "/") && dir < 0
+    return (path === "home" || path === "") && dir < 0
             ? "about"
             : path === "about" && dir < 0
                 ? "projects"

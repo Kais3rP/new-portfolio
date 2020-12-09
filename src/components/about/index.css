@@ -14,7 +14,7 @@
     margin: 0 !important;
     filter: grayscale(1);
     user-select:none;
-    
+    touch-action:none;
 }
 
 #filter {
