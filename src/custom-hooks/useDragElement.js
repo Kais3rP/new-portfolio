@@ -7,8 +7,8 @@ export default function useDragElement(isOpen, setIsOpen, width, dir) {
       [dir]: window.innerWidth > 800 ? -(width - (1 / 3) * width) : -width,
       immediate: 2
     }));
-    const bind = useDrag(({ down, direction, distance, event }) => {
-      distance = distance * (dir === "left" ? direction[0] : -direction[0]);
+    const bind = useDrag(({ down, movement }) => {
+      const distance = dir === "left" ? movement[0] : -movement[0];
       if (distance > 30 && !down) setIsOpen(true);
       if (distance <= -30 && !down) setIsOpen(false);
       

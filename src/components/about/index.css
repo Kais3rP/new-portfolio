@@ -13,6 +13,8 @@
     padding: 0 !important;
     margin: 0 !important;
     filter: grayscale(1);
+    user-select:none;
+    
 }
 
 #filter {
@@ -24,6 +26,7 @@
     left: 0;
     mix-blend-mode: darken;
     border-right:4px inset rgba(0,0,0,0.3);
+    user-select:none;
 }
 
 #about-text {

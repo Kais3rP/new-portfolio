@@ -9,6 +9,7 @@ import { CRTFilter } from "@pixi/filter-crt"
 import Word from "./Word"
 import setTvEffect from "../../helpers/setTvEffect"
 import uuid from "react-uuid"
+import { animated } from "react-spring";
 
 const words = [
   `Error: Permission denied to access property "x" `,
@@ -90,15 +91,15 @@ const words = [
 
 gsap.registerPlugin(ScrollTrigger);
 
-
-const MainWindowsHoc = React.memo(function ({ myRef, children, setCurrentLocation }) {
+const AnimatedRow = animated(Row);
+const MainWindowsHoc = React.memo(function ({ myRef, children, bind, springProps}) {
 const [wordsArr, setWordsArr] = useState([]);
 const [wordsIds, setWordsIds] = useState([]);
 
   useEffect(() => {
-  //Setting location
+ /* //Setting location
   const location = /\w+$/.exec(window.location.href)[0]
-  setCurrentLocation(location)
+  setCurrentLocation(location)*/
 //Setting up PIXI canvas
     const windowWidth = window.innerWidth;
     const localRef = myRef.current;
@@ -158,12 +159,12 @@ const [wordsIds, setWordsIds] = useState([]);
   }, [myRef])
 
   return (
-    <Row className="justify-content-center align-items-center">
+    <AnimatedRow {...bind()} style={{...springProps}} className="justify-content-center align-items-center">
       <Col xs={12} lg={8} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
         {children}
         {wordsArr.map((data,i) => <Word key={wordsIds[i]} position={{x:data.x, y:data.y}} text={data.text} />)}
       </Col>
-    </Row>
+    </AnimatedRow>
   )
 })
 

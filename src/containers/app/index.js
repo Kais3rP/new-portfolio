@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap"
-import { Route, Switch, withRouter } from "react-router-dom";
+import { Route, Switch, useLocation, useHistory } from "react-router-dom";
 import LeftNavbar from "../../components/left-navbar/index"
 import RightNavbar from "../../components/right-navbar/index"
 import './index.css'
@@ -21,6 +21,9 @@ import Arrow from "../../components/arrow"
 import useLoadAssets from "./useLoadAssets"
 import useHandleListenersAndSpritesAnimation from "./useHandleListenersAndSpriteAnimations"
 import useAnimateStuffOnceReady from "./useAnimateStuffOnceReady";
+import useDragRouterElement from "../../custom-hooks/useDragRouterElement"
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+
 
 
 //Registering GSAP plugins
@@ -35,7 +38,7 @@ export default function App() {
 
   const [isReady, setIsReady] = useState(false);
   const [container, setContainer] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(/\w+$/.exec(window.location.href) ? /\w+$/.exec(window.location.href)[0] : "home");
+
 
 
   const homeRef = useRef();
@@ -51,8 +54,9 @@ export default function App() {
   const hereRef = useRef();
 
 
+  const width = window.innerWidth;
 
- 
+
 
   const {
     app,
@@ -94,9 +98,15 @@ export default function App() {
       hereRef
     })
 
- useAnimateStuffOnceReady(isReady, rippleAnimation, _dropSound, _rippleSprite)
+  useAnimateStuffOnceReady(isReady, rippleAnimation, _dropSound, _rippleSprite)
 
-
+  //Prepare Router switch animation bheaviour
+  const location = useLocation();
+  const history = useHistory();
+  const [bind, springProps, isScrollingLeft] = useDragRouterElement(
+    location,
+    history
+  );
 
   return (
     <Container className="main-theme" fluid>
@@ -114,40 +124,81 @@ export default function App() {
                 havefunLinkRef,
               }}
               handleMenuLinks={handleMenuLinks}
-              currentLocation={currentLocation}
+
             />
             <RightNavbar handleAudio={handleAudio} />
-            <Switch>
-            <Route exact path="/about">
-            <MainWindowsHoc myRef={aboutRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} >
-               <About /> 
-            </MainWindowsHoc>
-            </Route>
-            <Route exact path="/projects">
-            <MainWindowsHoc myRef={projectsRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation}>
-             <Projects  /> 
-            </MainWindowsHoc>
-            </Route>
-            <Route exact path="/technologies">
-            <MainWindowsHoc myRef={technologiesRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} >
-             <Technologies  /> 
-            </MainWindowsHoc>
-            </Route>
-            <Route exact path="/havefun">
-            <MainWindowsHoc myRef={havefunRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} >
-            <HaveFun  /> 
-            </MainWindowsHoc>
-            </Route>
-            <Route exact path="/home">
-          <Home myRef={homeRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} />
-            </Route>    
-            <Route exact path="/">
-          <Home myRef={homeRef} currentLocation={currentLocation} setCurrentLocation={setCurrentLocation} />
-            </Route>          
-            </Switch>
+            <TransitionGroup>
+            <CSSTransition
+          in={true}
+          key={location.key}
+          timeout={2000}
+          onEnter={(el, isApp) => {
+            new TimelineMax({
+             
+            })
+              .set(el, {
+                transform: (idx, el) =>
+                  `translateX(${
+                    isScrollingLeft
+                      ? width
+                      : -(el.getBoundingClientRect().width)
+                  }px)`
+              })
+              .to(el, 2, { transform: `translateX(${0}px)` });
+          }}
+          onExit={el => {
+            new TimelineMax()
+              .set(el, {
+                position:"absolute",
+                top:0,
+                left:0,
+                transform: (idx, el) =>`translateX(${
+                  isScrollingLeft ? 0:0
+                }px)`
+              })
+              .to(el, 2, {
+                transform: (idx, el) =>
+                  `translateX(${
+                    isScrollingLeft
+                      ? - el.getBoundingClientRect().width
+                      : el.getBoundingClientRect().width
+                  }px)`
+              });
+          }}
+        >
+                <Switch location={location}>
+                  <Route exact path="/about">
+                    <MainWindowsHoc bind={bind} springProps={springProps} myRef={aboutRef}  >
+                      <About />
+                    </MainWindowsHoc>
+                  </Route>
+                  <Route exact path="/projects">
+                    <MainWindowsHoc bind={bind} springProps={springProps} myRef={projectsRef} >
+                      <Projects />
+                    </MainWindowsHoc>
+                  </Route>
+                  <Route exact path="/technologies">
+                    <MainWindowsHoc bind={bind} springProps={springProps} myRef={technologiesRef}  >
+                      <Technologies />
+                    </MainWindowsHoc>
+                  </Route>
+                  <Route exact path="/havefun">
+                    <MainWindowsHoc bind={bind} springProps={springProps} myRef={havefunRef} >
+                      <HaveFun />
+                    </MainWindowsHoc>
+                  </Route>
+                  <Route exact path="/home">
+                    <Home bind={bind} springProps={springProps} myRef={homeRef} />
+                  </Route>
+                  <Route exact path="/">
+                    <Home bind={bind} springProps={springProps} myRef={homeRef} />
+                  </Route>
+                </Switch>
+                </CSSTransition>
+      </TransitionGroup>
           </> : <LoadingView setIsReady={setIsReady} loadProgress={loadProgress} />}
         </Col>
-      </Row>
+          </Row>
     </Container>
   );
 }

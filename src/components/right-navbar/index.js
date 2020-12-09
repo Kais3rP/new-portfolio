@@ -64,10 +64,10 @@ export default function RightNavbar({ handleAudio }) {
                         direction={"left"}
                         isRotation={false}
                         style={
-                            { width: "80px", position: "absolute", fill: "#66ccff" }
+                            { width: "40px", position: "absolute", fill: "#66ccff" }
                         }
                         pos={
-                            { x: -100, y: window.innerHeight / 2 - 20 }
+                            { x: -100, y: window.innerHeight - 100 }
                         } />}
                 <div id="nav-controls"
                     className="" >

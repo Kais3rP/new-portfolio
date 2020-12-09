@@ -52,7 +52,8 @@ export default function SwipeCarousel({ pics, style, className }) {
     const index = useRef(0)
     const [props, set] = useSprings(pics.length, i => ({ x: i * window.innerWidth, sc: 1, display: 'block' }))
     const bind = useGesture({
-      onDrag: ({ down, direction: [xDir], distance, cancel }) => {
+      onDrag: ({ down, direction: [xDir], distance, cancel, event }) => {
+        event.stopPropagation();
         if (down && distance > window.innerWidth / 2)
           cancel((index.current = clamp(index.current + (xDir > 0 ? -1 : 1), 0, pics.length - 1)))
         set(i => {

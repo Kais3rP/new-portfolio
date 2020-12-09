@@ -17,6 +17,8 @@ import { animated } from "react-spring";
 import useDragElement from "../../custom-hooks/useDragElement"
 import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
 import MoveRight from "../../reusable/pointer-animations/MoveRight"
+import usePreviousLocation from "../../custom-hooks/usePreviousLocation"
+import removeSlash from "../../helpers/removeSlashFromPathname"
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
@@ -25,15 +27,15 @@ const width = 530;
 const AnimatedRow = animated(Row);
 
 
-
 export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, currentLocation }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const navCanvasContainerRef = useRef();
 
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
-
-
+const location = useLocation()
+   const previousLocation = usePreviousLocation(location)
+   console.log(location.pathname, previousLocation.pathname)
 
     //Setting PIXI 
     useEffect(() => {
@@ -86,13 +88,13 @@ export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, current
                             Icon={MoveRight}
                             direction={"right"}
                             isRotation={false}
-                            style={{ width: "80px", position: "absolute", fill: "#66ccff" }}
-                            pos={{ x: 100, y: window.innerHeight / 2 - 20 }} />}
+                            style={{ width: "40px", position: "absolute", fill: "#66ccff" }}
+                            pos={{ x: 100, y: 100 }} />}
                     <ul id="nav-menu" className=" d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
                             <NavLink  isActive={(match, location) => {                                                  
-                             if (match && removeSlash(location.pathname) !== currentLocation) {  
-                                 handleMenuLinks(removeSlash(location.pathname),currentLocation);  
+                             if (match && removeSlash(location.pathname) !== removeSlash(previousLocation.pathname)) {  
+                                 handleMenuLinks(removeSlash(location.pathname),removeSlash(previousLocation.pathname));  
                              }                       
                             }} to={link}
                           
@@ -121,6 +123,3 @@ export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, current
 }
 
 
-function removeSlash(str){
-    return /\w+/.exec(str)[0]
-}
