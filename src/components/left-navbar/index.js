@@ -17,11 +17,11 @@ import { animated } from "react-spring";
 import useDragElement from "../../custom-hooks/useDragElement"
 import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
 import MoveRight from "../../reusable/pointer-animations/MoveRight"
-import usePreviousLocation from "../../custom-hooks/usePreviousLocation"
-import removeSlash from "../../helpers/removeSlashFromPathname"
+
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
+
 const links = ["home", "about", "projects", "technologies", "havefun"];
 const width = 530;
 const AnimatedRow = animated(Row);
@@ -32,10 +32,8 @@ export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, current
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const navCanvasContainerRef = useRef();
-
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
-const location = useLocation()
-   const previousLocation = usePreviousLocation(location)
+
 
     //Setting PIXI 
     useEffect(() => {
@@ -62,15 +60,15 @@ const location = useLocation()
 
     function animateLink(e) {
 
-     /*   if (!currentLinkAnim)
+      /*  if (!currentLinkAnim && window.innerWidth > 800 )
             setCurrentlinkAnim(new TimelineMax({ repeat: -1, yoyo: true }).to(e.target, 0.2, { scale: 1.2, ease: "linear" }))*/
     }
 
     function stopAnimateLink(e) {
-/*
+   /* if (!window.innerWidth > 800) return;
         gsap.set(e.target, { scale: 1 });
         currentLinkAnim?.kill();
-        setCurrentlinkAnim(null)  */
+        setCurrentlinkAnim(null) */ 
     }
 
     return (
@@ -90,13 +88,9 @@ const location = useLocation()
                             isRotation={false}
                             style={{ width: "40px", position: "absolute", fill: "#66ccff" }}
                             pos={{ x: 100, y: 100 }} />}
-                    <ul id="nav-menu" className=" d-flex flex-column justify-content-start align-items-start mt-5">
+                    <ul id="nav-menu" className="d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
-                            <NavLink  isActive={(match, location) => {                                                  
-                             if (match && removeSlash(location.pathname) !== removeSlash(previousLocation.pathname)) {  
-                                 handleMenuLinks(removeSlash(location.pathname),removeSlash(previousLocation.pathname));  
-                             }                       
-                            }} to={link}
+                            <NavLink activeClassName="active-link" to={link}
                           
                                 key={link} ref={linkRefs[`${link}LinkRef`]}>
                                 <li                                   

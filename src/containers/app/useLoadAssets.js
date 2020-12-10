@@ -54,7 +54,7 @@ if (!container) return;
     .load(init)
 
   loader.onProgress.add(data => {
-    console.log(data.progress)
+    console.log(data.progress+"% Loaded")
     setLoadProgress(Math.ceil(data.progress))
   })
 
@@ -69,7 +69,7 @@ if (!container) return;
     const rippleSprite = new Sprite(resources.ripple.texture);
     resources.clouds.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT; //It's important that the wrap modeis initialized before the sprite creation and upload
     const cloudsSprite = new Sprite(resources.clouds.texture);
-    console.log(resources.clouds.texture.baseTexture.isPowerOfTwo)
+    //console.log(resources.clouds.texture.baseTexture.isPowerOfTwo)
 
     const style = new PIXI.TextStyle({
       dropShadow: true,

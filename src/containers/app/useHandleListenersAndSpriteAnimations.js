@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react"
+import {  useLocation, useHistory } from "react-router-dom"
 import * as PIXI from "pixi.js"
-import * as PIXISound from "pixi-sound"
-import { gsap, TimelineMax } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { ScrollToPlugin } from "gsap/ScrollToPlugin"
-import { PixiPlugin } from "gsap/PixiPlugin"
+import { TimelineMax } from "gsap"
 import { GodrayFilter } from "@pixi/filter-godray"
+import usePreviousLocation from "../../custom-hooks/usePreviousLocation"
+import removeSlash from "../../helpers/removeSlashFromPathname"
 
 export default function useHandleListenersAndSpritesAnimation(
     hasLoaded,
@@ -25,8 +24,15 @@ export default function useHandleListenersAndSpritesAnimation(
     const [isBallDeflating, setIsBallDeflating] = useState(false);
     const [rippleAnimation, setRippleAnimation] = useState(null);
     const [isMuted, setIsMuted] = useState(false);
+    const location = useLocation();
+    const previousLocation = usePreviousLocation(location);
 
+//Handle menu links animation on location change
+useEffect(()=>{
+    if (removeSlash(location.pathname) !== removeSlash(previousLocation.pathname))  
+        handleMenuLinks(removeSlash(location.pathname),removeSlash(previousLocation.pathname));
 
+},[location])
     //Handling listeners resize, scroll, pointermove, and click events
     useEffect(() => {
         const mousePos = {

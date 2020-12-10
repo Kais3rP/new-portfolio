@@ -75,16 +75,14 @@
 
 @media Screen and (max-height:300px){
 
-    #nav-controls {
-        height: 50%;
-    }
+  
     #nav-menu {
         height: 0%;
         font-size:0;
     }
     
     #nav-contacts {
-        height: 50%;
+        height: 100%;
         font-size: 25px;
     }
     #here-img {

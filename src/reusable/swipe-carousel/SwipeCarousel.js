@@ -46,7 +46,8 @@ const width = window.innerWidth;
       letterSpacing: ".05em",
       fontSize:"2rem",
       cursor: "pointer",
-      color:"#FFF"
+      color:"#FFF",
+      pointerEvents:"auto"
     }
   
     const index = useRef(0)
