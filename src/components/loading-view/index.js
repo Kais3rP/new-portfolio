@@ -10,21 +10,19 @@ import stompSound from "../../sound/stomp.mp3"
 
 export default function Loading({ loadProgress, setIsReady }) {
 
-    const [hasLogoBeenClicked, setHasLogoBeenClicked] = useState(false);
     const logoRef = useRef();
-    const buttonRef = useRef();
-    const buttonTextRef = useRef();
     const loadColRef = useRef();
     const logoContainerRef = useRef();
     const fallRef = useRef();
-    const stompRef = useRef();
-    const progressDataRef = useRef();
     const [animations, setAnimations] = useState({});
 
     useEffect(()=>{
 if (loadProgress === 100) {
-animations.fadeLogo.play()
+    setTimeout(()=>{
+        animations.fadeLogo.play()
 animations.fadeBg.play()  
+    },1000)
+
 }                          
     },[loadProgress])
 
@@ -52,7 +50,6 @@ animations.fadeBg.play()
         <Row className="justify-content-center align-items-center">
             <Col ref={loadColRef} className=" loading-col d-flex flex-column justify-content-center align-items-center full-height main-theme">
                 <audio ref={fallRef} src={fallSound}></audio>
-                <audio ref={stompRef} src={stompSound}></audio>
                 <div ref={logoContainerRef} className="loader-container">
                     <svg
                         id="logo"
