@@ -41,7 +41,7 @@ export default function Technologies() {
       <Col className="w-100 d-flex flex-column technologies-container">
         <TypeIt>
           <div className="d-flex ml-4 mt-2">
-            <p style={{ color: "#66ccff" }}>this.technologies()</p>
+            <p style={{ color: "#66ccff" }}>this.techs()</p>
           </div>
           <div className="w-100 d-flex ml-4 mt-2">
             <p style={{ color: "#ff6600" }}>

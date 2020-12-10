@@ -40,9 +40,6 @@ export default function App() {
   const [isReady, setIsReady] = useState(false);
   const [container, setContainer] = useState(null);
  
-
-
-
   const homeRef = useRef();
   const aboutRef = useRef();
   const projectsRef = useRef();
@@ -58,6 +55,8 @@ export default function App() {
   const width = window.innerWidth;
   const widthThreshold = width/3;
 
+  const location = useLocation();
+  const history = useHistory();
 
 
   const {
@@ -101,11 +100,9 @@ export default function App() {
       hereRef
     })
 
-  useAnimateStuffOnceReady(isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted)
+  useAnimateStuffOnceReady({ isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted, handleMenuLinks, location})
 
   //Prepare Router switch animation bheaviour
-  const location = useLocation();
-  const history = useHistory();
   const [bind, springProps, isScrollingLeft, setIsScrollingLeft] = useDragRouterElement(
     location,
     history
@@ -134,8 +131,6 @@ export default function App() {
                 technologiesLinkRef,
                 havefunLinkRef,
               }}
-              handleMenuLinks={handleMenuLinks}
-
             />
             <RightNavbar handleAudio={handleAudio} isMuted={isMuted} />
             <TransitionGroup>

@@ -60,7 +60,7 @@ export default function RightNavbar({ handleAudio, isMuted }) {
         className="m-0 h-100" >
         <Col className=" d-flex justify-content-start m-0 p-0">
             <div id="nav-right-container"
-                className="d-flex flex-column justify-content-start align-items-center">
+                className="d-flex flex-column justify-content-between align-items-center">
                 {!isNavLarge &&
                     <TouchIcon
                         Icon={MoveLeft}

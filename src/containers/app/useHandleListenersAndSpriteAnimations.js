@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import {  useLocation, useHistory } from "react-router-dom"
+import { useLocation, useHistory } from "react-router-dom"
 import * as PIXI from "pixi.js"
 import { TimelineMax } from "gsap"
 import { GodrayFilter } from "@pixi/filter-godray"
@@ -27,12 +27,12 @@ export default function useHandleListenersAndSpritesAnimation(
     const location = useLocation();
     const previousLocation = usePreviousLocation(location);
 
-//Handle menu links animation on location change
-useEffect(()=>{
-    if (removeSlash(location.pathname) !== removeSlash(previousLocation.pathname))  
-        handleMenuLinks(removeSlash(location.pathname),removeSlash(previousLocation.pathname));
+    //Handle menu links animation on location change
+    useEffect(() => {
+        if (location.pathname !== previousLocation.pathname)
+            handleMenuLinks(location.pathname, previousLocation.pathname);
 
-},[location])
+    }, [location])
     //Handling listeners resize, scroll, pointermove, and click events
     useEffect(() => {
         const mousePos = {
@@ -218,16 +218,19 @@ useEffect(()=>{
 
 
     function handleMenuLinks(target, prevTarget) {
-//console.log(target, prevTarget)
-    if (!linkRefs[target + "LinkRef"] || !linkRefs[prevTarget + "LinkRef"]) return;    
+        //console.log(target, prevTarget)
+        target = removeSlash(target);
+        prevTarget = removeSlash(prevTarget);
+        if (!linkRefs[target + "LinkRef"] || !linkRefs[prevTarget + "LinkRef"]) return;
         target = linkRefs[target + "LinkRef"].current
         prevTarget = linkRefs[prevTarget + "LinkRef"].current
-  
-       const containerHeight = target.parentNode.getBoundingClientRect().height;
+
+        const containerHeight = target.parentNode.getBoundingClientRect().height;
         const diffPositionLinkContainer = target.getBoundingClientRect().y - target.parentNode.getBoundingClientRect().y;
-            const linkRaise = new TimelineMax()
-         .to(prevTarget, 1, { color: "#66ccff", y: 0, duration: 1, ease: "bounce" })
- 
+
+        const linkRaise = new TimelineMax()
+            .to(prevTarget, 1, { color: "#66ccff", y: 0, duration: 1, ease: "bounce" })
+
 
         const linkFall = new TimelineMax()
             .to(target, 1, {
@@ -270,7 +273,7 @@ useEffect(()=>{
 
     function handleAudio() {
         console.log("Toggling audio", isMuted)
-        setIsMuted(bool => !bool)   
+        setIsMuted(bool => !bool)
     }
     return { handleMenuLinks, setRippleAnimation, handleAudio, isMuted, rippleAnimation }
 }

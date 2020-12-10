@@ -55,13 +55,10 @@ export default function useDragRouterElement(location, history) {
  //use gesture   
       const bind = useDrag(
         ({ down, event, direction, movement, cancel }) => {
-          moveElement({ movement, down, currentPosY, location, cancel });
-    
+          moveElement({ movement, down, currentPosY, location, cancel });    
           if (!down)
-            setCurrentPosY(curr =>curr + movement[1]);
-    
-          const xDir = direction[0];
-        
+            setCurrentPosY(curr =>curr + movement[1]);    
+          const xDir = direction[0];        
          if (movement[0] > 0) setisScrollingLeft( false )
          if (movement[0] < 0) setisScrollingLeft( true )
           if ((movement[0] > widthThreshold || movement[0] < -widthThreshold) && !down) {

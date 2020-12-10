@@ -27,7 +27,7 @@ const width = 530;
 const AnimatedRow = animated(Row);
 
 
-export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, currentLocation }) {
+export default function LeftNavbar({ linkRefs, hereRef }) {
    
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
@@ -88,7 +88,7 @@ export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, current
                             isRotation={false}
                             style={{ width: "40px", position: "absolute", fill: "#66ccff" }}
                             pos={{ x: 100, y: 100 }} />}
-                    <ul id="nav-menu" className="d-flex flex-column justify-content-start align-items-start mt-5">
+                    <ul id="nav-menu" className="w-100 d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
                             <NavLink activeClassName="active-link" to={link}
                           
@@ -97,7 +97,7 @@ export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, current
                                     className="p-3">
                                     <h6 onMouseEnter={animateLink}
                                         onMouseLeave={stopAnimateLink}>
-                                        {`.${link}()`}</h6>
+                                        {`.${link === "technologies" ? "techs" : link}()`}</h6>
                                 </li>
                             </NavLink>))}
                         <img id="here-img" ref={hereRef} src={here} alt="You are here" />

@@ -21,33 +21,49 @@ body {
     overscroll-behavior: none;
 }
 
+
 /*This is needed in order to show the main windows with absolute Row. FOr some reason relative position column, prevent them from being shown */
+
 [class*='col'] {
     position: static;
 }
 
 a {
-    outline:0 !important;
+    outline: 0 !important;
 }
 
 a.icons:hover {
-animation: animateAnchors 0.5s ease-in-out infinite;
+    animation: animateAnchors 0.5s ease-in-out infinite;
 }
+
 
 /* animation for active anchors */
+
 @keyframes animateAnchors {
     0% {
-    transform: translateY(-8px)
+        transform: translateY(-8px)
     }
-
-        50% {
-            transform: translateY(8px)
-            }
-
-                100% {
-                    transform: translateY(-8px)
-                    }
+    50% {
+        transform: translateY(8px)
+    }
+    100% {
+        transform: translateY(-8px)
+    }
 }
+
+@keyframes animateActiveMenuLinks {
+    0% {
+        letter-spacing: 1px;
+    }
+    50% {
+
+        letter-spacing: 2px;
+    }
+    100% {
+        letter-spacing: 1px;
+    }
+}
+
 .main-theme {
     background-color: #000000;
     /*#1A0315;*/
