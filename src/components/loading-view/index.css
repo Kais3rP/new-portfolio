@@ -49,6 +49,7 @@ cursor:pointer;
 
 .loading-col {
     overflow: hidden;
+   position:relative;
 }
 
 #start-button {

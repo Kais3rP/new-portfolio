@@ -92,44 +92,44 @@ const words = [
 gsap.registerPlugin(ScrollTrigger);
 
 const AnimatedRow = animated(Row);
-const MainWindowsHoc = React.memo(function ({ myRef, children, bind, springProps}) {
-const [wordsArr, setWordsArr] = useState([]);
-const [wordsIds, setWordsIds] = useState([]);
+const MainWindowsHoc = React.memo(function ({ myRef, children, bind, springProps }) {
+  const [wordsArr, setWordsArr] = useState([]);
+  const [wordsIds, setWordsIds] = useState([]);
 
   useEffect(() => {
- /* //Setting location
-  const location = /\w+$/.exec(window.location.href)[0]
-  setCurrentLocation(location)*/
-//Setting up PIXI canvas
+    /* //Setting location
+     const location = /\w+$/.exec(window.location.href)[0]
+     setCurrentLocation(location)*/
+    //Setting up PIXI canvas
     const windowWidth = window.innerWidth;
     const localRef = myRef.current;
     const width = myRef.current.clientWidth;
     const height = myRef.current.clientHeight;
-    console.log("width:",width, myRef.current, myRef.current.getBoundingClientRect().width)
+    console.log("width:", width, myRef.current, myRef.current.getBoundingClientRect().width)
     const {
       app,
       Container,
-    } = createNewPixiApp(300, height, localRef);    
-    const firstContainer = new Container();    
+    } = createNewPixiApp(width, height, localRef);
+    const firstContainer = new Container();
     //Monitor Words animation
     const wordsArr = [];
     const wordsIds = []
-  if (windowWidth > 900){
-    for (let i = 0; i < words.length; i++) {     
-      const x = Math.floor(Math.random()*(width-200))
-      const y = Math.floor(Math.random()*(height-30))
-      const text = words[Math.floor(Math.random()*words.length)]
-      wordsArr.push({x,y,text})
-      wordsIds.push(uuid())
-    }    
-    
-    setWordsArr(wordsArr);
-    setWordsIds(wordsIds)
-  }     
+    if (windowWidth > 900) {
+      for (let i = 0; i < words.length; i++) {
+        const x = Math.floor(Math.random() * (width - 200))
+        const y = Math.floor(Math.random() * (height - 30))
+        const text = words[Math.floor(Math.random() * words.length)]
+        wordsArr.push({ x, y, text })
+        wordsIds.push(uuid())
+      }
+
+      setWordsArr(wordsArr);
+      setWordsIds(wordsIds)
+    }
     const rect = new PIXI.Graphics();
     const filter = new CRTFilter();
     //if (window.innerWidth > 900)
-    setTvEffect(app,rect,0.2,filter,firstContainer, myRef,5, 10, 0.5, 0, 0, 5)
+    setTvEffect(app, rect, 0.2, filter, firstContainer, myRef, 5, 10, 0.5, 0, 0, 5)
 
     function handlePointerEnter(e) {
       filter.noiseSize = 1.2;
@@ -148,22 +148,23 @@ const [wordsIds, setWordsIds] = useState([]);
     return () => {
       localRef.removeEventListener("pointerenter", handlePointerEnter)
       localRef.removeEventListener("pointerleave", handlePointerLeave)
-    //Clean all the PIXI WebGL assets on unmount during react router navigation
+      //Clean all the PIXI WebGL assets on unmount during react router navigation
       app.destroy({
         children: true,
         texture: true,
-        baseTexture: true}
-  ); 
-     
+        baseTexture: true
+      }
+      );
+
     }
 
   }, [myRef])
 
   return (
-    <AnimatedRow  {...bind()} style={{...springProps, pointerEvents:"none"}} className="window-container w-100 justify-content-center align-items-center">
-      <Col  xs={12} lg={8} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>    
-        {children}   
-        {wordsArr.map((data,i) => <Word key={wordsIds[i]} position={{x:data.x, y:data.y}} text={data.text} />)}
+    <AnimatedRow  {...bind()} style={{ ...springProps, pointerEvents: "none" }} className="window-container w-100 justify-content-center align-items-center">
+      <Col xs={12} lg={8} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
+        {children}
+        {wordsArr.map((data, i) => <Word key={wordsIds[i]} position={{ x: data.x, y: data.y }} text={data.text} />)}
       </Col>
     </AnimatedRow>
   )

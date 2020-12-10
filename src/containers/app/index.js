@@ -138,7 +138,7 @@ export default function App() {
             <CSSTransition
           in={true}
           key={location.key}
-          timeout={700}
+          timeout={3000}
           onEnter={(el, isApp) => {
             new TimelineMax({})
               .set(el, {
@@ -147,17 +147,17 @@ export default function App() {
                   isScrollingLeft ? width : -el.getBoundingClientRect().width,
                 transform: "scale(0.7)"
               })
-              .to(el, 0.7, { left: 0, transform: "scale(1)" });
+              .to(el, 3, { left: 0, transform: "scale(1)" });
           }}
           onExit={el => {
             new TimelineMax()
               .set(el, {
                 position: "absolute",
-                top: 0,
+                top: 100,
                 left: (idx, el) => (isScrollingLeft ? -widthThreshold : widthThreshold),
                 transform: "scale(0.8)"
               })
-              .to(el, 0.7, {
+              .to(el, 3, {
                 top:0,
                 left: (idx, el) =>
                   isScrollingLeft

@@ -22,9 +22,10 @@ export default function Loading({ loadProgress, setIsReady }) {
     const [animations, setAnimations] = useState({});
 
     useEffect(()=>{
-if (loadProgress === 100) new TimelineMax()
-                                .to(progressDataRef.current, {opacity:0, duration:3})
-                                
+if (loadProgress === 100) {
+animations.fadeLogo.play()
+animations.fadeBg.play()  
+}                          
     },[loadProgress])
 
     useEffect(() => {
@@ -59,12 +60,12 @@ if (loadProgress === 100) new TimelineMax()
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 185.78 200.51"
                         ref={logoRef}
-                        onClick={() => {
+                       /* onClick={() => {
                         if (loadProgress !== 100) return;
                         setHasLogoBeenClicked(true)
                         animations.fadeLogo.play()
-                        animations.fadeBg.play()                       
-                    }}
+                        animations.fadeBg.play()                   
+                    }}*/
                     >
                         <defs>
                             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -86,11 +87,7 @@ if (loadProgress === 100) new TimelineMax()
                             transform="translate(-8.22 -0.42)" />
                     </svg>
                 </div>                  
-                  {/*}  <div id="bar" ref={progressDataRef}>
-                    <h5 id="progress">{loadProgress} % </h5>
-                    <div id="inside-bar" style={{width:loadProgress+"%"}}></div>
-                    </div>   
-                    */}            
+             
             </Col>
         </Row>
 
