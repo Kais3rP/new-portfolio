@@ -13,6 +13,8 @@ import node from "../../pics/icons/node.svg"
 import react from "../../pics/icons/react.svg"
 import redux from "../../pics/icons/redux.svg"
 import webpack from "../../pics/icons/webpack.svg"
+import underConstr from "../../pics/under-constr.svg"
+
 gsap.registerPlugin(ScrollTrigger);
 let icons = [html5, css3, js, mongo, node, react, redux, webpack, git2]
 
@@ -31,7 +33,7 @@ export default function Technologies() {
 
   useEffect(() => {
     new TimelineMax({ })
-    .to(refs.map(ref => ref.current),2, {y:(idx, target) => idx*20 , ease:"elastic"} )
+    .to(refs.map(ref => ref.current),2, {x:(idx, target) => idx*20 , ease:"elastic"} )
   }, [])
 
   return (
@@ -47,11 +49,13 @@ export default function Technologies() {
            </p>
           </div>
         </TypeIt>
-        {myIcons.map(icon =>(        
-          <div id="tech-icons-container" key={icon.icon} ref={icon.ref}>
-            <img style={{ height: "70px" }} src={icon.icon}></img>
+        <img className="under-construction" src={underConstr} style={{width:"20%"}} alt="under construction"/>
+        {myIcons.map((icon,idx) =>(        
+          <div key={idx+idx-2} className="tech-icons-container" key={icon.icon} ref={icon.ref}>
+            <img style={{ height: "70px", pointerEvents:"none !important" }} src={icon.icon} alt="tech icon"></img>
           </div>
           ))}
+         
       </Col>
     </Row>
   )

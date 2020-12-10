@@ -109,7 +109,7 @@ export default function App() {
     location,
     history
   );
-  //Manages the scroll direction when the location changes
+ //Manages the scroll direction when the location changes
   useEffect(() => {
     if (location.pathname === "/home" || location.pathname === "/")
       setIsScrollingLeft(true)
@@ -117,7 +117,7 @@ export default function App() {
       setIsScrollingLeft(false)
   }, [location, setIsScrollingLeft])
 
-  console.log("is scrolling left ?", isScrollingLeft)
+ 
   return (
     <Container className=" main-container main-theme" fluid>
       <Row>

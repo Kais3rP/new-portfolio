@@ -22,7 +22,7 @@ export default function HaveFun({ havefunRef }) {
            </p>
             </div>
           </TypeIt>
-           <img className="under-construction" src={underConstr} style={{width:"20%"}} alt="under construction"/>
+           <img className="under-construction" src={underConstr} style={{width:"20%", pointerEvents:"none"}} alt="under construction"/>
         </Col>
       </Row>
     )

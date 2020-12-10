@@ -5,12 +5,14 @@ import removeSlash from "../helpers/removeSlashFromPathname"
 
 export default function useDragRouterElement(location, history) {
     //react-spring + gesture
+    console.log("rerendering custom hook drag")
     const width = window.innerWidth
     const widthThreshold = width/3;
     const [isScrollingLeft, setisScrollingLeft] = useState(true);
-    const [currentPos, setCurrentPos] = useState([0,0]);
-   
+    const [currentPosY, setCurrentPosY] = useState(0);
+ //react spring  
       const [props, set] = useSpring(() => ({
+        position:"absolute",
         transform: `scale(1)`,
         top: 0,
         left: 0,
@@ -20,10 +22,12 @@ export default function useDragRouterElement(location, history) {
       function moveElement({
         movement: [mx, my],
         down,
-        currentPos: [currX, currY],
+        currentPosY:currY,
         cancel,
         location
       }) {
+
+        console.log(currY)
     if (mx > widthThreshold || mx < -widthThreshold) {
       cancel();
       set({
@@ -50,21 +54,22 @@ export default function useDragRouterElement(location, history) {
           immediate: name => down && name === "left"
         });
       }
-    
+ //use gesture   
       const bind = useDrag(
         ({ down, event, direction, movement, cancel }) => {
-          moveElement({ movement, down, currentPos, location, cancel });
+          moveElement({ movement, down, currentPosY, location, cancel });
     
           if (!down)
-            setCurrentPos(curr => [curr[0] + movement[0], curr[1] + movement[1]]);
+            setCurrentPosY(curr =>curr + movement[1]);
     
           const xDir = direction[0];
-          //console.log("xDir",xDir)
-          setisScrollingLeft(xDir > 0 ? false : true);
+        
+         if (movement[0] > 0) setisScrollingLeft( false )
+         if (movement[0] < 0) setisScrollingLeft( true )
           if ((movement[0] > widthThreshold || movement[0] < -widthThreshold) && !down) {
        if (
-         (location.pathname === "/home" && xDir >= 0) ||
-         (location.pathname === "/havefun" && xDir <= 0)
+         (location.pathname === "/home" && movement[0] >= 0) ||
+         (location.pathname === "/havefun" && movement[0] <= 0)
        )
          return;
        history.push(
@@ -75,12 +80,12 @@ export default function useDragRouterElement(location, history) {
              xDir
            )
        );
-       setCurrentPos([0,0]);
+       setCurrentPosY(0);
      
      }
    }, {lockDirection:true});
  
-   return [bind, props, isScrollingLeft, setisScrollingLeft, currentPos];
+   return [bind, props, isScrollingLeft, setisScrollingLeft, currentPosY];
  }
 
 function calculateNextPage(path, dir) {

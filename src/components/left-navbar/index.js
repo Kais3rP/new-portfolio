@@ -28,6 +28,7 @@ const AnimatedRow = animated(Row);
 
 
 export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, currentLocation }) {
+    console.log("rerendering left navbar")
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const navCanvasContainerRef = useRef();
@@ -35,7 +36,6 @@ export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, current
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
 const location = useLocation()
    const previousLocation = usePreviousLocation(location)
-   console.log(location.pathname, previousLocation.pathname)
 
     //Setting PIXI 
     useEffect(() => {
@@ -72,7 +72,7 @@ const location = useLocation()
         currentLinkAnim?.kill();
         setCurrentlinkAnim(null)  */
     }
-//console.log("location", location.pathname, "prevloc",previousLocation.pathname)
+
     return (
         <AnimatedRow
             ref={navCanvasContainerRef}

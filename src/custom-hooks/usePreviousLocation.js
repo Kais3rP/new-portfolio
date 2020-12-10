@@ -5,7 +5,7 @@ export default function usePreviousLocation(location){
     useEffect(()=>{
         console.log("usePrevLoc", location)
         prevLocRef.current = location
-    })
+    },[location])
 
     return prevLocRef.current
 }
