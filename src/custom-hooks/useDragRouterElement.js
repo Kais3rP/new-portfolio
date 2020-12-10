@@ -36,7 +36,7 @@ export default function useDragRouterElement(location, history) {
         -width
         ,
         top: 0,
-        transform: `scale(${mx < 0 && location.pathname === "/havefun" ? 1 : 0.85})`,
+        transform: `scale(1)`,
         immediate: name => down && name === "left"
       });
 
@@ -47,7 +47,7 @@ export default function useDragRouterElement(location, history) {
             ? mx
             : 0,
           top: my + currY,
-          transform: `scale(${down ? 0.85 : 1}
+          transform: `scale(${down ? 0.9 : 1}
           )`,
           immediate: name => down && name === "left"
         });
