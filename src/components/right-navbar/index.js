@@ -22,7 +22,7 @@ const AnimatedRow = animated(Row);
 const windowWidth = window.innerWidth;
 
 export default function RightNavbar({ handleAudio }) {
-    const [isNavLarge, setIsNavLarge] = useState(true);
+    const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
 
