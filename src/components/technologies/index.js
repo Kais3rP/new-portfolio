@@ -32,8 +32,8 @@ export default function Technologies() {
   const myIcons =  icons.map((icon, idx) => ({ icon, ref: refs[idx] }))
 
   useEffect(() => {
-    new TimelineMax({ })
-    .to(refs.map(ref => ref.current),2, {y:(idx, target) => idx*20 , ease:"elastic"} )
+   /* new TimelineMax({ })
+    .to(refs.map(ref => ref.current),2, {y:(idx, target) => idx*20 , ease:"elastic"} )*/
   }, [])
 
   return (
@@ -50,11 +50,11 @@ export default function Technologies() {
           </div>
         </TypeIt>
         <img className="under-construction" src={underConstr} style={{width:"20%"}} alt="under construction"/>
-        {myIcons.map((icon,idx) =>(        
+        {/*myIcons.map((icon,idx) =>(        
           <div key={idx+idx-2} className="tech-icons-container" ref={icon.ref}>
             <img style={{ height: "70px", pointerEvents:"none !important" }} src={icon.icon} alt="tech icon"></img>
           </div>
-          ))}
+          ))*/}
          
       </Col>
     </Row>
