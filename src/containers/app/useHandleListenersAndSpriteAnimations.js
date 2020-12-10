@@ -213,7 +213,7 @@ export default function useHandleListenersAndSpritesAnimation(
 
     function handleMenuLinks(target, prevTarget) {
 //console.log(target, prevTarget)
-        
+    if (!target || !prevTarget) return;    
         target = linkRefs[target + "LinkRef"].current
         prevTarget = linkRefs[prevTarget + "LinkRef"].current
   
