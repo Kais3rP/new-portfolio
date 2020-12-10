@@ -106,7 +106,7 @@ export default function App() {
   //Prepare Router switch animation bheaviour
   const location = useLocation();
   const history = useHistory();
-  const [bind, springProps, isScrollingLeft, setIsScrollingLeft,  currentPos] = useDragRouterElement(
+  const [bind, springProps, isScrollingLeft, setIsScrollingLeft] = useDragRouterElement(
     location,
     history
   );
@@ -149,10 +149,11 @@ export default function App() {
                 position:"absolute",
                 left: (idx, el) =>
                   isScrollingLeft ? width : -el.getBoundingClientRect().width,
+                  top:0,
                 transform: "scale(0.7)",
                 visibility:"hidden"
               })
-              .to(el, 1, { left: 0, transform: "scale(1)",visibility:"visible" });
+              .to(el, 1, { left: 0, top:0, transform: "scale(1)",visibility:"visible" });
           }}
           onExit={el => {
             new TimelineMax()

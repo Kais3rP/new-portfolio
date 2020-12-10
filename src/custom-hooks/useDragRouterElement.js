@@ -83,7 +83,7 @@ export default function useDragRouterElement(location, history) {
      }
    }, {lockDirection:true});
  
-   return [bind, props, isScrollingLeft, setisScrollingLeft, currentPosY];
+   return [bind, props, isScrollingLeft, setisScrollingLeft];
  }
 
 function calculateNextPage(path, dir) {
