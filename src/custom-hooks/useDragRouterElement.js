@@ -15,7 +15,8 @@ export default function useDragRouterElement(location, history) {
         transform: `scale(1)`,
         top: 0,
         left: 0,
-        immediate: 2
+        immediate: 2,
+        config: config.gentle
       }));
     
       function moveElement({
