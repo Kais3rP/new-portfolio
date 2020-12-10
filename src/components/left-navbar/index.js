@@ -90,8 +90,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
                             pos={{ x: 100, y: 100 }} />}
                     <ul id="nav-menu" className="w-100 d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
-                            <NavLink activeClassName="active-link" to={link}
-                          
+                            <NavLink className="nav-link" activeClassName="active-link" to={link}                         
                                 key={link} ref={linkRefs[`${link}LinkRef`]}>
                                 <li                                   
                                     className="p-3">

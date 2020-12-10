@@ -50,7 +50,17 @@ a.icons:hover {
         transform: translateY(-8px)
     }
 }
-
+@keyframes animateHoveredMenuLinks {
+    0% {
+       font-size:0.95rem;
+    }
+    50% {
+        font-size:1.05rem;
+    }
+    100% {
+        font-size:0.95rem;
+    }
+}
 @keyframes animateActiveMenuLinks {
     0% {
         letter-spacing: 1px;
@@ -63,6 +73,8 @@ a.icons:hover {
         letter-spacing: 1px;
     }
 }
+
+
 
 .main-theme {
     background-color: #000000;
