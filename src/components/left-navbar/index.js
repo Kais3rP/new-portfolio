@@ -72,7 +72,7 @@ const location = useLocation()
         currentLinkAnim?.kill();
         setCurrentlinkAnim(null)  */
     }
-
+//console.log("location", location.pathname, "prevloc",previousLocation.pathname)
     return (
         <AnimatedRow
             ref={navCanvasContainerRef}

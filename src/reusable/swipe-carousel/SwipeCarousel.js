@@ -6,11 +6,11 @@ import SwipeLeft from "../pointer-animations/SwipeLeft"
 import SwipeRight from "../pointer-animations/SwipeRight"
 
 export default function SwipeCarousel({ pics, style, className }) {
-
+const width = window.innerWidth;
     const containerStyle = {
       position: "relative",
       width: "100%",
-      height: "500px",
+      height:width > 768 ? "400px" : "200px",
       touchAction: "none",
       marginTop: "50px",
       marginBottom: "50px",

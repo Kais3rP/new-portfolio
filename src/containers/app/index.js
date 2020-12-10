@@ -103,7 +103,7 @@ export default function App() {
   //Prepare Router switch animation bheaviour
   const location = useLocation();
   const history = useHistory();
-  const [bind, springProps, isScrollingLeft, setIsScrollingLeft] = useDragRouterElement(
+  const [bind, springProps, isScrollingLeft, setIsScrollingLeft,  currentPos] = useDragRouterElement(
     location,
     history
   );
@@ -115,6 +115,7 @@ export default function App() {
       setIsScrollingLeft(false)
   }, [location, setIsScrollingLeft])
 
+  console.log("is scrolling left ?", isScrollingLeft)
   return (
     <Container className=" main-container main-theme" fluid>
       <Row>
