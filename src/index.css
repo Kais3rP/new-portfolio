@@ -30,6 +30,24 @@ a {
     outline:0 !important;
 }
 
+a:hover {
+animation: animateAnchors 0.5s ease-in-out infinite;
+}
+
+/* animation for active anchors */
+@keyframes animateAnchors {
+    0% {
+    transform: translateY(-8px)
+    }
+
+        50% {
+            transform: translateY(8px)
+            }
+
+                100% {
+                    transform: translateY(-8px)
+                    }
+}
 .main-theme {
     background-color: #000000;
     /*#1A0315;*/

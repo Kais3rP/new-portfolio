@@ -38,6 +38,7 @@ export default function App() {
 
   const [isReady, setIsReady] = useState(false);
   const [container, setContainer] = useState(null);
+ 
 
 
 
@@ -75,6 +76,7 @@ export default function App() {
   const {
     handleMenuLinks,
     handleAudio,
+    isMuted,
     rippleAnimation
   } = useHandleListenersAndSpritesAnimation(
     hasLoaded,
@@ -98,7 +100,7 @@ export default function App() {
       hereRef
     })
 
-  useAnimateStuffOnceReady(isReady, rippleAnimation, _dropSound, _rippleSprite)
+  useAnimateStuffOnceReady(isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted)
 
   //Prepare Router switch animation bheaviour
   const location = useLocation();
@@ -134,7 +136,7 @@ export default function App() {
               handleMenuLinks={handleMenuLinks}
 
             />
-            <RightNavbar handleAudio={handleAudio} />
+            <RightNavbar handleAudio={handleAudio} isMuted={isMuted} />
             <TransitionGroup>
             <CSSTransition
           in={true}

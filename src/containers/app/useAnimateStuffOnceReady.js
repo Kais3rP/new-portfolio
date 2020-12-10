@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { gsap, TimelineMax } from "gsap"
 
 
-export default function useAnimateStuffOnceReady(isReady, rippleAnimation, _dropSound, _rippleSprite   ){
+export default function useAnimateStuffOnceReady(isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted   ){
 
   useEffect(() => {
   
@@ -14,11 +14,11 @@ export default function useAnimateStuffOnceReady(isReady, rippleAnimation, _drop
 
       function playRippleAnimation() {
         rippleAnimation?.restart()
-        _dropSound?.play()
+        if (!isMuted) _dropSound?.play()
         _rippleSprite?.position.set(0, 0)
         rippleTimeout = setTimeout(playRippleAnimation, 6000)
       }
     }
     return () => { clearTimeout(rippleTimeout) }
-  }, [isReady])
+  }, [isReady, isMuted])
 }

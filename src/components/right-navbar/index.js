@@ -21,7 +21,7 @@ const width = 528;
 const AnimatedRow = animated(Row);
 const windowWidth = window.innerWidth;
 
-export default function RightNavbar({ handleAudio }) {
+export default function RightNavbar({ handleAudio, isMuted }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
@@ -71,7 +71,7 @@ export default function RightNavbar({ handleAudio }) {
                         } />}
                 <div id="nav-controls"
                     className="" >
-                    <AudioButton handleAudio={handleAudio} /> </div> </div>
+                    <AudioButton handleAudio={handleAudio} isMuted={isMuted} /> </div> </div>
         </Col>
     </AnimatedRow>
     )

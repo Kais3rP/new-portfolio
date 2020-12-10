@@ -24,7 +24,7 @@ export default function useHandleListenersAndSpritesAnimation(
 
     const [isBallDeflating, setIsBallDeflating] = useState(false);
     const [rippleAnimation, setRippleAnimation] = useState(null);
-
+    const [isMuted, setIsMuted] = useState(false);
 
 
     //Handling listeners resize, scroll, pointermove, and click events
@@ -212,7 +212,7 @@ export default function useHandleListenersAndSpritesAnimation(
 
 
     function handleMenuLinks(target, prevTarget) {
-console.log(target, prevTarget)
+//console.log(target, prevTarget)
         
         target = linkRefs[target + "LinkRef"].current
         prevTarget = linkRefs[prevTarget + "LinkRef"].current
@@ -262,14 +262,11 @@ console.log(target, prevTarget)
 
     }
 
-    function handleAudio(isMuted) {
-        if (isMuted) {
-            _flowSound.resume();
-        } else {
-            _flowSound.pause();
-        }
+    function handleAudio() {
+        console.log("Toggling audio", isMuted)
+        setIsMuted(bool => !bool)   
     }
-    return { handleMenuLinks, setRippleAnimation, handleAudio, rippleAnimation }
+    return { handleMenuLinks, setRippleAnimation, handleAudio, isMuted, rippleAnimation }
 }
 
 
