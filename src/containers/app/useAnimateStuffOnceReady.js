@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { gsap, TimelineMax } from "gsap"
+import { useEffect } from "react"
+
 
 
 export default function useAnimateStuffOnceReady(isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted   ){
