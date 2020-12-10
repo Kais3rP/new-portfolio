@@ -198,6 +198,9 @@ export default function App() {
                   <Route exact path="/home">
                     <Home bind={bind} springProps={springProps} myRef={homeRef} />
                   </Route>
+                  <Route exact path="/index.html">
+                    <Home bind={bind} springProps={springProps} myRef={homeRef} />
+                  </Route>
                   <Route exact path="/">
                     <Home bind={bind} springProps={springProps} myRef={homeRef} />
                   </Route>
