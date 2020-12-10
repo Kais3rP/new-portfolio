@@ -71,7 +71,8 @@ const games = [
 export default function Projects({ projectsRef }) {
   const iconsStyle = {
     width: "40px",
-    zIndex: 5
+    zIndex: 5,
+    pointerEvents:"none"
   }
   return (
     <Row className="w-100">
