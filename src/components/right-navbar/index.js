@@ -13,6 +13,7 @@ import { animated } from "react-spring";
 import useDragElement from "../../custom-hooks/useDragElement"
 import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
 import MoveLeft from "../../reusable/pointer-animations/MoveLeft"
+import Logo from "../../reusable/logo/Logo"
 
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
@@ -51,13 +52,15 @@ export default function RightNavbar({ handleAudio, isMuted }) {
 
 
 
-    return (<AnimatedRow ref={navCanvasContainerRef}
-        id="right-navbar" {...bind()}
+    return (
+    <AnimatedRow ref={navCanvasContainerRef}
+        id="right-navbar" 
+        {...bind()}
         style={props}
         className="m-0 h-100" >
         <Col className=" d-flex justify-content-start m-0 p-0">
             <div id="nav-right-container"
-                className="d-flex flex-column justify-content-start align-items-center"> 
+                className="d-flex flex-column justify-content-start align-items-center">
                 {!isNavLarge &&
                     <TouchIcon
                         Icon={MoveLeft}
@@ -71,7 +74,11 @@ export default function RightNavbar({ handleAudio, isMuted }) {
                         } />}
                 <div id="nav-controls"
                     className="" >
-                    <AudioButton handleAudio={handleAudio} isMuted={isMuted} /> </div> </div>
+                    <AudioButton handleAudio={handleAudio} isMuted={isMuted} />
+                     </div>
+                     <div style={{width:"70%"}}> <Logo/></div> 
+                   
+                     </div>
         </Col>
     </AnimatedRow>
     )

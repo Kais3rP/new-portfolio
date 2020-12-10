@@ -10,34 +10,9 @@
     box-shadow: 0px 0px 20px 5px #ff6600, inset 0px 2px 6px #ff6600;
 }
 
-#bar {
-    position:relative;
-    width:150px;
-    height:20px;
-    border-radius:5px;
-    margin-top:40px;
-    font-size:12px;
-    border:1px outset white;
-    padding:1px;
-}
 
-#progress {
-    width:30%;
-    height:80%;
-position:absolute;
-left:40%;
-top:10%;
-line-height:1.5;
-color: #000;
-}
 
-#inside-bar {
-    width:0%;
-    height:98%;
-    background-color:#FFF;
-    border-radius:5px;
-}
-.cls-1 {
+.logo-path {
     stroke: #66ccff;
     stroke-miterlimit: 10;
     fill: url(#grad1);
@@ -50,6 +25,19 @@ cursor:pointer;
 .loading-col {
     overflow: hidden;
    position:relative;
+}
+
+/*
+
+#bar {
+    position:relative;
+    width:150px;
+    height:20px;
+    border-radius:5px;
+    margin-top:40px;
+    font-size:12px;
+    border:1px outset white;
+    padding:1px;
 }
 
 #start-button {
@@ -75,13 +63,29 @@ cursor:pointer;
     box-shadow: 0px 3px 8px #ff6600, inset 0px 2px 6px #ff6600;
     border: 2px outset #ff6600;
 }
-
+/*
 
 #start-button:hover {
     box-shadow: 0px 0px 15px 10px  #ff6600;
 }
 
+#progress {
+    width:30%;
+    height:80%;
+position:absolute;
+left:40%;
+top:10%;
+line-height:1.5;
+color: #000;
+}
 
+#inside-bar {
+    width:0%;
+    height:98%;
+    background-color:#FFF;
+    border-radius:5px;
+}
+*/
 
 @media Screen and (max-width:600px) {
     .loader-container {
