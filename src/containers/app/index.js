@@ -23,6 +23,7 @@ import useHandleListenersAndSpritesAnimation from "./useHandleListenersAndSprite
 import useAnimateStuffOnceReady from "./useAnimateStuffOnceReady";
 import useDragRouterElement from "../../custom-hooks/useDragRouterElement"
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import Error404 from "../../components/errors/Error404"
 
 
 
@@ -198,6 +199,11 @@ export default function App() {
                   </Route>
                   <Route exact path="/">
                     <Home bind={bind} springProps={springProps} myRef={homeRef} />
+                  </Route>
+                  <Route exact path="/*">
+                  <MainWindowsHoc bind={bind} springProps={springProps} myRef={havefunRef} >
+                      <Error404 />
+                    </MainWindowsHoc>
                   </Route>
                 </Switch>
               </CSSTransition>
