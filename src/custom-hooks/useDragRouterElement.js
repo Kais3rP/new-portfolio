@@ -5,7 +5,8 @@ import removeSlash from "../helpers/removeSlashFromPathname"
 
 export default function useDragRouterElement(location, history) {
     //react-spring + gesture
-    const widthThreshold = window.innerWidth/3;
+    const width = window.innerWidth
+    const widthThreshold = width/3;
     const [isScrollingLeft, setisScrollingLeft] = useState(true);
     const [currentPos, setCurrentPos] = useState([0,0]);
    
@@ -20,10 +21,25 @@ export default function useDragRouterElement(location, history) {
         movement: [mx, my],
         down,
         currentPos: [currX, currY],
-        event
+        cancel,
+        location
       }) {
-    
-       //if (currX === 0) event.target.style.left = 0;
+    if (mx > widthThreshold || mx < -widthThreshold) {
+      cancel();
+      set({
+        left: mx > 0 ?        
+        width :
+        location.pathname === "/havefun" ?
+        0 :
+        -width
+        ,
+        top: 0,
+        transform: `scale(${mx < 0 && location.pathname === "/havefun" ? 1 : 0.85})`,
+        immediate: name => down && name === "left"
+      });
+
+    }
+    else
         set({
           left: down
             ? mx
@@ -36,8 +52,8 @@ export default function useDragRouterElement(location, history) {
       }
     
       const bind = useDrag(
-        ({ down, event, direction, previous, movement, offset, cancel }) => {
-          moveElement({ movement, down, currentPos, location, cancel, event });
+        ({ down, event, direction, movement, cancel }) => {
+          moveElement({ movement, down, currentPos, location, cancel });
     
           if (!down)
             setCurrentPos(curr => [curr[0] + movement[0], curr[1] + movement[1]]);
