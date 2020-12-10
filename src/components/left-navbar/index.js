@@ -110,9 +110,9 @@ const location = useLocation()
                     </ul>
                     <div id="nav-contacts" className="align-self-start d-flex flex-column justify-content-around">
                         <div className=" d-flex">
-                           <a href="https://www.facebook.com/cesare.polo/" target="_blank" rel="noreferrer" > <AiFillFacebook /></a>
-                           <a href="https://twitter.com/CesarePolonara" target="_blank" rel="noreferrer"><AiFillTwitterCircle /></a>
-                           <a href="mailto:cesare.polonara@gmail.com" target="_blank" rel="noreferrer"> <AiFillMail /></a>
+                           <a className="icons" href="https://www.facebook.com/cesare.polo/" target="_blank" rel="noreferrer" > <AiFillFacebook /></a>
+                           <a className="icons" href="https://twitter.com/CesarePolonara" target="_blank" rel="noreferrer"><AiFillTwitterCircle /></a>
+                           <a className="icons" href="mailto:cesare.polonara@gmail.com" target="_blank" rel="noreferrer"> <AiFillMail /></a>
                         </div>
                         <p style={{ fontSize: "10px" }}>Copyright © 2020 Cesare Polonara, All rights reserved.</p>
                     </div>

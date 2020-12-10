@@ -30,7 +30,7 @@ a {
     outline:0 !important;
 }
 
-a:hover {
+a.icons:hover {
 animation: animateAnchors 0.5s ease-in-out infinite;
 }
 
