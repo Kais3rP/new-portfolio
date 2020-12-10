@@ -5,7 +5,6 @@ import removeSlash from "../helpers/removeSlashFromPathname"
 
 export default function useDragRouterElement(location, history) {
     //react-spring + gesture
-    console.log("rerendering custom hook drag")
     const width = window.innerWidth
     const widthThreshold = width/3;
     const [isScrollingLeft, setisScrollingLeft] = useState(true);
@@ -27,7 +26,6 @@ export default function useDragRouterElement(location, history) {
         location
       }) {
 
-        console.log(currY)
     if (mx > widthThreshold || mx < -widthThreshold) {
       cancel();
       set({

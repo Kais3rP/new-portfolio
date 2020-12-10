@@ -97,15 +97,13 @@ const MainWindowsHoc = React.memo(function ({ myRef, children, bind, springProps
   const [wordsIds, setWordsIds] = useState([]);
 
   useEffect(() => {
-    /* //Setting location
-     const location = /\w+$/.exec(window.location.href)[0]
-     setCurrentLocation(location)*/
+
     //Setting up PIXI canvas
     const windowWidth = window.innerWidth;
     const localRef = myRef.current;
     const width = myRef.current.clientWidth;
     const height = myRef.current.clientHeight;
-    console.log("width:", width, myRef.current, myRef.current.getBoundingClientRect().width)
+
     const {
       app,
       Container,

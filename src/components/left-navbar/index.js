@@ -28,7 +28,7 @@ const AnimatedRow = animated(Row);
 
 
 export default function LeftNavbar({ linkRefs, hereRef, handleMenuLinks, currentLocation }) {
-    console.log("rerendering left navbar")
+   
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
     const navCanvasContainerRef = useRef();
