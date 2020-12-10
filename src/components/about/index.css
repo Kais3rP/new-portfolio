@@ -7,9 +7,13 @@
  
 }
 
+#pic-container {
+    height:70vh;
+}
+
 #my-pic {
     object-fit: cover;
-    width: 90%;
+    height: 100%;
     padding: 0 !important;
     margin: 0 !important;
     filter: grayscale(1);
