@@ -18,12 +18,18 @@
     touch-action:none;
     cursor:-webkit-grab;
     pointer-events:auto;
+   /* 
+   height: 10vh;
+   overflow-y:scroll;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  */
 
 }
+/*
+.window::-webkit-scrollbar {
+    display: none;
+  }*/
 
-.window > canvas {
-    width:100%;
-}
 
 .window:active{
     cursor:-webkit-grabbing;
@@ -42,3 +48,12 @@
     pointer-events:none;
     touch-action:none;
 }
+
+
+  
+ @media Screen and (max-width:800px){
+     .window {
+    height:auto;
+    overflow-y:hidden;
+     }
+ }

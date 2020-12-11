@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Row, Col } from "react-bootstrap";
-import { NavLink, useLocation, useHistory } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import "./index.css";
 import { gsap, TimelineMax } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -93,7 +93,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
                             <NavLink className="nav-link" activeClassName="active-link" to={link}                         
                                 key={link} ref={linkRefs[`${link}LinkRef`]}>
                                 <li                                   
-                                    className="p-3">
+                                    className="p-1">
                                     <h6 onMouseEnter={animateLink}
                                         onMouseLeave={stopAnimateLink}>
                                         {`.${link === "technologies" ? "techs" : link}()`}</h6>

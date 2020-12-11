@@ -73,6 +73,14 @@ animation: animateActiveMenuLinks 0.7s ease-in-out infinite;
 
 @media Screen and (max-width:768px){
 
+    .nav-link:hover{
+        animation: none;
+    }
+    
+    .active-link {  
+    animation: none;
+    }
+
     #nav-menu {
         font-size:1rem;       
     }
