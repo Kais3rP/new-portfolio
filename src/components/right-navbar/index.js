@@ -74,7 +74,7 @@ export default function RightNavbar({ handleAudio, isMuted }) {
                         } />}
               
                      <div style={{width:"70%", marginTop:"50px"}}> 
-                    
+                    <Logo/>
                      </div>    
                      <div id="nav-controls"
                     className="" >
