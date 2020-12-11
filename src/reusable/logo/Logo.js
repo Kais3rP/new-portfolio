@@ -4,17 +4,17 @@ import * as easings from 'd3-ease';
 import styled from "styled-components"
 
 export default function Logo(props) {
-
+console.log(easings)
     const [toggle, setToggle] = useState(true)
 
     const springProps = useSpring({
         from: { transform: `scale(1)`, boxShadow: "0px 0px 20px 5px #ff6600, inset 0px 2px 6px #ff6600", },
         to: async next => {
             while (toggle) {
-                await next({ transform: `scale(1.2)`, boxShadow: "0px 0px 1px 1px #ff6600, inset 0px 0px 15px #ff6600" })
-                await next({ transform: `scale(1)`, boxShadow: "0px 0px 20px 5px #ff6600, inset 0px 2px 6px #ff6600", })
+                await next({ transform: `scale(1.2)`, boxShadow: "0px 0px 1px 1px #ff6600, inset 0px 0px 20px #ff6600" })
+                await next({ transform: `scale(0.9)`, boxShadow: "0px 0px 20px 5px #ff6600, inset 0px 2px 6px #ff6600", delay:100 })
             }
-        }, reset:true, config: { duration: 700 },
+        }, reset:true, config: { duration: 600, easing: easings.easeSinInOut },
     })
 
     return (

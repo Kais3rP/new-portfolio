@@ -73,7 +73,9 @@ export default function RightNavbar({ handleAudio, isMuted }) {
                             { x: -100, y: window.innerHeight - 100 }
                         } />}
               
-                     <div style={{width:"70%", marginTop:"50px"}}> <Logo/></div>    
+                     <div style={{width:"70%", marginTop:"50px"}}> 
+                    
+                     </div>    
                      <div id="nav-controls"
                     className="" >
                     <AudioButton handleAudio={handleAudio} isMuted={isMuted} />
