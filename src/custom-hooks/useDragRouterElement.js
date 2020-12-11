@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSpring, config } from "react-spring";
 import { useDrag } from "react-use-gesture";
 import removeSlash from "../helpers/removeSlashFromPathname"
 
-export default function useDragRouterElement(location, history) {
+
+export default function useDragRouterElement(location, history, handleScrollDirection) {
     //react-spring + gesture
     const width = window.innerWidth
     const widthThreshold = width/3;
-    const [isScrollingLeft, setisScrollingLeft] = useState(true);
-    const [currentPosY, setCurrentPosY] = useState(0);
+ 
+
+  
+
  //react spring  
       const [props, set] = useSpring(() => ({
         position:"absolute",
@@ -24,21 +27,23 @@ export default function useDragRouterElement(location, history) {
         down,
         currentPosY:currY,
         cancel,
-        location
+        location,
+        offset:[ox,oy]
       }) {
 
     if (mx > widthThreshold || mx < -widthThreshold) {
       cancel();
       set({
         left: mx > 0 ?        
-        width :
+        widthThreshold :
         location.pathname === "/havefun" ?
         0 :
-        -width
+        -widthThreshold
         ,
         top: 0,
         transform: `scale(1)`,
-        immediate: name => down && name === "left"
+        immediate: name => down && name === "left",
+        
       });
 
     }
@@ -47,7 +52,7 @@ export default function useDragRouterElement(location, history) {
           left: down
             ? mx
             : 0,
-          top: my + currY,
+          top: my + oy,
           transform: `scale(${down ? 0.9 : 1}
           )`,
           immediate: name => down && name === "left"
@@ -55,13 +60,13 @@ export default function useDragRouterElement(location, history) {
       }
  //use gesture   
       const bind = useDrag(
-        ({ down, event, direction, movement, cancel }) => {
-          moveElement({ movement, down, currentPosY, location, cancel });    
-          if (!down)
-            setCurrentPosY(curr =>curr + movement[1]);    
+        ({ down, offset, direction, movement, cancel }) => {
+
+          moveElement({ movement, down, offset, location, cancel });    
+   
           const xDir = direction[0];        
-         if (movement[0] > 0) setisScrollingLeft( false )
-         if (movement[0] < 0) setisScrollingLeft( true )
+         if (movement[0] > 0) handleScrollDirection( false )
+         if (movement[0] < 0) handleScrollDirection( true )
           if ((movement[0] > widthThreshold || movement[0] < -widthThreshold) && !down) {
        if (
          (location.pathname === "/home" && movement[0] >= 0) ||
@@ -76,12 +81,13 @@ export default function useDragRouterElement(location, history) {
              xDir
            )
        );
-       setCurrentPosY(0);
+
      
      }
-   }, {lockDirection:true});
+   }, {
+    lockDirection:true});
  
-   return [bind, props, isScrollingLeft, setisScrollingLeft];
+   return [bind, props];
  }
 
 function calculateNextPage(path, dir) {

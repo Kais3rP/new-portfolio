@@ -21,7 +21,6 @@ import Arrow from "../../components/arrow"
 import useLoadAssets from "./useLoadAssets"
 import useHandleListenersAndSpritesAnimation from "./useHandleListenersAndSpriteAnimations"
 import useAnimateStuffOnceReady from "./useAnimateStuffOnceReady";
-import useDragRouterElement from "../../custom-hooks/useDragRouterElement"
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Error404 from "../../components/errors/Error404"
 
@@ -36,9 +35,13 @@ gsap.registerPlugin(ScrollToPlugin);
 
 
 export default function App() {
+console.log("rerendering app")
+  const location = useLocation();
+  const history = useHistory();
 
   const [isReady, setIsReady] = useState(false);
   const [container, setContainer] = useState(null);
+  const [isScrollingLeft, setIsScrollingLeft] = useState(location.pathname === "/home" ? true : false)
  
   const homeRef = useRef();
   const aboutRef = useRef();
@@ -55,8 +58,6 @@ export default function App() {
   const width = window.innerWidth;
   const widthThreshold = width/3;
 
-  const location = useLocation();
-  const history = useHistory();
 
 
   const {
@@ -102,20 +103,11 @@ export default function App() {
 
   useAnimateStuffOnceReady({ isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted, handleMenuLinks, location})
 
-  //Prepare Router switch animation bheaviour
-  const [bind, springProps, isScrollingLeft, setIsScrollingLeft] = useDragRouterElement(
-    location,
-    history
-  );
- //Manages the scroll direction when the location changes
-  useEffect(() => {
-    if (location.pathname === "/home" || location.pathname === "/")
-      setIsScrollingLeft(true)
-    if (location.pathname === "/havefun")
-      setIsScrollingLeft(false)
-  }, [location, setIsScrollingLeft])
 
- 
+
+ function handleScrollDirection(bool){
+setIsScrollingLeft(bool);
+ }
   return (
     <Container className=" main-container main-theme" fluid>
       <Row>
@@ -137,7 +129,7 @@ export default function App() {
             <CSSTransition
           in={true}
           key={location.key}
-          timeout={1000}
+          timeout={1800}
           onEnter={(el, isApp) => {
             new TimelineMax({})
               .set(el, {
@@ -145,62 +137,60 @@ export default function App() {
                 left: (idx, el) =>
                   isScrollingLeft ? width : -el.getBoundingClientRect().width,
                   top:0,
-                transform: "scale(0.7)",
-                visibility:"hidden"
               })
-              .to(el, 1, { left: 0, top:0, transform: "scale(1)",visibility:"visible" });
+              .to(el, 2, { left: 0, top:0});
           }}
           onExit={el => {
             new TimelineMax()
               .set(el, {
                 position: "absolute",
                 top: 0,
-                left: (idx, el) => (isScrollingLeft ? -widthThreshold  : width),
-                transform: "scale(0.8)"
+                left: (idx, el) => (isScrollingLeft ? -widthThreshold  : widthThreshold),
               })
-              .to(el, 1, {
+              .to(el, 2, {
                 top:0,
                 left: (idx, el) =>
                   isScrollingLeft
-                    ? -el.getBoundingClientRect().width - widthThreshold
-                    : el.getBoundingClientRect().width + widthThreshold,
-                transform: "scale(0.8)",
-                display:"none"
-              });
+                    ? -el.getBoundingClientRect().width 
+                    : el.getBoundingClientRect().width ,
+             
+                
+              });  
           }}
+          unmountOnExit={true}
         >
                 <Switch location={location}>
                   <Route exact path="/about">
-                    <MainWindowsHoc bind={bind} springProps={springProps} myRef={aboutRef}  >
+                    <MainWindowsHoc  myRef={aboutRef} handleScrollDirection={handleScrollDirection}  >
                       <About />
                     </MainWindowsHoc>
                   </Route>
                   <Route exact path="/projects">
-                    <MainWindowsHoc bind={bind} springProps={springProps} myRef={projectsRef} >
+                    <MainWindowsHoc  myRef={projectsRef} handleScrollDirection={handleScrollDirection} >
                       <Projects />
                     </MainWindowsHoc>
                   </Route>
                   <Route exact path="/technologies">
-                    <MainWindowsHoc bind={bind} springProps={springProps} myRef={technologiesRef}  >
+                    <MainWindowsHoc  myRef={technologiesRef} handleScrollDirection={handleScrollDirection} >
                       <Technologies />
                     </MainWindowsHoc>
                   </Route>
                   <Route exact path="/havefun">
-                    <MainWindowsHoc bind={bind} springProps={springProps} myRef={havefunRef} >
+                    <MainWindowsHoc myRef={havefunRef} handleScrollDirection={handleScrollDirection} >
                       <HaveFun />
                     </MainWindowsHoc>
                   </Route>
                   <Route exact path="/home">
-                    <Home bind={bind} springProps={springProps} myRef={homeRef} />
+                    <Home myRef={homeRef}  />
                   </Route>
                   <Route exact path="/index.html">
-                    <Home bind={bind} springProps={springProps} myRef={homeRef} />
+                    <Home  myRef={homeRef} />
                   </Route>
                   <Route exact path="/">
-                    <Home bind={bind} springProps={springProps} myRef={homeRef} />
+                    <Home  myRef={homeRef} />
                   </Route>
                   <Route exact path="/*">
-                  <MainWindowsHoc bind={bind} springProps={springProps} myRef={havefunRef} >
+                  <MainWindowsHoc >
                       <Error404 />
                     </MainWindowsHoc>
                   </Route>

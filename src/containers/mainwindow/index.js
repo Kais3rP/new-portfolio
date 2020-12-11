@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Route, Switch, useLocation, useHistory } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
 import "./index.css";
 import { gsap, TimelineMax } from "gsap";
@@ -10,6 +11,7 @@ import Word from "./Word"
 import setTvEffect from "../../helpers/setTvEffect"
 import uuid from "react-uuid"
 import { animated } from "react-spring";
+import useDragRouterElement from "../../custom-hooks/useDragRouterElement"
 
 const words = [
   `Error: Permission denied to access property "x" `,
@@ -92,10 +94,12 @@ const words = [
 gsap.registerPlugin(ScrollTrigger);
 
 const AnimatedRow = animated(Row);
-const MainWindowsHoc = React.memo(function ({ myRef, children, bind, springProps }) {
+const MainWindowsHoc = React.memo(function ({ myRef, children, handleScrollDirection }) {
   const [wordsArr, setWordsArr] = useState([]);
   const [wordsIds, setWordsIds] = useState([]);
 
+  const location = useLocation();
+  const history = useHistory();
   useEffect(() => {
 
     //Setting up PIXI canvas
@@ -158,9 +162,15 @@ const MainWindowsHoc = React.memo(function ({ myRef, children, bind, springProps
 
   }, [myRef])
 
+
+  const [bind, springProps] = useDragRouterElement(
+    location,
+    history,
+    handleScrollDirection
+  );
   return (
-    <AnimatedRow  {...bind()} style={{ ...springProps, pointerEvents: "none" }} className="window-container w-100 justify-content-center align-items-center">
-      <Col xs={12} lg={8} id={myRef?.current ? myRef.current.id : null} ref={myRef} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
+    <AnimatedRow   {...bind()} style={{ ...springProps, pointerEvents: "none" }} className="window-container w-100 justify-content-center align-items-center">
+      <Col ref={myRef} xs={12} lg={8} id={myRef?.current ? myRef.current.id : null}  className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
         {children}
         {wordsArr.map((data, i) => <Word key={wordsIds[i]} position={{ x: data.x, y: data.y }} text={data.text} />)}
       </Col>
