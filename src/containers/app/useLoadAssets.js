@@ -28,7 +28,6 @@ export default function useLoadWhenReady (container){
 
 //Effect that creates the pixi App, loads the assets and sets the basic app containers
 useEffect(() => {
-  console.log("loading assets effect...")
 if (!container) return;
   const {
     app,
@@ -54,7 +53,7 @@ if (!container) return;
     .load(init)
 
   loader.onProgress.add(data => {
-    console.log(data.progress+"% Loaded")
+    //console.log(data.progress+"% Loaded")
     setLoadProgress(Math.ceil(data.progress))
   })
 

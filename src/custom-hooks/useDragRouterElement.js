@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSpring, config } from "react-spring";
-import { useDrag } from "react-use-gesture";
+import { useDrag, useGesture } from "react-use-gesture";
 import removeSlash from "../helpers/removeSlashFromPathname"
 import * as easings from 'd3-ease';
 
@@ -14,7 +14,7 @@ export default function useDragRouterElement(location, history, handleScrollDire
   //react spring  
   const [props, set] = useSpring(() => ({
     position: "absolute",
-    transform: `scale(1)`,
+    scale:1,
     top: 0,
     left: 0,
     immediate: 2,
@@ -27,31 +27,31 @@ export default function useDragRouterElement(location, history, handleScrollDire
     offset: [ox, oy]
   }) {
 
-    if ((mx > widthThreshold || mx < -widthThreshold)&&!down) {
+    if ((mx > widthThreshold || mx < -widthThreshold) && !down) {
       set({
         from: {
           left: mx > 0 ?
             width :
-              -width
+            -width
           ,
           top: 0,
-          transform: `scale(0)`,
+          scale:0,
           immediate: name => down && name === "left",
         },
         to: async next => {
           await next({
             left: mx > 0 ?
               -width :
-                +width
+              +width
             ,
             top: 0,
-            transform: `scale(0)`,
+            scale:0,
             immediate: name => down && name === "left",
           })
           await next({
             left: 0,
             top: 0,
-            transform: `scale(1)`,
+            scale:1,
             immediate: name => down && name === "left",
           })
 
@@ -68,42 +68,45 @@ export default function useDragRouterElement(location, history, handleScrollDire
           mx :
           0,
         top: my + oy,
-        transform: `scale(${down ? 0.9 : 1}
-          )`,
+        scale: down ? 0.9 : 1,
         immediate: name => down && name === "left"
       });
   }
   //use gesture   
-  const bind = useDrag(
-    ({ down, offset, direction, movement, cancel }) => {
+  const bind = useGesture({
 
-      moveElement({ movement, down, offset, location, cancel });
+    onDrag:
+      ({ down, offset, direction, movement, cancel }) => {
 
-      const xDir = direction[0];
-      if (movement[0] > 0) handleScrollDirection(false)
-      if (movement[0] < 0) handleScrollDirection(true)
+        moveElement({ movement, down, offset, location, cancel });
 
-      if ((movement[0] > widthThreshold || movement[0] < -widthThreshold) && !down) {
-        if (
-          !(location.pathname === "/home" && movement[0] >= 0) ||
-          (location.pathname === "/havefun" && movement[0] <= 0)
-        ) {
-          return history.push(
-            "/" +
-            calculateNextPage(
-              removeSlash(location.pathname)
-              ,
-              xDir
-            )
-          );
+        const xDir = direction[0];
+        if (movement[0] > 0) handleScrollDirection(false)
+        if (movement[0] < 0) handleScrollDirection(true)
+
+        if ((movement[0] > widthThreshold || movement[0] < -widthThreshold) && !down) {
+          if (
+            !(location.pathname === "/home" && movement[0] >= 0) ||
+            (location.pathname === "/havefun" && movement[0] <= 0)
+          ) {
+            return history.push(
+              "/" +
+              calculateNextPage(
+                removeSlash(location.pathname)
+                ,
+                xDir
+              )
+            );
+          }
+
         }
-
-      }
-    }, {
-
-    lockDirection: true
+      } 
+ 
+  }, {
+    drag : {
+      lockDirection:true
+    }
   });
-
   return [bind, props];
 }
 
@@ -130,3 +133,6 @@ function calculateNextPage(path, dir) {
                     ? "technologies"
                     : path;
 }
+
+const calcX = (y, ly) => -(y - ly - window.innerHeight / 2) / 20
+const calcY = (x, lx) => (x - lx - window.innerWidth / 2) / 20

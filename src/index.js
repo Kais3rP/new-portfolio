@@ -10,6 +10,8 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 
+//Dev console msg
+console.log("%cMade with 🧡 by Cesare Polonara", "font-size:35px; border:10px inset #ff6600; padding:25px; color: #ff6600; background-color: #66ccff")
 
 
 

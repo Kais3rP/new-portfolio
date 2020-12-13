@@ -6,7 +6,7 @@ export default function createNewPixiApp(width,height, container){
     const Sprite = PIXI.Sprite;
     const Container = PIXI.Container;
     const ratio = size[0] / size[1];
-  
+    PIXI.utils.skipHello()
     //Create the app:
     const app = new PIXI.Application({
       antialias: true,
@@ -20,6 +20,6 @@ export default function createNewPixiApp(width,height, container){
     app.renderer.resize(size[0], size[1]);
 
     container.appendChild(app.view);
-  
+    
     return {app, loader, Sprite, Container, ratio}
   }
