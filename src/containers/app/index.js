@@ -35,14 +35,9 @@ gsap.registerPlugin(ScrollToPlugin);
 
 
 export default function App() {
-console.log("rerendering app")
-  const location = useLocation();
-  const history = useHistory();
-
+  console.log("rerendering app")
   const [isReady, setIsReady] = useState(false);
   const [container, setContainer] = useState(null);
-  const [isScrollingLeft, setIsScrollingLeft] = useState(location.pathname === "/home" ? true : false)
- 
   const homeRef = useRef();
   const aboutRef = useRef();
   const projectsRef = useRef();
@@ -55,8 +50,7 @@ console.log("rerendering app")
   const havefunLinkRef = useRef();
   const hereRef = useRef();
 
-  const width = window.innerWidth;
-  const widthThreshold = width/3;
+
 
 
 
@@ -101,13 +95,11 @@ console.log("rerendering app")
       hereRef
     })
 
-  useAnimateStuffOnceReady({ isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted, handleMenuLinks, location})
+  useAnimateStuffOnceReady({ isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted, handleMenuLinks })
 
 
 
- function handleScrollDirection(bool){
-setIsScrollingLeft(bool);
- }
+ 
   return (
     <Container className=" main-container main-theme" fluid>
       <Row>
@@ -125,78 +117,49 @@ setIsScrollingLeft(bool);
               }}
             />
             <RightNavbar handleAudio={handleAudio} isMuted={isMuted} />
-            <TransitionGroup>
-            <CSSTransition
-          in={true}
-          key={location.key}
-          timeout={1800}
-          onEnter={(el, isApp) => {
-            new TimelineMax({})
-              .set(el, {
-                position:"absolute",
-                left: (idx, el) =>
-                  isScrollingLeft ? width : -el.getBoundingClientRect().width,
-                  top:0,
-              })
-              .to(el, 2, { left: 0, top:0});
-          }}
-          onExit={el => {
-            new TimelineMax()
-              .set(el, {
-                position: "absolute",
-                top: 0,
-                left: (idx, el) => (isScrollingLeft ? -widthThreshold  : widthThreshold),
-              })
-              .to(el, 2, {
-                top:0,
-                left: (idx, el) =>
-                  isScrollingLeft
-                    ? -el.getBoundingClientRect().width 
-                    : el.getBoundingClientRect().width ,
-             
-                
-              });  
-          }}
-          unmountOnExit={true}
-        >
-                <Switch location={location}>
-                  <Route exact path="/about">
-                    <MainWindowsHoc  myRef={aboutRef} handleScrollDirection={handleScrollDirection}  >
-                      <About />
-                    </MainWindowsHoc>
-                  </Route>
-                  <Route exact path="/projects">
-                    <MainWindowsHoc  myRef={projectsRef} handleScrollDirection={handleScrollDirection} >
-                      <Projects />
-                    </MainWindowsHoc>
-                  </Route>
-                  <Route exact path="/technologies">
-                    <MainWindowsHoc  myRef={technologiesRef} handleScrollDirection={handleScrollDirection} >
-                      <Technologies />
-                    </MainWindowsHoc>
-                  </Route>
-                  <Route exact path="/havefun">
-                    <MainWindowsHoc myRef={havefunRef} handleScrollDirection={handleScrollDirection} >
-                      <HaveFun />
-                    </MainWindowsHoc>
-                  </Route>
-                  <Route exact path="/home">
-                    <Home myRef={homeRef}  />
-                  </Route>
-                  <Route exact path="/index.html">
-                    <Home  myRef={homeRef} />
-                  </Route>
-                  <Route exact path="/">
-                    <Home  myRef={homeRef} />
-                  </Route>
-                  <Route exact path="/*">
-                  <MainWindowsHoc >
-                      <Error404 />
-                    </MainWindowsHoc>
-                  </Route>
-                </Switch>
-              </CSSTransition>
-            </TransitionGroup>
+            <Switch>
+              <Route exact path="/about">
+                <MainWindowsHoc   >
+                  <About />
+                </MainWindowsHoc>
+              </Route>
+              <Route exact path="/projects">
+                <MainWindowsHoc  >
+                  <Projects />
+                </MainWindowsHoc>
+              </Route>
+              <Route exact path="/technologies">
+                <MainWindowsHoc >
+                  <Technologies />
+                </MainWindowsHoc>
+              </Route>
+              <Route exact path="/havefun">
+                <MainWindowsHoc  >
+                  <HaveFun />
+                </MainWindowsHoc>
+              </Route>
+              <Route exact path="/home">
+              <MainWindowsHoc >
+              <Home  />
+              </MainWindowsHoc>  
+              </Route>
+              <Route exact path="/index.html">
+              <MainWindowsHoc >
+              <Home />
+              </MainWindowsHoc>  
+              </Route>
+              <Route exact path="/">
+              <MainWindowsHoc>
+              <Home />
+              </MainWindowsHoc>                
+              </Route>
+              <Route exact path="/*">
+                <MainWindowsHoc >
+                  <Error404 />
+                </MainWindowsHoc>
+              </Route>
+            </Switch>
+
           </> : <LoadingView setIsReady={setIsReady} loadProgress={loadProgress} />}
         </Col>
       </Row>

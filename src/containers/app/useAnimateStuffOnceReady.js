@@ -1,9 +1,11 @@
 import { useEffect } from "react"
+import { useLocation, useHistory } from "react-router-dom";
 
 
 
-export default function useAnimateStuffOnceReady({isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted, handleMenuLinks, location}   ){
+export default function useAnimateStuffOnceReady({isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted, handleMenuLinks}   ){
 
+  const location = useLocation()
   useEffect(() => {
   
     let rippleTimeout;

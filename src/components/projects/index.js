@@ -13,6 +13,7 @@ import snake from "../../pics/projects/snake.png"
 import forecast from "../../pics/projects/forecast.png"
 import starRating from "../../pics/projects/star-rating.png"
 import carousel from "../../pics/projects/carousel.png"
+import covid from "../../pics/projects/covid.png"
 import SwipeCarousel from "../../reusable/swipe-carousel/SwipeCarousel"
 
 
@@ -46,6 +47,10 @@ const poc = [
   {
     pic: carousel,
     link: "https://codepen.io/kais3rp/pen/wvWeVvx"
+  },
+  {
+    pic: covid,
+    link: "https://covid-deaths.netlify.app/"
   }
 ]
 const games = [
