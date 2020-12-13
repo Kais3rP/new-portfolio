@@ -166,7 +166,7 @@ export default function useHandleListenersAndSpritesAnimation(
             }
 
             function handleWaterClick(e) {
-                console.log(e)
+
                 let isReadyLocal;
                 setIsReady(isReady => { isReadyLocal = isReady; return isReady });
 
@@ -218,7 +218,7 @@ export default function useHandleListenersAndSpritesAnimation(
 
 
     function handleMenuLinks(target, prevTarget) {
-        //console.log(target, prevTarget)
+
         target = removeSlash(target);
         prevTarget = removeSlash(prevTarget);
         if (!linkRefs[target + "LinkRef"] || !linkRefs[prevTarget + "LinkRef"]) return;
@@ -272,7 +272,7 @@ export default function useHandleListenersAndSpritesAnimation(
     }
 
     function handleAudio() {
-        console.log("Toggling audio", isMuted)
+
         setIsMuted(bool => !bool)
     }
     return { handleMenuLinks, setRippleAnimation, handleAudio, isMuted, rippleAnimation }

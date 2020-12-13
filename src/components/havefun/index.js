@@ -12,6 +12,7 @@ export default function HaveFun({ havefunRef }) {
     return (
         <Row className="w-100">
         <Col className="w-100 d-flex flex-column">
+        <div className="window-text">
           <TypeIt>
             <div className="d-flex ml-4 mt-2">
               <p style={{ color: "#66ccff" }}>this.haveFun()</p>
@@ -22,7 +23,14 @@ export default function HaveFun({ havefunRef }) {
            </p>
             </div>
           </TypeIt>
-           <img className="under-construction" src={underConstr} style={{width:"20%", pointerEvents:"none"}} alt="under construction"/>
+          </div>
+           <img 
+           className="under-construction" 
+           src={underConstr} 
+           style={{width:"20%", pointerEvents:"none"}} 
+           alt="under construction"
+           draggable="false"
+           />
         </Col>
       </Row>
     )

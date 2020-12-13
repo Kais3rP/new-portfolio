@@ -12,6 +12,7 @@ export default function Error404({ havefunRef }) {
     return (
         <Row className="w-100">
         <Col className="w-100 d-flex flex-column">
+        <div className="window-text">
           <TypeIt>
             <div className="d-flex ml-4 mt-2">
               <p style={{ color: "#66ccff" }}>this.Error404!()</p>
@@ -22,6 +23,7 @@ export default function Error404({ havefunRef }) {
            </p>
             </div>
           </TypeIt>
+          </div>
            <img className="under-construction" src={underConstr} style={{width:"20%", pointerEvents:"none"}} alt="under construction"/>
         </Col>
       </Row>

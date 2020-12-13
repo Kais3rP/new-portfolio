@@ -82,16 +82,18 @@ export default function Projects({ projectsRef }) {
   return (
     <Row className="w-100">
       <Col className="w-100 d-flex flex-column align-items-start">
+      <div className="window-text">
         <TypeIt>
-          <div className="d-flex ml-4 mt-2">
+          <div>
             <p style={{ fontSize: "1.2rem", color: "#66ccff" }}>this.projects()</p>
           </div>
-          <div className="w-100 d-flex ml-4 mt-2">
+          <div>
             <p style={{ fontSize: "1rem", color: "#ff6600" }}>
               "Here are some projects I worked on, they are classified by categories, front end / full stack projects, proof of concepts, and games"
            </p>
           </div>
         </TypeIt>
+        </div>
         <SwipeCarousel pics={proj}  style={iconsStyle} className={"carousel-container"} />
         <SwipeCarousel pics={poc}  style={iconsStyle} className={"carousel-container"}/>
         <SwipeCarousel pics={games}  style={iconsStyle} className={"carousel-container"}/>

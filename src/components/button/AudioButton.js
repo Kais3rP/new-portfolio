@@ -10,7 +10,7 @@ export default function AudioButton({handleAudio, isMuted}) {
 
     return (
        <Button onClick={()=>{ 
-           console.log("audio button clicked", isMuted)
+           
            handleAudio() }}>
 <FontAwesomeIcon icon={isMuted ? faVolumeMute :faVolumeUp}/>
        </Button>

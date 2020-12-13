@@ -9,40 +9,10 @@
     touch-action:none;
 }
 
-
-#arrow-down {
-   
-    width:80px;
-    fill: white;
-    z-index: 50;
-    position: fixed;
-    bottom: 30px;
-    left:50%;
-    margin-left:-40px;
-    cursor:pointer;
-}
-#arrow-up {
-   
-    width:80px;
-    fill: white;
-    z-index: 50;
-    position: fixed;
-    top: 30px;
-    left:50%;
-    margin-left: -40px;
-    cursor:pointer;
-}
-
-
 .full-height {
     height:100vh;
 }
 
-#home-window {
-    visibility:hidden !important;
-    opacity:0 !important;
-    height:100vh;
-}
 
 .code-container { 
     width:98%;
@@ -61,27 +31,7 @@
     color: #66ccff;
 }
 
-@media Screen and (max-width:800px){
-    #arrow-down {
-   
-        width:10%;
-        fill: white;
-        z-index: 50;
-        position: fixed;
-        bottom: 30px;
-        left:50%;
-        margin-left:-5%;
-        cursor:pointer;
-    }
-    #arrow-up {
-       
-        width:10%;
-        fill: white;
-        z-index: 50;
-        position: fixed;
-        top: 30px;
-        left:50%;
-        margin-left: -5%;
-        cursor:pointer;
-    }
+.window-text {
+    width: 100%;
+    min-height:100px;
 }

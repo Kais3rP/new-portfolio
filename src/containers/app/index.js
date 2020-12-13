@@ -35,14 +35,8 @@ gsap.registerPlugin(ScrollToPlugin);
 
 
 export default function App() {
-  console.log("rerendering app")
   const [isReady, setIsReady] = useState(false);
   const [container, setContainer] = useState(null);
-  const homeRef = useRef();
-  const aboutRef = useRef();
-  const projectsRef = useRef();
-  const technologiesRef = useRef();
-  const havefunRef = useRef();
   const homeLinkRef = useRef();
   const aboutLinkRef = useRef();
   const projectsLinkRef = useRef();

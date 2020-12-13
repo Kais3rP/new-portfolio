@@ -20,8 +20,8 @@ gsap.registerPlugin(ScrollTrigger);
 const AnimatedRow = animated(Row);
 const MainWindowsHoc = React.memo(function ({ children }) {
 
-  const rowRef =  useRef();
-  const colRef =  useRef();
+  const rowRef = useRef();
+  const colRef = useRef();
 
 
   const width = window.innerWidth;
@@ -34,21 +34,25 @@ const MainWindowsHoc = React.memo(function ({ children }) {
   const history = useHistory();
   const [isScrollingLeft, setIsScrollingLeft] = useState(location.pathname === "/home" ? true : false)
 
-  
+
   //Animation on mounting and unmounting
   useEffect(() => {
-const DOMnode = rowRef.current
+    const DOMnode = rowRef.current
 
     new TimelineMax()
       .set(DOMnode, {
         position: "absolute",
-        left: 
+        left:
           isScrollingLeft ? width : -width,
         top: 0,
-        transform:"scale(0)"
+        transform: "scale(0)"
       })
-      .to(DOMnode, 0.9, { left: 0, top: 0, transform:"scale(1)", ease:"back" });
+      .to(DOMnode, 0.9, { left: 0, top: 0, transform: "scale(1)", ease: "back" });
 
+    if (location.pathname === "/home")
+      setIsScrollingLeft(true)
+    if (location.pathname === "/havefun")
+      setIsScrollingLeft(false)
   }, [location])
 
   useEffect(() => {
@@ -113,13 +117,14 @@ const DOMnode = rowRef.current
 
   }, [colRef])
 
+  useEffect(() => {
 
-console.log("rerendering mainwindow")
+  })
+
   const [bind, springProps] = useDragRouterElement(
     location,
     history,
-    handleScrollDirection,
-    colRef
+    handleScrollDirection
   );
 
   function handleScrollDirection(bool) {
@@ -127,10 +132,29 @@ console.log("rerendering mainwindow")
   }
 
   return (
-    <AnimatedRow ref={rowRef}  {...bind()} style={{ ...springProps, pointerEvents: "none", visibility : location.pathname === "/home" ? "hidden" : "visible" }} className="window-container w-100 justify-content-center align-items-center">
-      <Col ref={colRef} xs={12} lg={8} id={colRef?.current ? colRef.current.id : null} className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
+    <AnimatedRow
+      ref={rowRef}
+      {...bind()}
+      style={
+        {
+          ...springProps,
+          pointerEvents: "none",
+          visibility: location.pathname === "/home" ?
+            "hidden" :
+            "visible"
+        }}
+      className="window-container w-100 justify-content-center align-items-center">
+      <Col
+        ref={colRef}
+        xs={12}
+        lg={8}
+        id={colRef?.current ? colRef.current.id : null}
+        className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
         {children}
-        {wordsArr.map((data, i) => <Word key={wordsIds[i]} position={{ x: data.x, y: data.y }} text={data.text} />)}
+        {wordsArr.map((data, i) => <Word
+          key={wordsIds[i]}
+          position={{ x: data.x, y: data.y }}
+          text={data.text} />)}
       </Col>
     </AnimatedRow>
   )

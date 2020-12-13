@@ -34,7 +34,7 @@ export default function About() {
   return (
     <Row className="w-100">
       <Col className="w-100 d-flex flex-column justify-content-around ">
-        <div className="about-text">
+        <div className="window-text">
           <TypeIt>
             <div className="d-flex justify-content-start ml-4 mt-2">
               <p style={{ fontSize: "1.2rem", color: "#66ccff" }}>this.about()</p>
@@ -47,7 +47,7 @@ export default function About() {
           </TypeIt>
         </div>
         <div ref={picContainerRef} id="pic-container" >
-          <img id="my-pic" src={me} alt="My photo"></img>
+          <img id="my-pic" src={me} alt="My photo" draggable="false"></img>
           <div ref={maskRef} id="filter" className="d-none d-md-block"></div>
 
         </div>

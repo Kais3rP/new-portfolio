@@ -7,7 +7,6 @@ import * as easings from 'd3-ease';
 
 export default function useDragRouterElement(location, history, handleScrollDirection) {
 
-
   //react-spring + gesture
   const width = window.innerWidth
   const widthThreshold = width / 3;
@@ -25,13 +24,10 @@ export default function useDragRouterElement(location, history, handleScrollDire
   function moveElement({
     movement: [mx, my],
     down,
-    cancel,
-    location,
     offset: [ox, oy]
   }) {
 
     if ((mx > widthThreshold || mx < -widthThreshold)&&!down) {
-     // if (mx < 0 && location.pathname === "/havefun") return;
       set({
         from: {
           left: mx > 0 ?
@@ -61,16 +57,11 @@ export default function useDragRouterElement(location, history, handleScrollDire
 
         },
         reset: true,
-        /*     config: {
-               duration: 600,
-               easing: easings.easeSinInOut
-             }*/
-
       });
 
     }
     else
-      //console.log(widthThreshold, mx)
+
       set({
         left: down
           ?
@@ -97,7 +88,6 @@ export default function useDragRouterElement(location, history, handleScrollDire
           !(location.pathname === "/home" && movement[0] >= 0) ||
           (location.pathname === "/havefun" && movement[0] <= 0)
         ) {
-          console.log("pushing new history")
           return history.push(
             "/" +
             calculateNextPage(

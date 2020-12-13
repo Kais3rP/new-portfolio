@@ -39,6 +39,7 @@ export default function Technologies() {
   return (
     <Row className="w-100">
       <Col className="w-100 d-flex flex-column technologies-container">
+      <div className="window-text">
         <TypeIt>
           <div className="d-flex ml-4 mt-2">
             <p style={{ color: "#66ccff" }}>this.techs()</p>
@@ -49,13 +50,19 @@ export default function Technologies() {
            </p>
           </div>
         </TypeIt>
-        <img className="under-construction" src={underConstr} style={{width:"20%"}} alt="under construction"/>
+        </div>
+        <img 
+        className="under-construction" 
+        src={underConstr} 
+        style={{width:"20%"}} 
+        alt="under construction"
+        draggable="false"
+        />
         {/*myIcons.map((icon,idx) =>(        
           <div key={idx+idx-2} className="tech-icons-container" ref={icon.ref}>
             <img style={{ height: "70px", pointerEvents:"none !important" }} src={icon.icon} alt="tech icon"></img>
           </div>
-          ))*/}
-         
+          ))*/}        
       </Col>
     </Row>
   )
