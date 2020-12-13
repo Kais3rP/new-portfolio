@@ -31,12 +31,11 @@ export default function useDragRouterElement(location, history, handleScrollDire
   }) {
 
     if ((mx > widthThreshold || mx < -widthThreshold)&&!down) {
+     // if (mx < 0 && location.pathname === "/havefun") return;
       set({
         from: {
           left: mx > 0 ?
             width :
-            location.pathname === "/havefun" ?
-              0 :
               -width
           ,
           top: 0,
@@ -47,8 +46,6 @@ export default function useDragRouterElement(location, history, handleScrollDire
           await next({
             left: mx > 0 ?
               -width :
-              location.pathname === "/havefun" ?
-                0 :
                 +width
             ,
             top: 0,
