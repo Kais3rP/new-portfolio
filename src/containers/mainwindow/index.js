@@ -139,7 +139,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
         {
           ...springProps,
           pointerEvents: "none",
-          visibility: location.pathname === "/home" ?
+          visibility: checkIfHomeRoot(location.pathname) ?
             "hidden" :
             "visible"
         }}
@@ -160,5 +160,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
   )
 })
 
-
+function checkIfHomeRoot(str){
+  return str === "/home" || str === "/" || str === "/index.html"
+}
 export default MainWindowsHoc
