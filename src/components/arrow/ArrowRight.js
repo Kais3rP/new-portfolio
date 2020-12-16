@@ -5,9 +5,13 @@ import * as easings from 'd3-ease';
 const ArrowRight = (props) => {
 
 const springProps = useSpring({
-    loop: { reverse:true},
     from : {x:0},
-    to:{x:50},
+    to: async next => {
+        while (true){
+       await next({x:50})
+       await next({x:0})
+        }
+    },
     config: { duration: 300, easing: easings.easeSinInOut }
 })
 

@@ -15,6 +15,7 @@ import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
 import MoveLeft from "../../reusable/pointer-animations/MoveLeft"
 import Logo from "../../reusable/logo/Logo"
 
+
 gsap.registerPlugin(CSSRulePlugin);
 gsap.registerPlugin(ScrollToPlugin);
 

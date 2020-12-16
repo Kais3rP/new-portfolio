@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Row, Col } from "react-bootstrap"
-import { useSpring, animated } from "react-spring"
+import styled from "styled-components"
+import { useSpring, animated, useTransition } from "react-spring"
 import "./index.css"
 import TypeIt from "typeit-react"
 import html5 from "../../pics/icons/html5.svg"
@@ -16,19 +17,16 @@ import uuid from "react-uuid"
 import ArrowRight from "../arrow/ArrowRight"
 
 
+
 const icons = [html5, css3, js, mongo, node, react, redux, webpack, git2]
-const myIcons = icons.map((src, idx) => ({ src, key: uuid() }))
+const myIcons = icons.map(src => ({ src, key: uuid() }))
 
 export default function Technologies() {
-
-
-  const [items, set] = useState([...myIcons])
-
 
   return (
     <Row className="w-100">
       <Col className="w-100 d-flex flex-column align-items-start technologies-container">
-        <div  className="window-text">
+        <div className="window-text">
           <TypeIt>
             <div className="d-flex ml-4 mt-2">
               <p style={{ color: "#66ccff" }}>this.techs()</p>
@@ -41,7 +39,7 @@ export default function Technologies() {
           </TypeIt>
         </div>
         <div className="tech-icons-container d-flex flex-column align-items-start" >
-        {myIcons.map(({src,key}) => <TechAnimation key={key} src={src}/>)}
+          {myIcons.map(({ src, key }) => <TechAnimation key={key} src={src}/> )}
 
         </div>
       </Col>
@@ -51,24 +49,92 @@ export default function Technologies() {
 
 function TechIcon({ src }) {
   return (
-    <img src={src} style={{width:"70px"}} alt="tech-icon"></img>
+    <img src={src} style={{ width: "70px" }} alt="tech-icon"></img>
   )
 }
 
 function TechAnimation({ src }) {
 
   const [toggle, setToggle] = useState(false)
-  const disappearProps = useSpring({ from: { x: 0, scale:1, opacity: 1 }, to: { x: toggle ? window.innerWidth : 0, scale: toggle ? 5 : 1, opacity: toggle ? 0.5 : 1 }, config: { duration: 1000 } })
-  const appearProps = useSpring({ from: { x: -window.innerWidth, opacity: 0 }, to: { x:  toggle ? 0 : -window.innerWidth , opacity:  toggle ? 1 : 0 } })
+  const disappearProps = useSpring({ from: { x: 0, scale: 1, opacity: 1 }, to: async next => {
+await next({ x: toggle ? 500 : 0, scale: toggle ? 5 : 1, opacity: toggle ? 0 : 1 }) 
+//await next({display:toggle ? "none" : "flex"})  
+}
+} )
+  const appearProps = useSpring({ from: { x: -window.innerWidth, opacity: 0 }, to: async next => {
+    await next({ x: toggle ? 0 : -window.innerWidth, opacity: toggle ? 1 : 0 })
+    while (true){
+      await next({scale:0.9}) 
+      await next({scale:1}) 
+    } 
+  }
+})
+  //const blinkProps = useSpring({ from: {scale:1}, to:{scale:0.8}, loop:{reverse:true}, config : {duration:400}})
 
   return (
     <div className="d-flex">
-      <animated.div  style={{ ...disappearProps, width: "70px", marginBottom: "30px" }}>
-        <ArrowRight onPointerEnter={() => { console.log("over"); setToggle(true) }} />
-      </animated.div>
-      <animated.div style={ appearProps }>
+      <AnimatedArrowContainer style={disappearProps}>
+        <ArrowRight onPointerEnter={() => { setToggle(true) }} />
+      </AnimatedArrowContainer>
+      <AnimatedIconContainer style={{...appearProps}}>
         <TechIcon src={src} />
-      </animated.div>
+      </AnimatedIconContainer>
     </div>
   )
 }
+
+const ArrowContainer = styled.div`
+width:70px;
+margin-bottom:20px;
+`
+
+const IconContainer = styled.div`
+width:100px;
+height:100px;
+border-radius:50%;
+background:#FFF;
+display:flex;
+justify-content:center;
+align-items:center;
+margin-bottom:10px;
+cursor:pointer;
+`
+const AnimatedIconContainer = animated(IconContainer)
+const AnimatedArrowContainer = animated(ArrowContainer)
+
+function TransitionSlideRight({Comp1, Comp2, src}){
+  const [toggle, setToggle] = useState(true);
+
+  const transition = useTransition(toggle, {
+    from: { opacity: 0, scale: 1, x:0 },
+    enter: { opacity: 1, scale:1, x:0 },
+    leave: { opacity: 0, scale: 2, x:window.innerWidth }
+  });
+
+  const transitionRender = transition((style, toggle) => {
+    return toggle ? (
+      <animated.div
+        onMouseEnter={() => {
+          setToggle(false);
+        }}
+        style={{...style, width: "70px", marginBottom: "30px" }}
+      >
+       <Comp1 />
+      </animated.div>
+    ) : (
+      <animated.div
+        onMouseLeave={() => {
+          setToggle(true);
+        }}
+        style={{...style, width: "70px", marginBottom: "30px" }}
+      >
+        <Comp2 src={src}/>
+      </animated.div>
+    );
+  });
+
+  return transitionRender
+}
+
+
+

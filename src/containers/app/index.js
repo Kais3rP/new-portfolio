@@ -35,17 +35,16 @@ gsap.registerPlugin(ScrollToPlugin);
 
 
 export default function App() {
+
   const [isReady, setIsReady] = useState(false);
   const [container, setContainer] = useState(null);
+
   const homeLinkRef = useRef();
   const aboutLinkRef = useRef();
   const projectsLinkRef = useRef();
   const technologiesLinkRef = useRef();
   const havefunLinkRef = useRef();
   const hereRef = useRef();
-
-
-
 
 
   const {
@@ -93,7 +92,7 @@ export default function App() {
 
 
 
- 
+
   return (
     <Container className=" main-container main-theme" fluid>
       <Row>
@@ -133,19 +132,19 @@ export default function App() {
                 </MainWindowsHoc>
               </Route>
               <Route exact path="/home">
-              <MainWindowsHoc >
-              <Home  />
-              </MainWindowsHoc>  
+                <MainWindowsHoc >
+                  <Home />
+                </MainWindowsHoc>
               </Route>
               <Route exact path="/index.html">
-              <MainWindowsHoc >
-              <Home />
-              </MainWindowsHoc>  
+                <MainWindowsHoc >
+                  <Home />
+                </MainWindowsHoc>
               </Route>
               <Route exact path="/">
-              <MainWindowsHoc>
-              <Home />
-              </MainWindowsHoc>                
+                <MainWindowsHoc>
+                  <Home />
+                </MainWindowsHoc>
               </Route>
               <Route exact path="/*">
                 <MainWindowsHoc >
