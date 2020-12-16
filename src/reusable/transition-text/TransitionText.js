@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./style.css";
 import { useTransition, animated } from "react-spring";
 
 export default function TransitionText({text1, text2}) {

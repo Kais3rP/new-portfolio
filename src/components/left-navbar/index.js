@@ -18,6 +18,7 @@ import useDragElement from "../../custom-hooks/useDragElement"
 import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
 import MoveRight from "../../reusable/pointer-animations/MoveRight"
 import useSkewText from "../../custom-hooks/useSkewText"
+import TransitionText from "../../reusable/transition-text/TransitionText"
 
 
 gsap.registerPlugin(CSSRulePlugin);
@@ -84,10 +85,11 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
                                 key={link} ref={linkRefs[`${link}LinkRef`]}>
                                 <li
                                     className="p-1">
-                                    <animated.h6
+                                    <animated.div
                                     {...bind2()}
                                     style={currentLink === link ? props2 : {}}>
-                                        {`.${link === "technologies" ? "techs" : link}()`}</animated.h6>
+                                    <TransitionText text2={`.${link === "technologies" ? "techs" : link}()`} text1={link === "technologies" ? "techs" : link}/>
+                                        </animated.div>
                                 </li>
                             </NavLink>))}
                         <img id="here-img" ref={hereRef} src={here} alt="You are here" />
