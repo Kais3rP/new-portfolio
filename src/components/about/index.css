@@ -1,5 +1,6 @@
 #pic-container {
     width: 99%;
+    height:70vh;
     position: relative;
     display:flex;
     justify-content: center;
@@ -7,9 +8,6 @@
  
 }
 
-#pic-container {
-    height:70vh;
-}
 
 #my-pic {
     object-fit: cover;

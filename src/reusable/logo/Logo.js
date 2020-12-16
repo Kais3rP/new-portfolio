@@ -8,17 +8,14 @@ export default function Logo(props) {
     const [toggle, setToggle] = useState(true)
 
     const springProps = useSpring({
+        loop: { reverse: true },
         from: { transform: `scale(1)`, boxShadow: "0px 0px 20px 5px #ff6600, inset 0px 2px 6px #ff6600", },
-        to: async next => {
-            while (toggle) {
-                await next({ transform: `scale(1.2)`, boxShadow: "0px 0px 1px 1px #ff6600, inset 0px 0px 20px #ff6600" })
-                await next({ transform: `scale(0.9)`, boxShadow: "0px 0px 20px 5px #ff6600, inset 0px 2px 6px #ff6600", delay: 100 })
-            }
-        }, reset: true, config: { duration: 600, easing: easings.easeSinInOut },
+        to: { transform: `scale(1.2)`, boxShadow: "0px 0px 1px 1px #ff6600, inset 0px 0px 20px #ff6600" }
+        , reset: true, config: { duration: 600, easing: easings.easeSinInOut },
     })
 
     return (
-        <AnimatedDiv onPointerDown={() => { setToggle(toggle => !toggle) }} {...{ ...props, style: { ...props.style, ...springProps } }}>
+        <AnimatedDiv onPointerDown={() => { setToggle(toggle => !toggle) }} {...{ ...props, style: { ...props.style,  ...toggle ? springProps : {}  } }}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 185.78 200.51"

@@ -1,0 +1,37 @@
+import React, { useState } from "react";
+import "./style.css";
+import { useTransition, animated } from "react-spring";
+
+export default function TransitionText({text1, text2}) {
+  const [toggle, setToggle] = useState(false);
+
+  const transition = useTransition(toggle, {
+    from: { position:"absolute", opacity: 0, scale: 1 },
+    enter: { opacity: 1, scale:1 },
+    leave: { opacity: 0, scale: 0 }
+  });
+
+  const transitionRender = transition((style, toggle) => {
+    return toggle ? (
+      <animated.div
+        onMouseEnter={() => {
+          setToggle(false);
+        }}
+        style={style}
+      >
+       {text1}
+      </animated.div>
+    ) : (
+      <animated.div
+        onMouseLeave={() => {
+          setToggle(true);
+        }}
+        style={style}
+      >
+        {text2}
+      </animated.div>
+    );
+  });
+
+  return transitionRender
+}

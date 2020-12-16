@@ -17,6 +17,7 @@ import { animated } from "react-spring";
 import useDragElement from "../../custom-hooks/useDragElement"
 import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
 import MoveRight from "../../reusable/pointer-animations/MoveRight"
+import useSkewText from "../../custom-hooks/useSkewText"
 
 
 gsap.registerPlugin(CSSRulePlugin);
@@ -28,12 +29,12 @@ const AnimatedRow = animated(Row);
 
 
 export default function LeftNavbar({ linkRefs, hereRef }) {
-   
+
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
-    const [currentLinkAnim, setCurrentlinkAnim] = useState(null);
+    const [currentLink, setCurrentLink] = useState(null);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
-
+   const [bind2, props2] = useSkewText();
 
     //Setting PIXI 
     useEffect(() => {
@@ -58,18 +59,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
         }
     }, [])
 
-    function animateLink(e) {
-
-      /*  if (!currentLinkAnim && window.innerWidth > 800 )
-            setCurrentlinkAnim(new TimelineMax({ repeat: -1, yoyo: true }).to(e.target, 0.2, { scale: 1.2, ease: "linear" }))*/
-    }
-
-    function stopAnimateLink(e) {
-   /* if (!window.innerWidth > 800) return;
-        gsap.set(e.target, { scale: 1 });
-        currentLinkAnim?.kill();
-        setCurrentlinkAnim(null) */ 
-    }
+   
 
     return (
         <AnimatedRow
@@ -90,22 +80,23 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
                             pos={{ x: 100, y: 100 }} />}
                     <ul id="nav-menu" className="w-100 d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
-                            <NavLink className="nav-link" activeClassName="active-link" to={link}                         
+                            <NavLink onPointerOver={()=>{ setCurrentLink(link)}} className="nav-link" activeClassName="active-link" to={link}
                                 key={link} ref={linkRefs[`${link}LinkRef`]}>
-                                <li                                   
+                                <li
                                     className="p-1">
-                                    <h6 onMouseEnter={animateLink}
-                                        onMouseLeave={stopAnimateLink}>
-                                        {`.${link === "technologies" ? "techs" : link}()`}</h6>
+                                    <animated.h6
+                                    {...bind2()}
+                                    style={currentLink === link ? props2 : {}}>
+                                        {`.${link === "technologies" ? "techs" : link}()`}</animated.h6>
                                 </li>
                             </NavLink>))}
                         <img id="here-img" ref={hereRef} src={here} alt="You are here" />
                     </ul>
                     <div id="nav-contacts" className="align-self-start d-flex flex-column justify-content-around">
                         <div className=" d-flex">
-                           <a className="icons" href="https://www.facebook.com/cesare.polo/" target="_blank" rel="noreferrer" > <AiFillFacebook /></a>
-                           <a className="icons" href="https://twitter.com/CesarePolonara" target="_blank" rel="noreferrer"><AiFillTwitterCircle /></a>
-                           <a className="icons" href="mailto:cesare.polonara@gmail.com" target="_blank" rel="noreferrer"> <AiFillMail /></a>
+                            <a className="icons" href="https://www.facebook.com/cesare.polo/" target="_blank" rel="noreferrer" > <AiFillFacebook /></a>
+                            <a className="icons" href="https://twitter.com/CesarePolonara" target="_blank" rel="noreferrer"><AiFillTwitterCircle /></a>
+                            <a className="icons" href="mailto:cesare.polonara@gmail.com" target="_blank" rel="noreferrer"> <AiFillMail /></a>
                         </div>
                         <p style={{ fontSize: "10px" }}>Copyright © 2020 Cesare Polonara, All rights reserved.</p>
                     </div>
