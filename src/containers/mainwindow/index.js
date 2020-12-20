@@ -130,6 +130,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
   function handleScrollDirection(bool) {
     setIsScrollingLeft(bool);
   }
+//console.log(isScrollingLeft)
 
   return (
     <AnimatedRow

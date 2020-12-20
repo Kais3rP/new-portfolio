@@ -35,7 +35,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
     const [currentLink, setCurrentLink] = useState(null);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
-   const [bind2, props2] = useSkewText();
+    const [bind2, props2] = useSkewText();
 
     //Setting PIXI 
     useEffect(() => {
@@ -60,7 +60,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
         }
     }, [])
 
-   
+
 
     return (
         <AnimatedRow
@@ -81,15 +81,15 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
                             pos={{ x: 100, y: 100 }} />}
                     <ul id="nav-menu" className="w-100 d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
-                            <NavLink onPointerOver={()=>{ setCurrentLink(link)}} className="nav-link" activeClassName="active-link" to={link}
+                            <NavLink onPointerOver={() => { setCurrentLink(link) }} className="nav-link" activeClassName="active-link" to={link}
                                 key={link} ref={linkRefs[`${link}LinkRef`]}>
                                 <li
                                     className="p-1">
                                     <animated.div
-                                    {...bind2()}
-                                    style={currentLink === link ? props2 : {}}>
-                                    <TransitionText text2={`.${link === "technologies" ? "techs" : link}()`} text1={link === "technologies" ? "techs" : link}/>
-                                        </animated.div>
+                                        {...bind2()}
+                                        style={currentLink === link ? props2 : {}}>
+                                        <TransitionText text2={`.${link === "technologies" ? "techs" : link}()`} text1={link === "technologies" ? "techs" : link} />
+                                    </animated.div>
                                 </li>
                             </NavLink>))}
                         <img id="here-img" ref={hereRef} src={here} alt="You are here" />

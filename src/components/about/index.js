@@ -1,35 +1,33 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Row, Col } from "react-bootstrap";
-import TypeIt from "typeit-react";
-import "./index.css";
+import React, { useState, useEffect, useRef } from "react"
+import { Row, Col } from "react-bootstrap"
+import TypeIt from "typeit-react"
+import "./index.css"
 import me from "../../pics/me.png"
-import { gsap, TimelineMax } from "gsap";
-
-
+import { gsap, TimelineMax } from "gsap"
+import { useSpring, animated } from "react-spring"
+import { useMove } from "react-use-gesture"
 
 export default function About() {
 
-  useEffect(() => {
-    let maskWidth = 0;
-    const windowWidth = window.innerWidth;
-    const moveFilter = new TimelineMax()
-      .to(maskRef.current, 0.2, { width: () => maskWidth })
-      .pause()
-    //Picture animation only on laptop+ screens   
-    if (windowWidth > 900)
-      picContainerRef.current.addEventListener("pointermove", handleMouseMove);
 
-    function handleMouseMove(e) {
-      maskWidth = Math.floor(e.clientX - e.currentTarget.getBoundingClientRect().x) + "px";
-      if (moveFilter.isActive()) moveFilter.invalidate()
-      moveFilter.restart()
-    }
+  function useMoveMask() {
+    const [props, set] = useSpring(() => ({
+      width: 0
+    })
+    )
+    const bind = useMove(({ moving, event }) => {
+
+      const targetX = event.target.getBoundingClientRect().x
+      const mouseX = event.clientX
+
+      set({
+        width: Math.floor(mouseX - targetX)
+      })
+    })
+    return [props, bind]
   }
-    , [])
 
-
-  const picContainerRef = useRef();
-  const maskRef = useRef();
+  const [springProps, bind] = useMoveMask()
 
   return (
     <Row className="w-100">
@@ -46,17 +44,11 @@ export default function About() {
             </div>
           </TypeIt>
         </div>
-        <div ref={picContainerRef} id="pic-container" >
-          <img id="my-pic" src={me} alt="My photo" draggable="false"></img>
-          <div ref={maskRef} id="filter" className="d-none d-md-block"></div>
-
+        <div {...bind()} id="pic-container" >
+          <img id="my-pic" src={me} alt="My pic" draggable="false"></img>
+          <animated.div style={springProps} id="filter" className="d-none d-md-block"></animated.div>
         </div>
-
       </Col>
     </Row>
-
-
   )
-
-
 }
