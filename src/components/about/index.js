@@ -2,32 +2,12 @@ import React, { useState, useEffect, useRef } from "react"
 import { Row, Col } from "react-bootstrap"
 import TypeIt from "typeit-react"
 import "./index.css"
-import me from "../../pics/me.png"
-import { gsap, TimelineMax } from "gsap"
 import { useSpring, animated } from "react-spring"
 import { useMove } from "react-use-gesture"
+import SvgDashoffset from "../../reusable/svg-dashoffset-animation/SvgDashoffset"
 
 export default function About() {
 
-
-  function useMoveMask() {
-    const [props, set] = useSpring(() => ({
-      width: 0
-    })
-    )
-    const bind = useMove(({ moving, event }) => {
-
-      const targetX = event.target.getBoundingClientRect().x
-      const mouseX = event.clientX
-
-      set({
-        width: Math.floor(mouseX - targetX)
-      })
-    })
-    return [props, bind]
-  }
-
-  const [springProps, bind] = useMoveMask()
 
   return (
     <Row className="w-100">
@@ -44,9 +24,10 @@ export default function About() {
             </div>
           </TypeIt>
         </div>
-        <div {...bind()} id="pic-container" >
-          <img id="my-pic" src={me} alt="My pic" draggable="false"></img>
-          <animated.div style={springProps} id="filter" className="d-none d-md-block"></animated.div>
+        <div id="pic-container" >
+          <div style={{ width: "100%" }}>
+            <SvgDashoffset />
+          </div>
         </div>
       </Col>
     </Row>
