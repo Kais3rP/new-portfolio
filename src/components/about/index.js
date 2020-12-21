@@ -25,7 +25,7 @@ export default function About() {
           </TypeIt>
         </div>
         <div id="pic-container" >
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", maxWidth:"800px" }}>
             <SvgDashoffset />
           </div>
         </div>
