@@ -44,7 +44,7 @@ export default function ElectricityFilterSVG({ id }) {
             in="strokeText"
             in2="noise"
             result="displacementMap"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
             scale="10"
           />
           <feGaussianBlur stdDeviation="5" result="coloredBlur" />
@@ -59,7 +59,7 @@ export default function ElectricityFilterSVG({ id }) {
           y="2"
           filter={`url(#shock${id})`}
           stroke="0"
-          stroke-width="1"
+          strokeWidth="1"
           fill="#FFF"
         />
       </>
