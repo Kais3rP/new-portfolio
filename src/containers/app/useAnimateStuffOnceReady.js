@@ -1,16 +1,19 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useLocation, useHistory } from "react-router-dom";
 
 
 
 export default function useAnimateStuffOnceReady({isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted, handleMenuLinks}   ){
 
+const [isFirstStart, setIsFirstStart] = useState(true)
+
   const location = useLocation()
   useEffect(() => {
-  
+
     let rippleTimeout;
     if (isReady) {
-      handleMenuLinks(location.pathname, null)
+     if (isFirstStart) handleMenuLinks(location.pathname, null)
+     setIsFirstStart(false)
       //Play the ripple continuous animation
       playRippleAnimation();
     

@@ -29,6 +29,7 @@ export default function useHandleListenersAndSpritesAnimation(
 
     //Handle menu links animation on location change
     useEffect(() => {
+       
         if (location.pathname !== previousLocation.pathname)
             handleMenuLinks(location.pathname, previousLocation.pathname);
 
@@ -272,7 +273,6 @@ export default function useHandleListenersAndSpritesAnimation(
     }
 
     function handleAudio() {
-
         setIsMuted(bool => !bool)
     }
     return { handleMenuLinks, setRippleAnimation, handleAudio, isMuted, rippleAnimation }
