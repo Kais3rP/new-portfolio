@@ -33,10 +33,10 @@ export default function SvgDashOffset({
   const bind = useGesture({
     onMove: (state) => {
       const mouseY = state.event.pageY;
-      const startY = state.event.target.parentNode.getBoundingClientRect().y;
-      const height = state.event.target.parentNode.getBoundingClientRect().height;
+      const startY = state.event.target.parentNode?.getBoundingClientRect().y;
+      const height = state.event.target.parentNode?.getBoundingClientRect().height;
       //console.log(mouseY, "mouse-start:", mouseY - startY, startY, height, (mouseY - startY) < height)
-      set({
+     if(state.down) { set({
         stroke:
           mouseY - startY < height - 50 ?
             transposeRange(
@@ -54,9 +54,10 @@ export default function SvgDashOffset({
         0,
         length
       )
-      // console.log( relativePosition )
+
       const hasToPower = relativePosition <= 235;
       if (handleActive) handleActive(hasToPower)
+     }
     }
   });
   return (
