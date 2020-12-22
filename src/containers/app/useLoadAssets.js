@@ -76,17 +76,18 @@ if (!container) return;
       dropShadowBlur: 9,
       dropShadowColor: "#ff6600",
       dropShadowDistance: 70,
-      fill: "#66ccff ",
+      fill: "none",
       fontFamily: "Helvetica",
       fontSize: 60,
       fontVariant: "small-caps",
       letterSpacing: 5,
       miterLimit: 20,
-      stroke: "#000",
+      lineJoin: "round",
+      stroke: "none",
       strokeThickness: 9,
       textAlign:"center"
     });
-    const titleText = new PIXI.Text('WELCOME', style);
+    const titleText = new PIXI.Text('/HOME', style);
     const flowSound = PIXISound.default.Sound.from({
       url: resources.flowSound,
       loop: true,

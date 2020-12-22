@@ -62,7 +62,10 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
             {...bind()}
             style={props} className="m-0 h-100">
             <Col className="d-flex justify-content-end m-0 p-0" >
-            <TurnedOffScreen style={{ opacity : isActive ? 0 : 1}} />
+            <TurnedOffScreen style={{ 
+                opacity : isActive ? 0 : 1,
+                touchEvents: isActive ? "none" : "auto", 
+              pointerEvents: isActive ? "none" : "auto"}} />
                 <div
                     id="nav-left-container"
                     className=" d-flex flex-column justify-content-between align-items-center">

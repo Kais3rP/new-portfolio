@@ -32,7 +32,7 @@ export default function useHandleListenersAndSpritesAnimation(
        
         if (location.pathname !== previousLocation.pathname)
             handleMenuLinks(location.pathname, previousLocation.pathname);
-
+if (_titleText ) _titleText.text = location.pathname
     }, [location])
     //Handling listeners resize, scroll, pointermove, and click events
     useEffect(() => {
