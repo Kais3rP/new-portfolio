@@ -4,7 +4,7 @@ import { useGesture } from "react-use-gesture";
 import styled from "styled-components"
 import me from "../../pics/me.png"
 
-export default function App() {
+export default function SvgDashOffset({d, style}) {
   const [length, setLength] = useState(null);
   const [{ stroke }, set] = useSpring(() => ({
     stroke: 0
@@ -17,8 +17,6 @@ export default function App() {
 
   const bind = useGesture({
     onMove: (state) => {
-      // console.log(state.event.pageY)
-      //console.log(state.xy[1], length);
       const mouseY = state.event.pageY;
       const height = state.event.target.parentNode.getBoundingClientRect().height;
       set({
@@ -43,10 +41,11 @@ export default function App() {
               fill: "none",
   stroke: "#ff6600",
   strokeMiterlimit: 1,
-  strokeWidth: "5px"}}
+  strokeWidth: "5px",
+  ...style}}
           strokeDasharray={length}
           strokeDashoffset={stroke?.to((val) => val)}
-          d="M91.5,8A83.5,83.5,0,1,1,8,91.5,83.6,83.6,0,0,1,91.5,8m0-7A90.5,90.5,0,1,0,182,91.5,90.5,90.5,0,0,0,91.5,1Z"
+          d={d}
           transform="translate(10 10)"
         />
         <image 

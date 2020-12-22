@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap"
-import { Route, Switch, useLocation, useHistory } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import LeftNavbar from "../../components/left-navbar/index"
 import RightNavbar from "../../components/right-navbar/index"
 import './index.css'
@@ -10,20 +10,17 @@ import Projects from "../../components/projects/index"
 import HaveFun from "../../components/havefun/index"
 import Technologies from "../../components/technologies/index"
 import * as PIXI from "pixi.js"
-import * as PIXISound from "pixi-sound"
-import { gsap, TimelineMax } from "gsap"
+import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrollToPlugin } from "gsap/ScrollToPlugin"
 import { PixiPlugin } from "gsap/PixiPlugin"
 import MainWindowsHoc from "../mainwindow/index"
 import LoadingView from "../../components/loading-view/index"
-import Arrow from "../../components/arrow"
 import useLoadAssets from "./useLoadAssets"
 import useHandleListenersAndSpritesAnimation from "./useHandleListenersAndSpriteAnimations"
 import useAnimateStuffOnceReady from "./useAnimateStuffOnceReady";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Error404 from "../../components/errors/Error404"
-
+import useSetStrokeOnMove from "../../custom-hooks/useSetStrokeOnMove"
 
 
 //Registering GSAP plugins
@@ -46,7 +43,15 @@ export default function App() {
   const havefunLinkRef = useRef();
   const hereRef = useRef();
 
+  //Right navbar SVG control
+  const [svgLength, setSvgLength] = useState(null);
+  const [bind, stroke] = useSetStrokeOnMove(svgLength);
 
+  function handleLength(length) {
+    setSvgLength(length);
+  }
+
+  //--------------------------
   const {
     app,
     _firstContainer,
@@ -95,7 +100,7 @@ export default function App() {
 
   return (
     <Container className=" main-container main-theme" fluid>
-      <Row>
+      <Row  {...bind()}>
         <Col>
           <div className="main-theme" id="container" ref={setContainer}></div>
           {isReady ? <>
@@ -109,7 +114,12 @@ export default function App() {
                 havefunLinkRef,
               }}
             />
-            <RightNavbar handleAudio={handleAudio} isMuted={isMuted} />
+            <RightNavbar 
+            handleAudio={handleAudio} 
+            isMuted={isMuted} 
+            handleLength={handleLength} 
+            svgLength={svgLength} 
+            stroke={stroke} />
             <Switch>
               <Route exact path="/about">
                 <MainWindowsHoc   >
