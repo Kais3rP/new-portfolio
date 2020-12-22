@@ -17,6 +17,7 @@ import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
 import MoveRight from "../../reusable/pointer-animations/MoveRight"
 import useSkewText from "../../custom-hooks/useSkewText"
 import TransitionText from "../../reusable/transition-text/TransitionText"
+import TurnedOffScreen from "../turnedoff/TurnedOffScreen"
 
 
 
@@ -32,7 +33,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
     const [bind2, props2] = useSkewText();
-
+    const isActive = useSelector( state => state.main.isActive )
     //Setting PIXI 
     useEffect(() => {
         const {
@@ -40,8 +41,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
             Container,
         } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
 
-       const rect = setTvEffect(app, Container, 1, navCanvasContainerRef, 0.5, 0, 0, 0.1, 0.1, 1)
-
+        const rect = setTvEffect(app, Container, 1, navCanvasContainerRef, 0.5, 0, 0, 0.1, 0.1, 1)
 
         function handleResize(e) {
             app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight + 30);
@@ -62,6 +62,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
             {...bind()}
             style={props} className="m-0 h-100">
             <Col className="d-flex justify-content-end m-0 p-0" >
+            <TurnedOffScreen style={{ opacity : isActive ? 0 : 1}} />
                 <div
                     id="nav-left-container"
                     className=" d-flex flex-column justify-content-between align-items-center">

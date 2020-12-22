@@ -21,15 +21,14 @@ const ButtonContainer = styled.div`
     border: ${props => props.isActive ? "5px inset #66ccff" : "5px inset #000"};
     background:none;
     color: ${props => props.isActive ? "#ff6600" : "#000"};
-    z-index:100;
     display:flex;
     justify-content:center;
     align-items:center;
     cursor:pointer;
-    pointer-events:default;
+    pointer-events:auto;
    margin:20px;
    font-size:1.3rem;
-
+ 
 
 &:hover {
     opacity:0.8;

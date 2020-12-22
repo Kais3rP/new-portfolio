@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Route, Switch, useLocation, useHistory } from "react-router-dom";
-import { Row, Col } from "react-bootstrap";
-import "./index.css";
-import { gsap, TimelineMax } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useState, useEffect, useRef } from "react"
+import { useLocation, useHistory } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { Row, Col } from "react-bootstrap"
+import "./index.css"
+import { gsap, TimelineMax } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
-import * as PIXI from "pixi.js"
-import { CRTFilter } from "@pixi/filter-crt"
 import Word from "./Word"
 import setTvEffect from "../../helpers/setTvEffect"
 import uuid from "react-uuid"
-import { animated } from "react-spring";
+import { animated } from "react-spring"
 import useDragRouterElement from "../../custom-hooks/useDragRouterElement"
 import { words } from "../../data/words"
-
+import TurnedOffScreen from "../../components/turnedoff/TurnedOffScreen"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -33,7 +32,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
   const location = useLocation();
   const history = useHistory();
   const [isScrollingLeft, setIsScrollingLeft] = useState(location.pathname === "/home" ? true : false)
-
+  const isActive = useSelector( state => state.main.isActive )
 
   //Animation on mounting and unmounting
   useEffect(() => {
@@ -140,6 +139,12 @@ const MainWindowsHoc = React.memo(function ({ children }) {
         lg={8}
         id={colRef?.current ? colRef.current.id : null}
         className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
+            <TurnedOffScreen style={{ 
+              opacity : isActive ? 0 : 1, 
+              touchEvents: isActive ? "none" : "auto", 
+              pointerEvents: isActive ? "none" : "auto"
+              }} 
+              />
         {children}
         {wordsArr.map((data, i) => <Word
           key={wordsIds[i]}

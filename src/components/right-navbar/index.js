@@ -15,7 +15,7 @@ import MoveLeft from "../../reusable/pointer-animations/MoveLeft"
 import Logo from "../../reusable/logo/Logo"
 import SvgDashoffset from "../../reusable/svg-dashoffset-animation/SvgDashoffset"
 import ElectricityFilterSVG from "../../reusable/svg-electricity-filter/ElectricityFilterSVG"
-
+import TurnedOffScreen from "../turnedoff/TurnedOffScreen"
 
 const width = 528;
 const AnimatedRow = animated(Row);
@@ -25,16 +25,30 @@ export default function RightNavbar({ handleAudio, isMuted }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
-   const dispatch = useDispatch()
-    const isActive = useSelector( state => state.main.isActive)
+    const dispatch = useDispatch()
+    const isActive = useSelector(state => state.main.isActive)
 
     useEffect(() => {
         const {
             app,
             Container,
-        } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
+        } = createNewPixiApp(
+            navCanvasContainerRef.current.clientWidth, 
+            navCanvasContainerRef.current.scrollHeight, 
+            navCanvasContainerRef.current
+            );
 
-        const rect = setTvEffect(app, Container, 1, navCanvasContainerRef, 0.5, 0, 0, 0.1, 0.1, 1)
+        const rect = setTvEffect(
+            app, 
+            Container, 
+            1, 
+            navCanvasContainerRef, 
+            0.5, 
+            0, 
+            0, 
+            0.1, 
+            0.1, 
+            1)
 
         function handleResize(e) {
             app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight + 30);
@@ -47,9 +61,9 @@ export default function RightNavbar({ handleAudio, isMuted }) {
 
     }, [])
 
-function handleActive(bool){
-    dispatch(setIsActive(bool))
-}
+    function handleActive(bool) {
+        dispatch(setIsActive(bool))
+    }
 
     return (
         <AnimatedRow ref={navCanvasContainerRef}
@@ -58,6 +72,7 @@ function handleActive(bool){
             style={props}
             className="m-0 h-100" >
             <Col className=" d-flex justify-content-start m-0 p-0">
+                <TurnedOffScreen style={{ opacity : isActive ? 0 : 1, zIndex:0}} />
                 <div id="nav-right-container"
                     className="d-flex flex-column justify-content-between align-items-center">
                     {!isNavLarge &&
@@ -73,18 +88,18 @@ function handleActive(bool){
                             } />}
 
                     <div style={{ width: "70%", marginTop: "50px" }}>
-                        <Logo isActive={isActive}/>
+                        <Logo isActive={isActive} />
                     </div>
                     <div className="right-navbar-svg">
-                         <SvgDashoffset
-                          d={d} 
-                          viewBox={"0 0 170 620"} 
-                          filter={(id) => <ElectricityFilterSVG id={id} />}
-                          handleActive={handleActive} 
-                          isActive={isActive}
-                          style={{stroke: isActive ?"#66ccff" : "#ff6600"}}
-                          />
-                        </div>
+                        <SvgDashoffset
+                            d={d}
+                            viewBox={"0 0 170 620"}
+                            filter={(id) => <ElectricityFilterSVG id={id} />}
+                            handleActive={handleActive}
+                            isActive={isActive}
+                            style={{ stroke: isActive ? "#66ccff" : "#ff6600"}}
+                        />
+                    </div>
                     <div id="nav-controls"
                         className="" >
                         <AudioButton handleAudio={handleAudio} isMuted={isMuted} isActive={isActive} />

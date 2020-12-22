@@ -49,6 +49,7 @@
 
 .right-navbar-svg {
   width:100%;
+  z-index:1;
     }
 
 @media Screen and (max-height:760px){
