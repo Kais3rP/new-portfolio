@@ -40,20 +40,21 @@ export default function Logo(props) {
 
 
 const MyDiv = styled.div`
-width: 100%;
-        position: relative;
-        border: 2px outset #ff6600;
-        border-radius : 20px;
-        padding:25px;
-        background-image: linear-gradient(to top, #070707, #171717);
-        //box-shadow: 0px 0px 20px 5px #ff6600, inset 0px 2px 6px #ff6600;
-        display:flex;
-        justify-content:center;
-        align-items:center;
+    width: 100%;
+    position: relative;
+    border: 2px outset #ff6600;
+    border-radius : 20px;
+    padding:25px;
+    background-image: linear-gradient(to top, #070707, #171717);
+    //box-shadow: 0px 0px 20px 5px #ff6600, inset 0px 2px 6px #ff6600;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 `
 const MyPath = styled.path`
-stroke: #66ccff;
+    stroke: #66ccff;
     stroke-miterlimit: 10;
     fill: ${props => props.isActive ? "#66ccff" : "none"};
+    transition: all 0.5s linear;
 `
 const AnimatedDiv = animated(MyDiv)

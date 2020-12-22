@@ -7,7 +7,7 @@ import styled from "styled-components"
 export default function Button({ children, onClick, isActive }) {
 
     return (
-        <ButtonContainer onClick={onClick} className="control-button" isActive={isActive}>
+        <ButtonContainer onClick={onClick} isActive={isActive}>
             {children}
         </ButtonContainer>
     )
@@ -18,19 +18,19 @@ const ButtonContainer = styled.div`
     width:50px;
     height:50px;
     border-radius:50%;
-    border: ${props => props.isActive ? "5px inset #66ccff" : "5px inset #000"};
+    border: ${props => props.isActive ? "5px inset #66ccff" : "1px inset #ff6600"};
     background:none;
-    color: ${props => props.isActive ? "#ff6600" : "#000"};
+    color: ${props => props.isActive ? "#ff6600" : "#222"};
     display:flex;
     justify-content:center;
     align-items:center;
     cursor:pointer;
-    pointer-events:auto;
-   margin:20px;
-   font-size:1.3rem;
- 
-
+    pointer-events:${props => props.isActive ? "auto" : "none"};
+    margin:20px;
+    font-size:1.3rem;
+    opacity:0.99;
+    transition: all 0.5s linear;
 &:hover {
-    opacity:0.8;
+   
 }
 `
