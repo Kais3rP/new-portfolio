@@ -5,7 +5,7 @@ import styled from "styled-components"
 import * as easings from "d3-ease"
 
 
-export default function SvgDashOffset({d, viewBox, dashOffsetStart, dashOffsetEnd, picSrc, style}) {
+export default function SvgDashOffset({d, viewBox, picSrc, startoff, style}) {
   const [length, setLength] = useState(null);
   const [{ stroke }, set] = useSpring(() => ({
     stroke: 0,
@@ -25,16 +25,18 @@ export default function SvgDashOffset({d, viewBox, dashOffsetStart, dashOffsetEn
       const mouseY = state.event.pageY;
       const startY = state.event.target.parentNode.getBoundingClientRect().y;
       const height = state.event.target.parentNode.getBoundingClientRect().height;
-
+console.log(mouseY,"mouse-start:",mouseY-startY,startY,height,(mouseY-startY) < height)
       set({
         stroke: 
+        mouseY-startY < height-50 ?
         transposeRange(
           mouseY, 
           startY, 
-          height, 
-          dashOffsetStart ? dashOffsetStart : 0, 
-          dashOffsetEnd ? length - dashOffsetEnd : length
-          )
+           height+startY, 
+           startoff ? startoff : 0, 
+           length
+          ) : length
+        
       });
     }
   });

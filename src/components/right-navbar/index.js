@@ -80,7 +80,7 @@ export default function RightNavbar({ handleAudio, isMuted }) {
                         <Logo />
                     </div>
                     <div style={{ width: "100%" }}>
-                         <SvgDashoffset d={d} viewBox={"0 0 170 600"}  dashOffsetEnd={580}/>
+                         <SvgDashoffset d={d} viewBox={"0 0 170 600"}/>
                         </div>
                     <div id="nav-controls"
                         className="" >
