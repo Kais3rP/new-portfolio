@@ -5,7 +5,15 @@ import styled from "styled-components"
 import * as easings from "d3-ease"
 
 
-export default function SvgDashOffset({ d, viewBox, picSrc, startoff, style, handleActive }) {
+export default function SvgDashOffset({
+  d,
+  viewBox,
+  picSrc,
+  startoff,
+  style,
+  handleActive,
+  isActive,
+  filter }) {
   const [length, setLength] = useState(null);
   const [{ stroke }, set] = useSpring(() => ({
     stroke: 0,
@@ -15,6 +23,8 @@ export default function SvgDashOffset({ d, viewBox, picSrc, startoff, style, han
     }
   }));
   const pathRef = useRef(null);
+  const pathID = "path" + Math.random() * 10.000
+
 
   useEffect(() => {
     setLength(pathRef.current.getTotalLength());
@@ -44,19 +54,20 @@ export default function SvgDashOffset({ d, viewBox, picSrc, startoff, style, han
         0,
         length
       )
-     // console.log( relativePosition )
-      if (handleActive) handleActive(relativePosition <= 235 ? true : false)
+      // console.log( relativePosition )
+      const hasToPower = relativePosition <= 235;
+      if (handleActive) handleActive(hasToPower)
     }
   });
   return (
     <div style={{ height: "100%", width: "100%" }} {...bind()}>
       <svg
-        id="Layer_1"
         data-name="Layer 1"
         xmlns="http://www.w3.org/2000/svg"
         viewBox={viewBox}
       >
         <AnimatedPath
+          id={pathID}
           ref={pathRef}
           style={{
             fill: "none",
@@ -70,6 +81,7 @@ export default function SvgDashOffset({ d, viewBox, picSrc, startoff, style, han
           d={d}
           transform="translate(10 10)"
         />
+        {filter && isActive && filter(pathID)}
         {picSrc && <image
           id="my-pic"
           width="426"

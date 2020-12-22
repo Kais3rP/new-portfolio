@@ -5,7 +5,6 @@ import styled from "styled-components"
 
 export default function Logo(props) {
 
-    const [toggle, setToggle] = useState(true)
 
     const springProps = useSpring({
         loop: { reverse: true },
@@ -15,7 +14,7 @@ export default function Logo(props) {
     })
 
     return (
-        <AnimatedDiv onPointerDown={() => { setToggle(toggle => !toggle) }} {...{ ...props, style: { ...props.style,  ...props.isActive ? springProps : {}  } }}>
+        <AnimatedDiv  {...{ ...props, style: { ...props.style,  ...props.isActive ? springProps : {}  } }}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 185.78 200.51"

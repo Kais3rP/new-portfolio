@@ -14,8 +14,8 @@ import useDragElement from "../../custom-hooks/useDragElement"
 import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
 import MoveLeft from "../../reusable/pointer-animations/MoveLeft"
 import Logo from "../../reusable/logo/Logo"
-//import StrokeDashSVG from "../../reusable/strokedash-svg/StrokeDashSVG"
 import SvgDashoffset from "../../reusable/svg-dashoffset-animation/SvgDashoffset"
+import ElectricityFilterSVG from "../../reusable/svg-electricity-filter/ElectricityFilterSVG"
 
 
 gsap.registerPlugin(CSSRulePlugin);
@@ -56,7 +56,7 @@ export default function RightNavbar({ handleAudio, isMuted }) {
 function handleActive(bool){
     setIsActive(bool)
 }
-console.log(isActive)
+
     return (
         <AnimatedRow ref={navCanvasContainerRef}
             id="right-navbar"
@@ -82,7 +82,15 @@ console.log(isActive)
                         <Logo isActive={isActive}/>
                     </div>
                     <div className="right-navbar-svg">
-                         <SvgDashoffset d={d} viewBox={"0 0 170 600"} handleActive={handleActive}/>
+                         <SvgDashoffset
+                          d={d} 
+                          viewBox={"0 0 170 620"} 
+                          filter={(id) => <ElectricityFilterSVG id={id} />}
+                          handleActive={handleActive} 
+                          isActive={isActive}
+                          style={{stroke: isActive ?"#66ccff" : "#ff6600"}}
+
+                          />
                         </div>
                     <div id="nav-controls"
                         className="" >
