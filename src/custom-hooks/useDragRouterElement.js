@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+
 import { useSpring, config } from "react-spring";
-import { useDrag, useGesture } from "react-use-gesture";
+import { useGesture } from "react-use-gesture";
 import removeSlash from "../helpers/removeSlashFromPathname"
 import * as easings from 'd3-ease';
 

@@ -102,7 +102,7 @@ await next({ x: toggle ? window.innerWidth/2 : 0, scale: toggle ? 5 : 1, opacity
  
 
   return (
-    <div className="d-flex" style={{height:"70px", width:"100%"}}>
+    <div className="d-flex" style={{height:"70px"}}>
       <AnimatedArrowContainer onPointerDown={() => { setToggle(true) }} style={disappearProps}>
         <ArrowRight  />
       </AnimatedArrowContainer>
