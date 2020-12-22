@@ -6,13 +6,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVolumeUp, faVolumeMute } from '@fortawesome/free-solid-svg-icons'
 import Button from "./index.js"
 
-export default function AudioButton({handleAudio, isMuted}) {
+export default function AudioButton({ handleAudio, isMuted, isActive }) {
 
     return (
-       <Button onClick={()=>{ 
-           
-           handleAudio() }}>
-<FontAwesomeIcon icon={isMuted ? faVolumeMute :faVolumeUp}/>
-       </Button>
+        <Button
+            isActive={isActive}
+            onClick={() => {
+                handleAudio()
+            }}>
+            <FontAwesomeIcon icon={isMuted ? faVolumeMute : faVolumeUp} />
+        </Button>
     )
 }

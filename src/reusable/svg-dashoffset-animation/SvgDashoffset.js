@@ -5,13 +5,13 @@ import styled from "styled-components"
 import * as easings from "d3-ease"
 
 
-export default function SvgDashOffset({d, viewBox, picSrc, startoff, style}) {
+export default function SvgDashOffset({ d, viewBox, picSrc, startoff, style, handleActive }) {
   const [length, setLength] = useState(null);
   const [{ stroke }, set] = useSpring(() => ({
     stroke: 0,
-    config : {
-    //  duration:200,
-    //  ease: easings.easeBackOut
+    config: {
+      //  duration:200,
+      //  ease: easings.easeBackOut
     }
   }));
   const pathRef = useRef(null);
@@ -25,19 +25,27 @@ export default function SvgDashOffset({d, viewBox, picSrc, startoff, style}) {
       const mouseY = state.event.pageY;
       const startY = state.event.target.parentNode.getBoundingClientRect().y;
       const height = state.event.target.parentNode.getBoundingClientRect().height;
-console.log(mouseY,"mouse-start:",mouseY-startY,startY,height,(mouseY-startY) < height)
+      //console.log(mouseY, "mouse-start:", mouseY - startY, startY, height, (mouseY - startY) < height)
       set({
-        stroke: 
-        mouseY-startY < height-50 ?
-        transposeRange(
-          mouseY, 
-          startY, 
-           height+startY, 
-           startoff ? startoff : 0, 
-           length
-          ) : length
-        
+        stroke:
+          mouseY - startY < height - 50 ?
+            transposeRange(
+              mouseY,
+              startY,
+              height + startY,
+              startoff ? startoff : 0,
+              length
+            ) : length
       });
+      const relativePosition = transposeRange(
+        mouseY,
+        startY,
+        height + startY,
+        0,
+        length
+      )
+     // console.log( relativePosition )
+      if (handleActive) handleActive(relativePosition <= 235 ? true : false)
     }
   });
   return (
@@ -50,23 +58,24 @@ console.log(mouseY,"mouse-start:",mouseY-startY,startY,height,(mouseY-startY) < 
       >
         <AnimatedPath
           ref={pathRef}
-          style={{  
-              fill: "none",
-  stroke: "#ff6600",
-  strokeMiterlimit: 1,
-  strokeWidth: "5px",
-  ...style}}
+          style={{
+            fill: "none",
+            stroke: "#ff6600",
+            strokeMiterlimit: 1,
+            strokeWidth: "5px",
+            ...style
+          }}
           strokeDasharray={length}
           strokeDashoffset={stroke?.to((val) => val)}
           d={d}
           transform="translate(10 10)"
         />
-       {picSrc && <image 
-        id="my-pic"
-        width="426" 
-        height="426" 
-        transform="translate(34 33) scale(0.32 0.32)" 
-        xlinkHref={picSrc}/> }
+        {picSrc && <image
+          id="my-pic"
+          width="426"
+          height="426"
+          transform="translate(34 33) scale(0.32 0.32)"
+          xlinkHref={picSrc} />}
       </svg>
     </div>
   );

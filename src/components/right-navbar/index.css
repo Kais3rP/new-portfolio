@@ -47,3 +47,26 @@
     
 }
 
+.right-navbar-svg {
+  width:100%;
+    }
+
+@media Screen and (max-height:760px){
+  .right-navbar-svg {
+width:75%;
+  }
+}
+
+@media Screen and (max-height:600px){
+  .right-navbar-svg {
+width:50%;
+  }
+}
+
+
+
+@media Screen and (max-height:500px){
+  .right-navbar-svg {
+display:none;
+  }
+}

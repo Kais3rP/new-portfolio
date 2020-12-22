@@ -79,16 +79,33 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
                             isRotation={false}
                             style={{ width: "40px", position: "absolute", fill: "#66ccff" }}
                             pos={{ x: 100, y: 100 }} />}
-                    <ul id="nav-menu" className="w-100 d-flex flex-column justify-content-start align-items-start mt-5">
+                    <ul
+                        id="nav-menu"
+                        className="w-100 d-flex flex-column justify-content-start align-items-start mt-5">
                         {links.map(link => (
-                            <NavLink onPointerOver={() => { setCurrentLink(link) }} className="nav-link" activeClassName="active-link" to={link}
+                            <NavLink
+                                onPointerOver={() => {
+                                    setCurrentLink(link)
+                                }}
+                                className="nav-link"
+                                activeClassName="active-link"
+                                to={link}
                                 key={link} ref={linkRefs[`${link}LinkRef`]}>
                                 <li
                                     className="p-1">
                                     <animated.div
                                         {...bind2()}
                                         style={currentLink === link ? props2 : {}}>
-                                        <TransitionText text2={`.${link === "technologies" ? "techs" : link}()`} text1={link === "technologies" ? "techs" : link} />
+                                        <TransitionText
+                                            text2={
+                                                `.${link === "technologies" ?
+                                                    "techs" :
+                                                    link}()`
+                                            }
+                                            text1={
+                                                link === "technologies" ?
+                                                    "techs" :
+                                                    link} />
                                     </animated.div>
                                 </li>
                             </NavLink>))}

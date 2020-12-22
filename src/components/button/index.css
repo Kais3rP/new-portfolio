@@ -1,20 +1,7 @@
 .control-button {
-    width:50px;
-    height:50px;
-    border-radius:50%;
-    border:5px inset #66ccff;
-    background:black;
-    color: #ff6600;
-    z-index:100;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
-    pointer-events:default;
-   margin:20px;
-   font-size:1.3rem;
+  
 }
 
 .control-button:hover {
-    opacity:0.8;
+    
 }

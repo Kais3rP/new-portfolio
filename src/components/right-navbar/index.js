@@ -29,7 +29,7 @@ export default function RightNavbar({ handleAudio, isMuted }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
-
+    const [isActive, setIsActive] = useState(true)
 
     useEffect(() => {
         const {
@@ -53,8 +53,10 @@ export default function RightNavbar({ handleAudio, isMuted }) {
 
     }, [])
 
-
-
+function handleActive(bool){
+    setIsActive(bool)
+}
+console.log(isActive)
     return (
         <AnimatedRow ref={navCanvasContainerRef}
             id="right-navbar"
@@ -77,14 +79,14 @@ export default function RightNavbar({ handleAudio, isMuted }) {
                             } />}
 
                     <div style={{ width: "70%", marginTop: "50px" }}>
-                        <Logo />
+                        <Logo isActive={isActive}/>
                     </div>
-                    <div style={{ width: "100%" }}>
-                         <SvgDashoffset d={d} viewBox={"0 0 170 600"}/>
+                    <div className="right-navbar-svg">
+                         <SvgDashoffset d={d} viewBox={"0 0 170 600"} handleActive={handleActive}/>
                         </div>
                     <div id="nav-controls"
                         className="" >
-                        <AudioButton handleAudio={handleAudio} isMuted={isMuted} />
+                        <AudioButton handleAudio={handleAudio} isMuted={isMuted} isActive={isActive} />
                     </div>
                 </div>
 
@@ -94,4 +96,4 @@ export default function RightNavbar({ handleAudio, isMuted }) {
 }
 
 
-const d = "M74.5,576.5a18.57,18.57,0,0,0-1-9c-4.2-10.89-19.83-17.29-39-16v-35h80v-35h-80v-35h80v-35h-80v-35h80v-35h-80v-35h80v-35h-80v-35h80v-35h-80v-35h80v-35h-80v-32h80v-30h-80v-29s41,0,40-30"
+const d = "M102.62,581.86a18.56,18.56,0,0,0-1-9c-4.2-10.9-19.83-17.29-39-16v-35h80v-35h-80v-35h80v-35h-80v-35h80v-35h-80v-35h80v-35h-80v-35h80v-35h-80v-35h80v-35h-80v-32h80v-30h-80v-29s41,0,40-30M106.5,7.5a5,5,0,1,0,5,5A5,5,0,0,0,106.5,7.5Zm1,569a5,5,0,1,0,5,5A5,5,0,0,0,107.5,576.5Zm92,5h-87m87-569h-88" 
