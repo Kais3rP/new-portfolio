@@ -9,7 +9,7 @@ export default function StrokeDashSVG({ d, style, stroke, handleLength, length }
   
     return (
       <div style={{ height: "100%", width: "100%" }}>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 197 600">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 600">
           <animated.path
             ref={pathRef}
             style={{
@@ -20,7 +20,7 @@ export default function StrokeDashSVG({ d, style, stroke, handleLength, length }
               ...style
             }}
             d={d}
-            transform="translate(-1.5 2.5)"
+            transform="translate(12.5 2.5)"
             strokeDasharray={length}
             strokeDashoffset={stroke?.to((val) => val)}
           />

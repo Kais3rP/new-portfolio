@@ -43,14 +43,6 @@ export default function App() {
   const havefunLinkRef = useRef();
   const hereRef = useRef();
 
-  //Right navbar SVG control
-  const [svgLength, setSvgLength] = useState(null);
-  const [bind, stroke] = useSetStrokeOnMove(svgLength);
-
-  function handleLength(length) {
-    setSvgLength(length);
-  }
-
   //--------------------------
   const {
     app,
@@ -99,8 +91,8 @@ export default function App() {
 
 
   return (
-    <Container className=" main-container main-theme" fluid>
-      <Row  {...bind()}>
+    <Container className=" main-container main-theme" fluid >
+      <Row>
         <Col>
           <div className="main-theme" id="container" ref={setContainer}></div>
           {isReady ? <>
@@ -117,9 +109,7 @@ export default function App() {
             <RightNavbar 
             handleAudio={handleAudio} 
             isMuted={isMuted} 
-            handleLength={handleLength} 
-            svgLength={svgLength} 
-            stroke={stroke} />
+            />
             <Switch>
               <Route exact path="/about">
                 <MainWindowsHoc   >

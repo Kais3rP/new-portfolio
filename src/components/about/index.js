@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from "react"
 import { Row, Col } from "react-bootstrap"
 import TypeIt from "typeit-react"
 import "./index.css"
-import { useSpring, animated } from "react-spring"
-import { useMove } from "react-use-gesture"
+import SvgDashoffsetAuto from "../../reusable/svg-dashoffset-animation/SvgDashoffsetAuto"
 import SvgDashoffset from "../../reusable/svg-dashoffset-animation/SvgDashoffset"
+import me from "../../pics/me.png"
+
+const circlePath = "M91.5,8A83.5,83.5,0,1,1,8,91.5,83.6,83.6,0,0,1,91.5,8m0-7A90.5,90.5,0,1,0,182,91.5,90.5,90.5,0,0,0,91.5,1Z"
 
 export default function About() {
 
@@ -26,7 +28,7 @@ export default function About() {
         </div>
         <div id="pic-container" >
           <div style={{ width: "100%", maxWidth:"800px" }}>
-            <SvgDashoffset d={"M91.5,8A83.5,83.5,0,1,1,8,91.5,83.6,83.6,0,0,1,91.5,8m0-7A90.5,90.5,0,1,0,182,91.5,90.5,90.5,0,0,0,91.5,1Z"}/>
+           <SvgDashoffset d={circlePath} viewBox={"0 0 200 200"} dashOffsetStart={520} dashOffsetEnd={80} picSrc={me}/>
           </div>
         </div>
       </Col>

@@ -10,7 +10,7 @@ export default function useSetStrokeOnMove(length) {
         const mouseY = state.event.pageY;
         const height = state.event.target.parentNode.getBoundingClientRect()
           .height;
-        //console.log(mouseY)
+        //console.log(transposeRange(mouseY, 0, height, length/3, length+200))
         set({
           stroke:
             mouseY < length

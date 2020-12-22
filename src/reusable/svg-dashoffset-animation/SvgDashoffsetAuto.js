@@ -5,13 +5,15 @@ import styled from "styled-components"
 import * as easings from "d3-ease"
 
 
-export default function SvgDashOffset({d, viewBox, dashOffsetStart, dashOffsetEnd, picSrc, style}) {
+export default function SvgDashOffset({d, picSrc, style}) {
   const [length, setLength] = useState(null);
   const [{ stroke }, set] = useSpring(() => ({
-    stroke: 0,
+    from:{stroke: 0},
+    to:{stroke:length},
+    loop: { reverse: true },
     config : {
-    //  duration:200,
-    //  ease: easings.easeBackOut
+      duration:1000,
+      ease: easings.easeBackOut
     }
   }));
   const pathRef = useRef(null);
@@ -20,31 +22,13 @@ export default function SvgDashOffset({d, viewBox, dashOffsetStart, dashOffsetEn
     setLength(pathRef.current.getTotalLength());
   }, [pathRef]);
 
-  const bind = useGesture({
-    onMove: (state) => {
-      const mouseY = state.event.pageY;
-      const startY = state.event.target.parentNode.getBoundingClientRect().y;
-      const height = state.event.target.parentNode.getBoundingClientRect().height;
-
-      set({
-        stroke: 
-        transposeRange(
-          mouseY, 
-          startY, 
-          height, 
-          dashOffsetStart ? dashOffsetStart : 0, 
-          dashOffsetEnd ? length - dashOffsetEnd : length
-          )
-      });
-    }
-  });
   return (
-    <div style={{ height: "100%", width: "100%" }} {...bind()}>
+    <div style={{}}>
       <svg
         id="Layer_1"
         data-name="Layer 1"
         xmlns="http://www.w3.org/2000/svg"
-        viewBox={viewBox}
+        viewBox="0 0 200 200"
       >
         <AnimatedPath
           ref={pathRef}
@@ -68,11 +52,6 @@ export default function SvgDashOffset({d, viewBox, dashOffsetStart, dashOffsetEn
       </svg>
     </div>
   );
-}
-
-//utility
-function transposeRange(value, x1, y1, x2, y2) {
-  return ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
 }
 
 
