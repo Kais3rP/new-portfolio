@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { setIsActive } from "../../slices/mainSlice"
 import { Row, Col } from "react-bootstrap"
 import "./index.css"
-import { gsap, TimelineMax } from "gsap"
-import { ScrollToPlugin } from "gsap/ScrollToPlugin"
-import { CSSRulePlugin } from "gsap/CSSRulePlugin"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
 import setTvEffect from "../../helpers/setTvEffect"
 import * as PIXI from "pixi.js"
@@ -18,9 +17,6 @@ import SvgDashoffset from "../../reusable/svg-dashoffset-animation/SvgDashoffset
 import ElectricityFilterSVG from "../../reusable/svg-electricity-filter/ElectricityFilterSVG"
 
 
-gsap.registerPlugin(CSSRulePlugin);
-gsap.registerPlugin(ScrollToPlugin);
-
 const width = 528;
 const AnimatedRow = animated(Row);
 const windowWidth = window.innerWidth;
@@ -29,7 +25,8 @@ export default function RightNavbar({ handleAudio, isMuted }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
-    const [isActive, setIsActive] = useState(true)
+   const dispatch = useDispatch()
+    const isActive = useSelector( state => state.main.isActive)
 
     useEffect(() => {
         const {
@@ -37,10 +34,7 @@ export default function RightNavbar({ handleAudio, isMuted }) {
             Container,
         } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
 
-        const firstContainer = new Container();
-        const rect = new PIXI.Graphics();
-        const filter = new CRTFilter();
-        setTvEffect(app, rect, 1, filter, firstContainer, navCanvasContainerRef, 0.5, 0, 0, 0.1, 0.1, 1)
+        const rect = setTvEffect(app, Container, 1, navCanvasContainerRef, 0.5, 0, 0, 0.1, 0.1, 1)
 
         function handleResize(e) {
             app.renderer.resize(navCanvasContainerRef.innerWidth, window.innerHeight + 30);
@@ -54,7 +48,7 @@ export default function RightNavbar({ handleAudio, isMuted }) {
     }, [])
 
 function handleActive(bool){
-    setIsActive(bool)
+    dispatch(setIsActive(bool))
 }
 
     return (
@@ -89,7 +83,6 @@ function handleActive(bool){
                           handleActive={handleActive} 
                           isActive={isActive}
                           style={{stroke: isActive ?"#66ccff" : "#ff6600"}}
-
                           />
                         </div>
                     <div id="nav-controls"

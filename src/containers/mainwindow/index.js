@@ -67,7 +67,6 @@ const MainWindowsHoc = React.memo(function ({ children }) {
       app,
       Container,
     } = createNewPixiApp(width, height, localRef);
-    const firstContainer = new Container();
     //Monitor Words animation
     const wordsArr = [];
     const wordsIds = []
@@ -83,28 +82,18 @@ const MainWindowsHoc = React.memo(function ({ children }) {
       setWordsArr(wordsArr);
       setWordsIds(wordsIds)
     }
-    const rect = new PIXI.Graphics();
-    const filter = new CRTFilter();
+   
     //if (window.innerWidth > 900)
-    setTvEffect(app, rect, 0.2, filter, firstContainer, colRef, 5, 10, 0.5, 0, 0, 5)
+    const rect = setTvEffect(app, Container, 0.2, colRef, 5, 10, 0.5, 0, 0, 5)
 
-    function handlePointerEnter(e) {
-      filter.noiseSize = 1.2;
-    }
-    function handlePointerLeave(e) {
-      filter.noiseSize = 1;
-    }
+  
 
     function handleResize() {
       rect.width = localRef.clientWidth;
       rect.height = localRef.scrollHeight;
     }
     window.addEventListener("resize", handleResize)
-    localRef.addEventListener("pointerenter", handlePointerEnter)
-    localRef.addEventListener("pointerleave", handlePointerLeave)
     return () => {
-      localRef.removeEventListener("pointerenter", handlePointerEnter)
-      localRef.removeEventListener("pointerleave", handlePointerLeave)
       //Clean all the PIXI WebGL assets on unmount during react router navigation
       app.destroy({
         children: true,

@@ -12,11 +12,11 @@ export const mainSlice = createSlice({
   },
 });
 
-export const { increment, decrement, incrementByAmount } = mainSlice.actions;
+export const { setIsActive } = mainSlice.actions;
 
 export const incrementAsync = amount => dispatch => {
   setTimeout(() => {
-    dispatch(incrementByAmount(amount));
+    //dispatch(incrementByAmount(amount));
   }, 1000);
 };
 

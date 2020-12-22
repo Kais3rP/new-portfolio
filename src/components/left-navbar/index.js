@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { Row, Col } from "react-bootstrap";
 import { NavLink } from "react-router-dom"
 import "./index.css";
-import { gsap, TimelineMax } from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { CSSRulePlugin } from "gsap/CSSRulePlugin";
 import { AiFillFacebook } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
 import { AiFillMail } from "react-icons/ai"
@@ -21,8 +19,6 @@ import useSkewText from "../../custom-hooks/useSkewText"
 import TransitionText from "../../reusable/transition-text/TransitionText"
 
 
-gsap.registerPlugin(CSSRulePlugin);
-gsap.registerPlugin(ScrollToPlugin);
 
 const links = ["home", "about", "projects", "technologies", "havefun"];
 const width = 530;
@@ -44,10 +40,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
             Container,
         } = createNewPixiApp(navCanvasContainerRef.current.clientWidth, navCanvasContainerRef.current.scrollHeight, navCanvasContainerRef.current);
 
-        const firstContainer = new Container();
-        const rect = new PIXI.Graphics();
-        const filter = new CRTFilter();
-        setTvEffect(app, rect, 1, filter, firstContainer, navCanvasContainerRef, 0.5, 0, 0, 0.1, 0.1, 1)
+       const rect = setTvEffect(app, Container, 1, navCanvasContainerRef, 0.5, 0, 0, 0.1, 0.1, 1)
 
 
         function handleResize(e) {
