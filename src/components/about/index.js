@@ -28,7 +28,13 @@ export default function About() {
         </div>
         <div id="pic-container" >
           <div style={{ width: "100%", maxWidth:"800px" }}>
-           <SvgDashoffset d={circlePath} viewBox={"0 0 200 200"} startoff={520} picSrc={me}/>
+           <SvgDashoffset 
+           d={circlePath} 
+           viewBox={"0 0 200 200"} 
+           startoff={520} 
+           picSrc={me}
+             onMove={true}
+           />
           </div>
         </div>
       </Col>

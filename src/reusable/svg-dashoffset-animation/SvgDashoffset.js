@@ -13,7 +13,8 @@ export default function SvgDashOffset({
   style,
   handleActive,
   isActive,
-  filter }) {
+  filter,
+  onMove }) {
   const [length, setLength] = useState(null);
   const [{ stroke }, set] = useSpring(() => ({
     stroke: 0,
@@ -36,28 +37,42 @@ export default function SvgDashOffset({
       const startY = state.event.target.parentNode?.getBoundingClientRect().y;
       const height = state.event.target.parentNode?.getBoundingClientRect().height;
       //console.log(mouseY, "mouse-start:", mouseY - startY, startY, height, (mouseY - startY) < height)
-     if(state.down) { set({
-        stroke:
-          mouseY - startY < height - 50 ?
-            transposeRange(
-              mouseY,
-              startY,
-              height + startY,
-              startoff ? startoff : 0,
-              length
-            ) : length
-      });
-      const relativePosition = transposeRange(
-        mouseY,
-        startY,
-        height + startY,
-        0,
-        length
-      )
+      if (onMove)
+        set({
+          stroke:
+            mouseY - startY < height - 50 ?
+              transposeRange(
+                mouseY,
+                startY,
+                height + startY,
+                startoff ? startoff : 0,
+                length
+              ) : length
+        });
+      else
+        if (state.down) {
+          set({
+            stroke:
+              mouseY - startY < height - 50 ?
+                transposeRange(
+                  mouseY,
+                  startY,
+                  height + startY,
+                  startoff ? startoff : 0,
+                  length
+                ) : length
+          });
+          const relativePosition = transposeRange(
+            mouseY,
+            startY,
+            height + startY,
+            0,
+            length
+          )
 
-      const hasToPower = relativePosition <= 235;
-      if (handleActive) handleActive(hasToPower)
-     }
+          const hasToPower = relativePosition <= 235;
+          if (handleActive) handleActive(hasToPower)
+        }
     }
   });
   return (
