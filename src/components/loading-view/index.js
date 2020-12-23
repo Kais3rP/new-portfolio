@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import "./index.css";
 import { gsap, TimelineMax } from "gsap";
 import fallSound from "../../sound/fall.mp3"
-import stompSound from "../../sound/stomp.mp3"
+
 
 
 

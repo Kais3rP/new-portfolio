@@ -13,16 +13,22 @@ export default function SvgDashOffset({
   style,
   handleActive,
   isActive,
+  isMuted,
   filter,
-  onMove }) {
+  onMove,
+  _electricSound,
+_electricityFilter }) {
+
   const [length, setLength] = useState(null);
   const [{ stroke }, set] = useSpring(() => ({
+
     stroke: 0,
     config: {
       //  duration:200,
       //  ease: easings.easeBackOut
     }
   }));
+
   const pathRef = useRef(null);
   const pathID = "path" + Math.random() * 10.000
 
@@ -36,8 +42,8 @@ export default function SvgDashOffset({
       const mouseY = state.event.pageY;
       const startY = state.event.target.parentNode?.getBoundingClientRect().y;
       const height = state.event.target.parentNode?.getBoundingClientRect().height;
-      //console.log(mouseY, "mouse-start:", mouseY - startY, startY, height, (mouseY - startY) < height)
-      if (onMove)
+    
+      if (onMove)  //Boolean prop to decide if moving on mouse move or on drag only
         set({
           stroke:
             mouseY - startY < height - 50 ?
@@ -62,6 +68,9 @@ export default function SvgDashOffset({
                   length
                 ) : length
           });
+
+          //Managing audio and toggling state
+
           const relativePosition = transposeRange(
             mouseY,
             startY,
@@ -71,10 +80,13 @@ export default function SvgDashOffset({
           )
 
           const hasToPower = relativePosition <= 235;
+          
+          if (isActive && !isMuted) _electricSound.play()
           if (handleActive) handleActive(hasToPower)
         }
     }
   });
+
   return (
     <div style={{ height: "100%", width: "100%" }} {...bind()}>
       <svg

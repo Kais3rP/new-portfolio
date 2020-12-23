@@ -21,12 +21,13 @@ const width = 528;
 const AnimatedRow = animated(Row);
 const windowWidth = window.innerWidth;
 
-export default function RightNavbar() {
+export default function RightNavbar({ _electricSound }) {
     const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
     const dispatch = useDispatch()
     const isActive = useSelector(state => state.main.isActive)
+    const isMuted = useSelector(state => state.main.isMuted)
 
     useEffect(() => {
         const {
@@ -98,6 +99,8 @@ export default function RightNavbar() {
                             handleActive={handleActive}
                             isActive={isActive}
                             style={{ stroke: isActive ? "#66ccff" : "#ff6600"}}
+                            _electricSound={_electricSound}
+                            isMuted={isMuted}
                         />
                     </div>
                     <div id="nav-controls"

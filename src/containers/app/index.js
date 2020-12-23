@@ -46,6 +46,7 @@ export default function App() {
     _titleText,
     _flowSound,
     _dropSound,
+    _electricSound,
     loadProgress,
     hasLoaded
   } = useLoadAssets(container)
@@ -75,7 +76,7 @@ export default function App() {
       hereRef
     })
 
-  useAnimateStuffOnceReady({ isReady, rippleAnimation, _dropSound, _rippleSprite, handleMenuLinks })
+  useAnimateStuffOnceReady({ isReady, rippleAnimation, _dropSound, _electricSound, _rippleSprite, handleMenuLinks })
 
 
 
@@ -95,7 +96,7 @@ export default function App() {
                 havefunLinkRef,
               }}
             />
-            <RightNavbar />
+            <RightNavbar _electricSound={_electricSound} />
             <Switch>
               <Route exact path="/about">
                 <MainWindowsHoc   >

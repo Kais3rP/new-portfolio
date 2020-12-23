@@ -12,6 +12,7 @@ import fish4_3 from "../../pics/fish4_3.png"
 import fish4_4 from "../../pics/fish4_4.png"
 import flowSound from "../../sound/flow.wav"
 import dropSound from "../../sound/drop.wav"
+import electricSound from  "../../sound/electricshock.mp3"
 
 export default function useLoadWhenReady (container){
   const [app, setApp] = useState(null);
@@ -23,6 +24,7 @@ export default function useLoadWhenReady (container){
   const [_titleText, set_titleText] = useState(null);
   const [_flowSound, set_flowSound] = useState(null);
   const [_dropSound, set_dropSound] = useState(null);
+  const [_electricSound, set_electricSound] = useState(null);
   const [loadProgress, setLoadProgress] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
 
@@ -50,6 +52,7 @@ if (!container) return;
     .add("fish4_4", fish4_4)
     .add("flowSound", flowSound)
     .add("dropSound", dropSound)
+    .add("electricSound", electricSound)
     .load(init)
 
   loader.onProgress.add(data => {
@@ -88,6 +91,9 @@ if (!container) return;
       textAlign:"center"
     });
     const titleText = new PIXI.Text('/HOME', style);
+
+    //Sounds init
+
     const flowSound = PIXISound.default.Sound.from({
       url: resources.flowSound,
       loop: true,
@@ -100,6 +106,14 @@ if (!container) return;
       autostart: false,
       volume: 0.1
     })
+
+    const electricSound = PIXISound.default.Sound.from({
+      url: resources.electricSound,
+      autostart: false,
+      volume: 0.1
+    })
+    //Fishes sprites init
+
     const allFishes = [  
       {
         fish: new PIXI.AnimatedSprite([resources.fish4.texture, resources.fish4_1.texture, resources.fish4_2.texture, resources.fish4_1.texture, resources.fish4.texture, resources.fish4_3.texture, resources.fish4_4.texture, resources.fish4_3.texture]),
@@ -123,6 +137,7 @@ if (!container) return;
     set_titleText(titleText)
     set_flowSound(flowSound)
     set_dropSound(dropSound)
+    set_electricSound(electricSound)
   }
   return () => {
     //Clean all the PIXI WebGL assets on unmount 
@@ -135,6 +150,6 @@ if (!container) return;
 }, [container])
 
 return ({
-  app, _firstContainer, _rippleSprite, _cloudsSprite, _waterSprite, allFishes, _titleText, _flowSound, _dropSound, loadProgress, hasLoaded 
+  app, _firstContainer, _rippleSprite, _cloudsSprite, _waterSprite, allFishes, _titleText, _flowSound, _dropSound, _electricSound, loadProgress, hasLoaded 
 })
 }
