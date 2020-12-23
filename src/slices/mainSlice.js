@@ -4,15 +4,19 @@ export const mainSlice = createSlice({
   name: 'main',
   initialState: {
     isActive: true,
+    isMuted: false
   },
   reducers: {
    setIsActive: (state, action) => {
      state.isActive = action.payload
+   },
+   toggleAudio: state => {
+state.isMuted = !state.isMuted
    }
   },
 });
 
-export const { setIsActive } = mainSlice.actions;
+export const { setIsActive, toggleAudio } = mainSlice.actions;
 
 export const incrementAsync = amount => dispatch => {
   setTimeout(() => {

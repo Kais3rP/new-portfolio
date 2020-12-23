@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 
 
-export default function useAnimateStuffOnceReady({isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted, handleMenuLinks}   ){
+export default function useAnimateStuffOnceReady({isReady, rippleAnimation, _dropSound, _rippleSprite, handleMenuLinks}   ){
 
 const [isFirstStart, setIsFirstStart] = useState(true)
-
+const isMuted = useSelector( state => state.main.isMuted)
   const location = useLocation()
   useEffect(() => {
 

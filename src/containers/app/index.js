@@ -52,8 +52,6 @@ export default function App() {
 
   const {
     handleMenuLinks,
-    handleAudio,
-    isMuted,
     rippleAnimation
   } = useHandleListenersAndSpritesAnimation(
     hasLoaded,
@@ -77,7 +75,7 @@ export default function App() {
       hereRef
     })
 
-  useAnimateStuffOnceReady({ isReady, rippleAnimation, _dropSound, _rippleSprite, isMuted, handleMenuLinks })
+  useAnimateStuffOnceReady({ isReady, rippleAnimation, _dropSound, _rippleSprite, handleMenuLinks })
 
 
 
@@ -97,10 +95,7 @@ export default function App() {
                 havefunLinkRef,
               }}
             />
-            <RightNavbar 
-            handleAudio={handleAudio} 
-            isMuted={isMuted} 
-            />
+            <RightNavbar />
             <Switch>
               <Route exact path="/about">
                 <MainWindowsHoc   >

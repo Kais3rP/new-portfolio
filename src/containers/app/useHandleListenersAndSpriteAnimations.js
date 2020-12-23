@@ -5,6 +5,7 @@ import { TimelineMax } from "gsap"
 import { GodrayFilter } from "@pixi/filter-godray"
 import usePreviousLocation from "../../custom-hooks/usePreviousLocation"
 import removeSlash from "../../helpers/removeSlashFromPathname"
+import { useSelector } from "react-redux"
 
 export default function useHandleListenersAndSpritesAnimation(
     hasLoaded,
@@ -23,9 +24,9 @@ export default function useHandleListenersAndSpritesAnimation(
 
     const [isBallDeflating, setIsBallDeflating] = useState(false);
     const [rippleAnimation, setRippleAnimation] = useState(null);
-    const [isMuted, setIsMuted] = useState(false);
     const location = useLocation();
     const previousLocation = usePreviousLocation(location);
+    const isMuted = useSelector( state => state.main.isMuted)
 
     //Handle menu links animation on location change
     useEffect(() => {
@@ -184,7 +185,7 @@ if (_titleText ) _titleText.text = location.pathname
                 new TimelineMax()
                     .to(newRippleSprite.scale, 3, { x: 2, y: 2 })
                     .to(newRippleFilter.scale, 3, { x: 2, y: 2 })
-                _dropSound.play()
+              if (!isMuted)  _dropSound.play()
                 //Animate fishes on mobile views where there is no mouse move animation
                 if (window.innerWidth < 800) {
                     mousePos.x = e.data.global.x;
@@ -272,10 +273,7 @@ if (_titleText ) _titleText.text = location.pathname
 
     }
 
-    function handleAudio() {
-        setIsMuted(bool => !bool)
-    }
-    return { handleMenuLinks, setRippleAnimation, handleAudio, isMuted, rippleAnimation }
+    return { handleMenuLinks, setRippleAnimation, rippleAnimation }
 }
 
 
