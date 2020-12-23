@@ -11,8 +11,6 @@ import HaveFun from "../../components/havefun/index"
 import Technologies from "../../components/technologies/index"
 import * as PIXI from "pixi.js"
 import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { ScrollToPlugin } from "gsap/ScrollToPlugin"
 import { PixiPlugin } from "gsap/PixiPlugin"
 import MainWindowsHoc from "../mainwindow/index"
 import LoadingView from "../../components/loading-view/index"
@@ -20,16 +18,10 @@ import useLoadAssets from "./useLoadAssets"
 import useHandleListenersAndSpritesAnimation from "./useHandleListenersAndSpriteAnimations"
 import useAnimateStuffOnceReady from "./useAnimateStuffOnceReady";
 import Error404 from "../../components/errors/Error404"
-import useSetStrokeOnMove from "../../custom-hooks/useSetStrokeOnMove"
-
 
 //Registering GSAP plugins
 window.PIXI = PIXI;
-gsap.registerPlugin(ScrollTrigger)
 gsap.registerPlugin(PixiPlugin);
-gsap.registerPlugin(ScrollToPlugin);
-
-
 
 export default function App() {
 
