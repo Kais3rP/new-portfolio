@@ -135,12 +135,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
         lg={8}
         id={colRef?.current ? colRef.current.id : null}
         className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
-            <TurnedOffScreen style={{ 
-              opacity : isActive ? 0 : 1, 
-              touchEvents: isActive ? "none" : "auto", 
-              pointerEvents: isActive ? "none" : "auto"
-              }} 
-              />
+            <TurnedOffScreen />
               <Led />
         {children}
         {wordsArr.map((data, i) => <Word

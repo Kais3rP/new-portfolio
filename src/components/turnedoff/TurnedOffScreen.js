@@ -20,7 +20,7 @@ background:url(${mainBackground});
 background-size:100% 100%;
 left:0;
 top:0;
-z-index:100;
+z-index:10;
 transition: opacity 2s ease-in;
 opacity:${ props => props.isActive ? 0 : 1};
 touch-events: ${ props => props.isActive ? "none" : "auto" } !important;
