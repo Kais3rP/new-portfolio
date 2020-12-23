@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const mainSlice = createSlice({
   name: 'main',
   initialState: {
-    isActive: true,
+    isActive: false,
     isMuted: false
   },
   reducers: {

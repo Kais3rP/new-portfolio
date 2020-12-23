@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from "styled-components"
 import mainBackground from "../../pics/main-background.jpg"
+import {  useSelector } from "react-redux"
 
 const TurnedOffScreen = ({style}) => {
+    const isActive = useSelector(state => state.main.isActive)
     return (
-        <StyledDiv style={{...style}}>
+        <StyledDiv isActive={isActive} style={{...style}}>
 
         </StyledDiv>
     )
@@ -19,8 +21,10 @@ background-size:100% 100%;
 left:0;
 top:0;
 z-index:100;
-transition: opacity 0.5s linear;
-opacity:0;
+transition: opacity 2s ease-in;
+opacity:${ props => props.isActive ? 0 : 1};
+touch-events: ${ props => props.isActive ? "none" : "auto" } !important;
+pointer-events: ${ props => props.isActive ? "none" : "auto" } !important;
 `
 
 export default TurnedOffScreen

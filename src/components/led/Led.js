@@ -6,8 +6,8 @@ import styled from "styled-components"
 const Led = () => {
     const isActive = useSelector( state => state.main.isActive)
     const props = useSpring({
-      from : { boxShadow: `0 0 2px ${isActive ? "#b5e550" : "#cc1c1c"}, 0 0 4px ${isActive ? "#b5e550" : "#cc1c1c"}, 0 0 8px ${isActive ? "#b5e550" : "#cc1c1c"}, 0 0 12px #FFF, 0 0 16px ${isActive ? "#b5e550" : "#cc1c1c"}, 0 0 20px ${isActive ? "#b5e550" : "#cc1c1c"}` },
-      to : { boxShadow: `0 0 4px ${isActive ? "#b5e550" : "#cc1c1c"}, 0 0 8px ${isActive ? "#b5e550" : "#cc1c1c"}, 0 0 16px ${isActive ? "#b5e550" : "#cc1c1c"}, 0 0 24px ${isActive ? "#b5e550" : "#cc1c1c"}, 0 0 32px ${isActive ? "#b5e550" : "#cc1c1c"}, 0 0 40px ${isActive ? "#b5e550" : "#cc1c1c"}`},
+      from : { boxShadow: `0 0 2px ${isActive ? " #66ccff" : " #ff6600"}, 0 0 4px ${isActive ? " #66ccff" : " #ff6600"}, 0 0 8px ${isActive ? " #66ccff" : " #ff6600"}, 0 0 12px #FFF, 0 0 16px ${isActive ? " #66ccff" : " #ff6600"}, 0 0 20px ${isActive ? " #66ccff" : " #ff6600"}` },
+      to : { boxShadow: `0 0 4px ${isActive ? " #66ccff" : " #ff6600"}, 0 0 8px ${isActive ? " #66ccff" : " #ff6600"}, 0 0 16px ${isActive ? " #66ccff" : " #ff6600"}, 0 0 24px ${isActive ? " #66ccff" : " #ff6600"}, 0 0 32px ${isActive ? " #66ccff" : " #ff6600"}, 0 0 40px ${isActive ? " #66ccff" : " #ff6600"}`},
       loop : { reverse: true}
     })
     return (
@@ -22,7 +22,7 @@ width:30px;
 height:30px;
 border:5px inset  #ff6600;
 border-radius:50%;
-background-color: ${props => props.isActive ? "#b5e550" : "red"};
+background-color: ${props => props.isActive ? " #66ccff" : " #ff6600"};
 z-index:100;
 position:absolute;
 top:30px;

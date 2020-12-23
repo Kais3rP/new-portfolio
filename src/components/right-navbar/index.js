@@ -22,7 +22,7 @@ const AnimatedRow = animated(Row);
 const windowWidth = window.innerWidth;
 
 export default function RightNavbar({ _electricSound }) {
-    const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
+    const [isNavLarge, setIsNavLarge] = useState(true);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "right");
     const dispatch = useDispatch()
@@ -73,7 +73,7 @@ export default function RightNavbar({ _electricSound }) {
             style={props}
             className="m-0 h-100" >
             <Col className=" d-flex justify-content-start m-0 p-0">
-                <TurnedOffScreen style={{ opacity : isActive ? 0 : 1, zIndex:0}} />
+                <TurnedOffScreen style={{zIndex:0}} />
                 <div id="nav-right-container"
                     className="d-flex flex-column justify-content-between align-items-center">
                     {!isNavLarge &&

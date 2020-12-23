@@ -25,6 +25,7 @@ cursor:pointer;
 .loading-col {
     overflow: hidden;
    position:relative;
+   z-index:2;
 }
 
 /*

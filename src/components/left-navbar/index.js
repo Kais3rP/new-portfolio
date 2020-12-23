@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+
 import { Row, Col } from "react-bootstrap";
 import { NavLink } from "react-router-dom"
 import "./index.css";
@@ -9,8 +9,6 @@ import { AiFillMail } from "react-icons/ai"
 import here from "../../pics/here.png"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
 import setTvEffect from "../../helpers/setTvEffect"
-import * as PIXI from "pixi.js"
-import { CRTFilter } from "@pixi/filter-crt"
 import { animated } from "react-spring";
 import useDragElement from "../../custom-hooks/useDragElement"
 import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
@@ -28,12 +26,12 @@ const AnimatedRow = animated(Row);
 
 export default function LeftNavbar({ linkRefs, hereRef }) {
 
-    const [isNavLarge, setIsNavLarge] = useState(window.innerWidth > 800 ? true : false);
+    const [isNavLarge, setIsNavLarge] = useState(true);
     const [currentLink, setCurrentLink] = useState(null);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
     const [bind2, props2] = useSkewText();
-    const isActive = useSelector( state => state.main.isActive )
+
     //Setting PIXI 
     useEffect(() => {
         const {
@@ -62,10 +60,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
             {...bind()}
             style={props} className="m-0 h-100">
             <Col className="d-flex justify-content-end m-0 p-0" >
-            <TurnedOffScreen style={{ 
-                opacity : isActive ? 0 : 1,
-                touchEvents: isActive ? "none" : "auto", 
-              pointerEvents: isActive ? "none" : "auto"}} />
+            <TurnedOffScreen />
                 <div
                     id="nav-left-container"
                     className=" d-flex flex-column justify-content-between align-items-center">

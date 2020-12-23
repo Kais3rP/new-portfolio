@@ -8,6 +8,8 @@ export default function useAnimateStuffOnceReady({isReady, rippleAnimation, _dro
 
 const [isFirstStart, setIsFirstStart] = useState(true)
 const isMuted = useSelector( state => state.main.isMuted)
+const isActive = useSelector( state => state.main.isActive)
+
   const location = useLocation()
   useEffect(() => {
  
@@ -18,17 +20,17 @@ const isMuted = useSelector( state => state.main.isMuted)
        _electricSound?.play()
      }
      setIsFirstStart(false)
-      //Play the ripple continuous animation
-      playRippleAnimation();
+     playRippleAnimation();
     
 
-      function playRippleAnimation() {
+      function playRippleAnimation() {      
         rippleAnimation?.restart()
-        if (!isMuted) _dropSound?.play()
+        if (!isMuted && isActive) _dropSound?.play()
         _rippleSprite?.position.set(0, 0)
         rippleTimeout = setTimeout(playRippleAnimation, 6000)
+        
       }
     }
     return () => { clearTimeout(rippleTimeout) }
-  }, [isReady, isMuted])
+  }, [isReady, isMuted, isActive])
 }

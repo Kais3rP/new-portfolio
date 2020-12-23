@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from "react"
 import { Container, Row, Col } from "react-bootstrap"
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom"
 import LeftNavbar from "../../components/left-navbar/index"
 import RightNavbar from "../../components/right-navbar/index"
 import './index.css'
@@ -16,8 +16,9 @@ import MainWindowsHoc from "../mainwindow/index"
 import LoadingView from "../../components/loading-view/index"
 import useLoadAssets from "./useLoadAssets"
 import useHandleListenersAndSpritesAnimation from "./useHandleListenersAndSpriteAnimations"
-import useAnimateStuffOnceReady from "./useAnimateStuffOnceReady";
+import useAnimateStuffOnceReady from "./useAnimateStuffOnceReady"
 import Error404 from "../../components/errors/Error404"
+import TurnedOffScreen from "../../components/turnedoff/TurnedOffScreen"
 
 //Registering GSAP plugins
 window.PIXI = PIXI;
@@ -84,6 +85,7 @@ export default function App() {
     <Container className=" main-container main-theme" fluid >
       <Row>
         <Col>
+        <TurnedOffScreen style={{zIndex:1}} />
           <div className="main-theme" id="container" ref={setContainer}></div>
           {isReady ? <>
             <LeftNavbar
