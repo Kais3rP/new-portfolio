@@ -13,6 +13,7 @@ import { animated } from "react-spring"
 import useDragRouterElement from "../../custom-hooks/useDragRouterElement"
 import { words } from "../../data/words"
 import TurnedOffScreen from "../../components/turnedoff/TurnedOffScreen"
+import Led from "../../components/led/Led"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,7 +23,6 @@ const MainWindowsHoc = React.memo(function ({ children }) {
   const rowRef = useRef();
   const colRef = useRef();
 
-
   const width = window.innerWidth;
   const widthThreshold = width / 3;
 
@@ -31,13 +31,13 @@ const MainWindowsHoc = React.memo(function ({ children }) {
 
   const location = useLocation();
   const history = useHistory();
-  const [isScrollingLeft, setIsScrollingLeft] = useState(location.pathname === "/home" ? true : false)
+  const [isScrollingLeft, setIsScrollingLeft] = useState(location.pathname === "/home")
   const isActive = useSelector( state => state.main.isActive )
 
   //Animation on mounting and unmounting
   useEffect(() => {
     const DOMnode = rowRef.current
-
+//This animation manages the router switch made through link navigation
     new TimelineMax()
       .set(DOMnode, {
         position: "absolute",
@@ -47,7 +47,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
         transform: "scale(0)"
       })
       .to(DOMnode, 0.9, { left: 0, top: 0, transform: "scale(1)", ease: "back" });
-
+//----------------------------------------------------------------------------------------
     if (location.pathname === "/home")
       setIsScrollingLeft(true)
     if (location.pathname === "/havefun")
@@ -55,7 +55,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
   }, [location])
 
   useEffect(() => {
-
+  
     //Setting up PIXI canvas
     const windowWidth = window.innerWidth;
     const localRef = colRef.current;
@@ -66,6 +66,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
       app,
       Container,
     } = createNewPixiApp(width, height, localRef);
+
     //Monitor Words animation
     const wordsArr = [];
     const wordsIds = []
@@ -77,7 +78,6 @@ const MainWindowsHoc = React.memo(function ({ children }) {
         wordsArr.push({ x, y, text })
         wordsIds.push(uuid())
       }
-
       setWordsArr(wordsArr);
       setWordsIds(wordsIds)
     }
@@ -103,11 +103,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
 
     }
 
-  }, [colRef])
-
-  useEffect(() => {
-
-  })
+  }, [])
 
   const [bind, springProps] = useDragRouterElement(
     location,
@@ -145,6 +141,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
               pointerEvents: isActive ? "none" : "auto"
               }} 
               />
+              <Led />
         {children}
         {wordsArr.map((data, i) => <Word
           key={wordsIds[i]}
