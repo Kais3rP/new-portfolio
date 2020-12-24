@@ -20,13 +20,17 @@ export default function useHandleListenersAndSpritesAnimation(
     _firstContainer,
     _titleText,
     _flowSound,
+    _circusSound,
+    _shutSound,
+    _electricSound,
     linkRefs) {
 
     const [isBallDeflating, setIsBallDeflating] = useState(false);
     const [rippleAnimation, setRippleAnimation] = useState(null);
     const location = useLocation();
     const previousLocation = usePreviousLocation(location);
-    const isMuted = useSelector(state => state.main.isMuted)
+    const isMuted = useSelector(state => state.main.isMuted);
+    const isActive = useSelector(state => state.main.isActive)
 
     //Handle menu links animation on location change
     useEffect(() => {
@@ -196,6 +200,22 @@ export default function useHandleListenersAndSpritesAnimation(
         return () => _firstContainer.removeListener("pointerdown", handleWaterClick);
     }, [hasLoaded, isReady, isMuted])
 
+//Play sounds when active
+
+useEffect(()=>{
+
+if (isActive && !isMuted){
+     _circusSound?.paused ? _circusSound?.resume() : _circusSound.play()
+     _electricSound?.play()
+}
+if (!isActive && !isMuted) {
+    _shutSound?.play()
+}
+if (!isActive || isMuted) _circusSound?.isPlaying ? _circusSound.pause() : void null
+
+},[isActive, _circusSound, _electricSound, _shutSound, isMuted])
+
+//Functions
 
     function handleMenuLinks(target, prevTarget) {
 

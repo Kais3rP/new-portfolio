@@ -18,9 +18,9 @@ const Led = () => {
 }
 
 const StyledDiv = styled.div`
-width:30px;
-height:30px;
-border:5px inset  #ff6600;
+width:20px;
+height:20px;
+border:2px inset  #ff6600;
 border-radius:50%;
 background-color: ${props => props.isActive ? " #66ccff" : " #ff6600"};
 z-index:100;

@@ -21,7 +21,7 @@ background-size:100% 100%;
 left:0;
 top:0;
 z-index:10;
-transition: opacity 2s ease-in;
+transition: opacity 1.5s ease-in;
 opacity:${ props => props.isActive ? 0 : 1};
 touch-events: ${ props => props.isActive ? "none" : "auto" } !important;
 pointer-events: ${ props => props.isActive ? "none" : "auto" } !important;

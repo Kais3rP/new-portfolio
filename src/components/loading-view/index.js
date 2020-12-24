@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom"
 import "./index.css";
-import { gsap, TimelineMax } from "gsap";
-import fallSound from "../../sound/fall.mp3"
+import { TimelineMax } from "gsap";
+
 
 
 
@@ -13,7 +12,6 @@ export default function Loading({ loadProgress, setIsReady }) {
     const logoRef = useRef();
     const loadColRef = useRef();
     const logoContainerRef = useRef();
-    const fallRef = useRef();
     const [animations, setAnimations] = useState({});
 
     useEffect(() => {
@@ -34,7 +32,7 @@ export default function Loading({ loadProgress, setIsReady }) {
                 setIsReady(true)
             },
             onStart: function () {
-                fallRef.current.play();
+
             }
         })
             .to(logoContainerRef.current, 4.8, { scale: 20, opacity: 0 })
@@ -51,7 +49,6 @@ export default function Loading({ loadProgress, setIsReady }) {
     return (
         <Row className="justify-content-center align-items-center">
             <Col ref={loadColRef} className=" loading-col d-flex flex-column justify-content-center align-items-center full-height main-theme">
-                <audio ref={fallRef} src={fallSound}></audio>
                 <div ref={logoContainerRef} className="loader-container">
                     <svg
                         id="logo"

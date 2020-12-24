@@ -48,6 +48,8 @@ export default function App() {
     _flowSound,
     _dropSound,
     _electricSound,
+    _circusSound,
+    _shutSound,
     loadProgress,
     hasLoaded
   } = useLoadAssets(container)
@@ -68,6 +70,9 @@ export default function App() {
     _firstContainer,
     _titleText,
     _flowSound,
+    _circusSound,
+    _shutSound,
+    _electricSound,
     {
       homeLinkRef,
       aboutLinkRef,
@@ -80,7 +85,7 @@ export default function App() {
   useAnimateStuffOnceReady({ isReady, rippleAnimation, _dropSound, _electricSound, _rippleSprite, handleMenuLinks })
 
 
-
+//console.log("rerendering main app")
   return (
     <Container className=" main-container main-theme" fluid >
       <Row>

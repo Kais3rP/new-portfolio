@@ -13,10 +13,8 @@ export default function SvgDashOffset({
   style,
   handleActive,
   isActive,
-  isMuted,
   filter,
-  onMove,
-  _electricSound }) {
+  onMove }) {
 
   const [length, setLength] = useState(null);
   const [{ stroke }, set] = useSpring(() => ({
@@ -79,8 +77,7 @@ export default function SvgDashOffset({
           )
 
           const hasToPower = relativePosition <= 235;
-
-          if (isActive && !isMuted) _electricSound.play()
+          
           if (handleActive) handleActive(hasToPower)
         }
     }
