@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useLocation, useHistory } from "react-router-dom"
 import * as PIXI from "pixi.js"
+import * as PIXISound from "pixi-sound"
 import { TimelineMax } from "gsap"
 import { GodrayFilter } from "@pixi/filter-godray"
 import usePreviousLocation from "../../custom-hooks/usePreviousLocation"
@@ -203,24 +204,23 @@ export default function useHandleListenersAndSpritesAnimation(
 
 //Play sounds when active
 //If I put the sound sprites into the deps array they have audio buffer issues
-useEffect(()=>{
-
-if (isActive && !isMuted){
+useEffect(()=>{ 
+if (isActive){
      _circusSound?.paused ? _circusSound?.resume() : _circusSound.play()
      _electricSound?.play()
     _powerSound?.play()
 }
-if (!isActive && !isMuted) {
+if (!isActive) {
     !_shutSound?.isPlaying ? _shutSound?.play() : void null
-}
-if (!isActive || isMuted) {
     _circusSound?.isPlaying ? _circusSound.pause() : void null
-    _electricSound?.pause()
-    _powerSound?.pause()
+    _electricSound?.play()
 }
+},[isActive])
 
-},[isActive, isMuted])
-
+useEffect(()=>{
+    if (!isMuted) PIXISound.default.unmuteAll()
+    if (isMuted) PIXISound.default.muteAll()    
+},[isMuted])
 //Functions
 
     function handleMenuLinks(target, prevTarget) {
