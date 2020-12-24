@@ -17,6 +17,9 @@ import circusSound from "../../sound/circus.mp3"
 import shutSound from "../../sound/shut-down.mp3"
 import powerSound from "../../sound/power-on.mp3"
 
+const width = window.visualViewport ? window.visualViewport.width : window.innerWidth
+const height = window.visualViewport ? window.visualViewport.height : window.innerHeight
+
 export default function useLoadWhenReady(container) {
   const [app, setApp] = useState(null);
   const [_firstContainer, set_firstContainer] = useState(null);
@@ -35,6 +38,8 @@ export default function useLoadWhenReady(container) {
   const [hasLoaded, setHasLoaded] = useState(false);
 
   //Effect that creates the pixi App, loads the assets and sets the basic app containers
+
+
   useEffect(() => {
     if (!container) return;
     const {
@@ -42,7 +47,7 @@ export default function useLoadWhenReady(container) {
       loader,
       Sprite,
       Container,
-    } = createNewPixiApp(window.visualViewport.width, window.visualViewport.height + 30, container)
+    } = createNewPixiApp(width, height + 30, container)
 
     const firstContainer = new Container();
 
@@ -139,8 +144,8 @@ export default function useLoadWhenReady(container) {
         autostart: false,
         volume: 0.1
       })
-      //Fishes sprites init
 
+      //Fishes sprites init
       const allFishes = [
         {
           fish: new PIXI.AnimatedSprite([resources.fish4.texture, resources.fish4_1.texture, resources.fish4_2.texture, resources.fish4_1.texture, resources.fish4.texture, resources.fish4_3.texture, resources.fish4_4.texture, resources.fish4_3.texture]),

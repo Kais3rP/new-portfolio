@@ -4,11 +4,10 @@ import { setIsActive } from "../../slices/mainSlice"
 import { Row, Col } from "react-bootstrap"
 import "./index.css"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
+import * as PIXISound from "pixi-sound"
 import setTvEffect from "../../helpers/setTvEffect"
-import * as PIXI from "pixi.js"
-import { CRTFilter } from "@pixi/filter-crt"
 import AudioButton from "../button/AudioButton"
-import { animated } from "react-spring";
+import { animated } from "react-spring"
 import useDragElement from "../../custom-hooks/useDragElement"
 import TouchIcon from "../../reusable/pointer-animations/TouchIcon"
 import MoveLeft from "../../reusable/pointer-animations/MoveLeft"
@@ -16,6 +15,7 @@ import Logo from "../../reusable/logo/Logo"
 import SvgDashoffset from "../../reusable/svg-dashoffset-animation/SvgDashoffset"
 import ElectricityFilterSVG from "../../reusable/svg-electricity-filter/ElectricityFilterSVG"
 import TurnedOffScreen from "../turnedoff/TurnedOffScreen"
+import VolumeSlider from "../../components/volume-slider/index"
 
 const width = 528;
 const AnimatedRow = animated(Row);
@@ -104,8 +104,9 @@ export default function RightNavbar({ _electricSound }) {
                         />
                     </div>
                     <div id="nav-controls"
-                        className="" >
+                        className="d-flex justify-content-center" >
                         <AudioButton isActive={isActive} />
+                        <VolumeSlider />
                     </div>
                 </div>
 

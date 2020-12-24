@@ -3,8 +3,7 @@ import { useLocation, useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { Row, Col } from "react-bootstrap"
 import "./index.css"
-import { gsap, TimelineMax } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { TimelineMax } from "gsap"
 import createNewPixiApp from "../../helpers/createNewPixiApp"
 import Word from "./Word"
 import setTvEffect from "../../helpers/setTvEffect"
@@ -13,9 +12,8 @@ import { animated } from "react-spring"
 import useDragRouterElement from "../../custom-hooks/useDragRouterElement"
 import { words } from "../../data/words"
 import TurnedOffScreen from "../../components/turnedoff/TurnedOffScreen"
-import Led from "../../components/led/Led"
+import Led from "../../components/led/index"
 
-gsap.registerPlugin(ScrollTrigger);
 
 const AnimatedRow = animated(Row);
 const MainWindowsHoc = React.memo(function ({ children }) {

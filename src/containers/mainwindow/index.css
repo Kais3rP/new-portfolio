@@ -16,12 +16,16 @@
     overflow:hidden;
     touch-action:none;
     cursor:-webkit-grab;
+    cursor:-moz-grab;
+    cursor:grab;
     pointer-events:auto;
 }
 
 
 .window:active{
     cursor:-webkit-grabbing;
+    cursor:-moz-grabbing;
+    cursor:grabbing;
     }
     
 
