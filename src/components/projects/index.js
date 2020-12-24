@@ -1,7 +1,5 @@
 import React, { useRef } from "react"
-import { Row, Col } from "react-bootstrap"
 import "./index.css"
-import TypeIt from "typeit-react"
 import timer from "../../pics/projects/app-timer.png"
 import chat from "../../pics/projects/chat.png"
 import chrono from "../../pics/projects/chrono.png"
@@ -15,6 +13,7 @@ import starRating from "../../pics/projects/star-rating.png"
 import carousel from "../../pics/projects/carousel.png"
 import covid from "../../pics/projects/covid.png"
 import SwipeCarousel from "../../reusable/swipe-carousel/SwipeCarousel"
+import Label from "../label/index"
 
 
 const proj = [
@@ -80,25 +79,11 @@ export default function Projects({ projectsRef }) {
     pointerEvents:"none"
   }
   return (
-    <Row className="w-100">
-      <Col className="w-100 d-flex flex-column align-items-start">
-      <div className="window-text">
-        <TypeIt>
-          <div>
-            <p style={{ fontSize: "1.2rem", color: "#66ccff" }}>this.projects()</p>
-          </div>
-          <div>
-            <p style={{ fontSize: "1rem", color: "#ff6600" }}>
-              "Here are some projects I worked on, they are classified by categories, front end / full stack projects, proof of concepts, and games"
-           </p>
-          </div>
-        </TypeIt>
-        </div>
+  <>
         <SwipeCarousel pics={proj}  style={iconsStyle} className={"carousel-container"} />
         <SwipeCarousel pics={poc}  style={iconsStyle} className={"carousel-container"}/>
         <SwipeCarousel pics={games}  style={iconsStyle} className={"carousel-container"}/>
-      </Col>
-    </Row>
+  </>
   )
 }
 

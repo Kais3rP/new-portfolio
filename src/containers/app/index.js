@@ -19,6 +19,7 @@ import useHandleListenersAndSpritesAnimation from "./useHandleListenersAndSprite
 import useAnimateStuffOnceReady from "./useAnimateStuffOnceReady"
 import Error404 from "../../components/errors/Error404"
 import TurnedOffScreen from "../../components/turnedoff/TurnedOffScreen"
+import { windowsText } from "../../data/windowsText"
 
 //Registering GSAP plugins
 window.PIXI = PIXI;
@@ -108,22 +109,22 @@ export default function App() {
             <RightNavbar _electricSound={_electricSound} />
             <Switch>
               <Route exact path="/about">
-                <MainWindowsHoc   >
+                <MainWindowsHoc  text={windowsText.about} >
                   <About />
                 </MainWindowsHoc>
               </Route>
               <Route exact path="/projects">
-                <MainWindowsHoc  >
+                <MainWindowsHoc text={windowsText.projects} >
                   <Projects />
                 </MainWindowsHoc>
               </Route>
               <Route exact path="/technologies">
-                <MainWindowsHoc >
+                <MainWindowsHoc text={windowsText.techs} >
                   <Technologies />
                 </MainWindowsHoc>
               </Route>
               <Route exact path="/havefun">
-                <MainWindowsHoc  >
+                <MainWindowsHoc text={windowsText.havefun} >
                   <HaveFun />
                 </MainWindowsHoc>
               </Route>

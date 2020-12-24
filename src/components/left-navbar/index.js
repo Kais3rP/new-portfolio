@@ -16,6 +16,7 @@ import MoveRight from "../../reusable/pointer-animations/MoveRight"
 import useSkewText from "../../custom-hooks/useSkewText"
 import TransitionText from "../../reusable/transition-text/TransitionText"
 import TurnedOffScreen from "../turnedoff/TurnedOffScreen"
+import Label from "../label/index"
 
 
 
@@ -30,7 +31,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
     const [currentLink, setCurrentLink] = useState(null);
     const navCanvasContainerRef = useRef();
     const [bind, props] = useDragElement(isNavLarge, setIsNavLarge, width, "left");
-    const [bind2, props2] = useSkewText();
+    //const [bind2, props2] = useSkewText();
 
     //Setting PIXI 
     useEffect(() => {
@@ -83,11 +84,9 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
                                 activeClassName="active-link"
                                 to={link}
                                 key={link} ref={linkRefs[`${link}LinkRef`]}>
-                                <li
-                                    className="p-1">
-                                    <animated.div
-                                        {...bind2()}
-                                        style={currentLink === link ? props2 : {}}>
+                                <li style={{position:"relative"}}>
+                                <Label />
+                                    <div>
                                         <TransitionText
                                             text2={
                                                 `.${link === "technologies" ?
@@ -98,7 +97,7 @@ export default function LeftNavbar({ linkRefs, hereRef }) {
                                                 link === "technologies" ?
                                                     "techs" :
                                                     link} />
-                                    </animated.div>
+                                    </div>
                                 </li>
                             </NavLink>))}
                         <img id="here-img" ref={hereRef} src={here} alt="You are here" />

@@ -16,7 +16,7 @@ import Led from "../../components/led/index"
 
 
 const AnimatedRow = animated(Row);
-const MainWindowsHoc = React.memo(function ({ children }) {
+const MainWindowsHoc = React.memo(function ({ children, text }) {
 
   const rowRef = useRef();
   const colRef = useRef();
@@ -30,12 +30,12 @@ const MainWindowsHoc = React.memo(function ({ children }) {
   const location = useLocation();
   const history = useHistory();
   const [isScrollingLeft, setIsScrollingLeft] = useState(location.pathname === "/home")
-  const isActive = useSelector( state => state.main.isActive )
+  const isActive = useSelector(state => state.main.isActive)
 
   //Animation on mounting and unmounting
   useEffect(() => {
     const DOMnode = rowRef.current
-//This animation manages the router switch made through link navigation
+    //This animation manages the router switch made through link navigation
     new TimelineMax()
       .set(DOMnode, {
         position: "absolute",
@@ -45,7 +45,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
         transform: "scale(0)"
       })
       .to(DOMnode, 0.9, { left: 0, top: 0, transform: "scale(1)", ease: "back" });
-//----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
     if (location.pathname === "/home")
       setIsScrollingLeft(true)
     if (location.pathname === "/havefun")
@@ -53,7 +53,7 @@ const MainWindowsHoc = React.memo(function ({ children }) {
   }, [location])
 
   useEffect(() => {
-  
+
     //Setting up PIXI canvas
     const windowWidth = window.innerWidth;
     const localRef = colRef.current;
@@ -79,11 +79,11 @@ const MainWindowsHoc = React.memo(function ({ children }) {
       setWordsArr(wordsArr);
       setWordsIds(wordsIds)
     }
-   
+
     //if (window.innerWidth > 900)
     const rect = setTvEffect(app, Container, 0.2, colRef, 5, 10, 0.5, 0, 0, 5)
 
-  
+
 
     function handleResize() {
       rect.width = localRef.clientWidth;
@@ -112,7 +112,6 @@ const MainWindowsHoc = React.memo(function ({ children }) {
   function handleScrollDirection(bool) {
     setIsScrollingLeft(bool);
   }
-//console.log(isScrollingLeft)
 
   return (
     <AnimatedRow
@@ -133,19 +132,33 @@ const MainWindowsHoc = React.memo(function ({ children }) {
         lg={8}
         id={colRef?.current ? colRef.current.id : null}
         className={`window d-flex justify-content-center align-items-start p-0 p-md-5`}>
-            <TurnedOffScreen />
-              <Led />
-        {children}
+        <TurnedOffScreen />
+        <Led />
         {wordsArr.map((data, i) => <Word
           key={wordsIds[i]}
           position={{ x: data.x, y: data.y }}
           text={data.text} />)}
+        <Row className="w-100">
+          <Col className="w-100 d-flex flex-column justify-content-around ">
+            <div className="window-text">            
+                <div className="d-flex justify-content-start ml-4 mt-2">
+                  <p style={{ fontSize: "1.2rem", color: "#66ccff" }}>{text.title}</p>
+                </div>
+                <div className="w-100 d-flex ml-4 mt-2">
+                  <p style={{ fontSize: "1rem", color: "#ff6600" }}>
+                    {text.content}
+         </p>
+                </div>              
+            </div>
+            {children}
+          </Col>
+        </Row>
       </Col>
     </AnimatedRow>
   )
 })
 
-function checkIfHomeRoot(str){
+function checkIfHomeRoot(str) {
   return str === "/home" || str === "/" || str === "/index.html"
 }
 export default MainWindowsHoc

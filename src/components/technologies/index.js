@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Row, Col } from "react-bootstrap"
 import styled from "styled-components"
 import { useSpring, animated, useTransition } from "react-spring"
 import "./index.css"
-import TypeIt from "typeit-react"
 import html5 from "../../pics/icons/html5.svg"
 import css3 from "../../pics/icons/css3.svg"
 import git2 from "../../pics/icons/git2.svg"
@@ -15,45 +13,21 @@ import redux from "../../pics/icons/redux.svg"
 import webpack from "../../pics/icons/webpack.svg"
 import uuid from "react-uuid"
 import ArrowRight from "../arrow/ArrowRight"
+import Label from "../label/index"
 
-const paths = [
- 
-  
-]
+const paths = []
 
 const icons = [html5, css3, js, mongo, node, react, redux, webpack, git2]
 const myIcons = icons.map(src => ({ src, key: uuid() }))
 
 export default function Technologies() {
 
-  return (
-    <Row className="w-100">
-      <Col className="w-100 d-flex flex-column align-items-start technologies-container">
-        <div className="window-text">
-          <TypeIt>
-            <div className="d-flex ml-4 mt-2">
-              <p style={{ color: "#66ccff" }}>this.techs()</p>
-            </div>
-            <div className="w-100 d-flex ml-4 mt-2">
-              <p style={{ color: "#ff6600" }}>
-                "This is the stack of technologies I currently use and am proficient in:"
-           </p>
-            </div>
-          </TypeIt>
-        </div>
-        {/*<div className="tech-svg-container">
-        <MorphingSvg paths={paths} icons={myIcons}/>
-        </div>*/}
-        
+  return (   
         <div className="tech-icons-container d-flex flex-column align-items-start" >
           {myIcons.map(({ src, key }, idx) => <TechAnimation key={key} idx={idx} src={src}/> )}
-        </div>
-      </Col>
-    </Row>
+        </div>   
   )
 }
-
-
 
 //-----------------------------------------------------------
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTransition, animated } from "react-spring";
 
 export default function TransitionText({text1, text2}) {
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(true);
 
   const transition = useTransition(toggle, {
     from: { position:"absolute", opacity: 0, scale: 1 },
@@ -13,7 +13,7 @@ export default function TransitionText({text1, text2}) {
   const transitionRender = transition((style, toggle) => {
     return toggle ? (
       <animated.div
-        onMouseEnter={() => {
+        onPointerEnter={() => {
           setToggle(false);
         }}
         style={style}
@@ -22,7 +22,7 @@ export default function TransitionText({text1, text2}) {
       </animated.div>
     ) : (
       <animated.div
-        onMouseLeave={() => {
+        onPointerLeave={() => {
           setToggle(true);
         }}
         style={style}

@@ -205,21 +205,20 @@ export default function useHandleListenersAndSpritesAnimation(
 //Play sounds when active
 //If I put the sound sprites into the deps array they have audio buffer issues
 useEffect(()=>{ 
+    _electricSound?.play()
 if (isActive){
      _circusSound?.paused ? _circusSound?.resume() : _circusSound.play()
-     _electricSound?.play()
     _powerSound?.play()
 }
-if (!isActive) {
-    !_shutSound?.isPlaying ? _shutSound?.play() : void null
+else {
     _circusSound?.isPlaying ? _circusSound.pause() : void null
-    _electricSound?.play()
+    _shutSound?.play()
 }
 },[isActive])
 
 useEffect(()=>{
-    if (!isMuted) PIXISound.default.unmuteAll()
-    if (isMuted) PIXISound.default.muteAll()    
+    if (isMuted) PIXISound.default.muteAll()
+    else PIXISound.default.unmuteAll()    
 },[isMuted])
 //Functions
 
