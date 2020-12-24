@@ -202,9 +202,9 @@ export default function useHandleListenersAndSpritesAnimation(
     }, [hasLoaded, isReady, isMuted])
 
 //Play sounds when active
-
+//If I put the sound sprites into the deps array they have audio buffer issues
 useEffect(()=>{
-console.log("sound:", _circusSound)
+
 if (isActive && !isMuted){
      _circusSound?.paused ? _circusSound?.resume() : _circusSound.play()
      _electricSound?.play()
