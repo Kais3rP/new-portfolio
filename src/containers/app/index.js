@@ -50,6 +50,7 @@ export default function App() {
     _electricSound,
     _circusSound,
     _shutSound,
+    _powerSound,
     loadProgress,
     hasLoaded
   } = useLoadAssets(container)
@@ -73,6 +74,7 @@ export default function App() {
     _circusSound,
     _shutSound,
     _electricSound,
+    _powerSound,
     {
       homeLinkRef,
       aboutLinkRef,

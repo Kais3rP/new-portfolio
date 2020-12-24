@@ -15,6 +15,7 @@ import dropSound from "../../sound/drop.wav"
 import electricSound from "../../sound/electricshock.mp3"
 import circusSound from "../../sound/circus.mp3"
 import shutSound from "../../sound/shut-down.mp3"
+import powerSound from "../../sound/power-on.mp3"
 
 export default function useLoadWhenReady(container) {
   const [app, setApp] = useState(null);
@@ -29,6 +30,7 @@ export default function useLoadWhenReady(container) {
   const [_electricSound, set_electricSound] = useState(null);
   const [_circusSound, set_circusSound] = useState(null);
   const [_shutSound, set_shutSound] = useState(null);
+  const [_powerSound, set_powerSound] = useState(null);
   const [loadProgress, setLoadProgress] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
 
@@ -59,6 +61,7 @@ export default function useLoadWhenReady(container) {
       .add("electricSound", electricSound)
       .add("circusSound", circusSound)
       .add("shutSound", shutSound)
+      .add("powerSound", powerSound)
       .load(init)
 
     loader.onProgress.add(data => {
@@ -130,6 +133,12 @@ export default function useLoadWhenReady(container) {
         autostart: false,
         volume: 0.1
       })
+
+      const powerSound = PIXISound.default.Sound.from({
+        url: resources.powerSound,
+        autostart: false,
+        volume: 0.1
+      })
       //Fishes sprites init
 
       const allFishes = [
@@ -158,6 +167,7 @@ export default function useLoadWhenReady(container) {
       set_electricSound(electricSound)
       set_circusSound(circusSound)
       set_shutSound(shutSound)
+      set_powerSound(powerSound)
     }
     return () => {
       //Clean all the PIXI WebGL assets on unmount 
@@ -183,6 +193,7 @@ export default function useLoadWhenReady(container) {
     _electricSound,
     _circusSound,
     _shutSound,
+    _powerSound,
     loadProgress,
     hasLoaded
   })

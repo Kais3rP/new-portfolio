@@ -23,6 +23,7 @@ export default function useHandleListenersAndSpritesAnimation(
     _circusSound,
     _shutSound,
     _electricSound,
+    _powerSound,
     linkRefs) {
 
     const [isBallDeflating, setIsBallDeflating] = useState(false);
@@ -203,17 +204,22 @@ export default function useHandleListenersAndSpritesAnimation(
 //Play sounds when active
 
 useEffect(()=>{
-
+console.log("sound:", _circusSound)
 if (isActive && !isMuted){
      _circusSound?.paused ? _circusSound?.resume() : _circusSound.play()
      _electricSound?.play()
+    _powerSound?.play()
 }
 if (!isActive && !isMuted) {
-    _shutSound?.play()
+    !_shutSound?.isPlaying ? _shutSound?.play() : void null
 }
-if (!isActive || isMuted) _circusSound?.isPlaying ? _circusSound.pause() : void null
+if (!isActive || isMuted) {
+    _circusSound?.isPlaying ? _circusSound.pause() : void null
+    _electricSound?.pause()
+    _powerSound?.pause()
+}
 
-},[isActive, _circusSound, _electricSound, _shutSound, isMuted])
+},[isActive, isMuted])
 
 //Functions
 
