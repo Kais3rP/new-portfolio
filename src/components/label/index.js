@@ -14,11 +14,14 @@ const index = (props) => {
         }
     }
     return (
-        <StyledImg {...props} src={returnSrc(props.brush)}>
 
+        <StyledImg {...props} src={returnSrc(props.brush)}>
         </StyledImg>
+
     )
 }
+
+
 
 const StyledImg = styled.img`
 position:absolute;
@@ -27,7 +30,7 @@ left:-10px;
 z-index:0;
 width:100%;
 min-width:100px;
-max-width:400px;
+max-width:170px;
 opacity:1;
 `
 

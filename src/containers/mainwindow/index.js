@@ -142,11 +142,11 @@ const MainWindowsHoc = React.memo(function ({ children, text }) {
           <Col className="w-100 d-flex flex-column justify-content-around ">
             <div className="window-text">            
                 <div className="d-flex justify-content-start ml-4 mt-2">
-                  <p style={{ fontSize: "1.2rem", color: "#66ccff" }}>{text.title}</p>
+                  <p style={{ fontSize: "1.2rem", color: "#66ccff" }}>{text?.title}</p>
                 </div>
                 <div className="w-100 d-flex ml-4 mt-2">
                   <p style={{ fontSize: "1rem", color: "#ff6600" }}>
-                    {text.content}
+                    {text?.content}
          </p>
                 </div>              
             </div>

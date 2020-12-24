@@ -16,6 +16,7 @@ import SvgDashoffset from "../../reusable/svg-dashoffset-animation/SvgDashoffset
 import ElectricityFilterSVG from "../../reusable/svg-electricity-filter/ElectricityFilterSVG"
 import TurnedOffScreen from "../turnedoff/TurnedOffScreen"
 import VolumeSlider from "../../components/volume-slider/index"
+import GenericLabel from "../label/GenericLabel"
 
 const width = 528;
 const AnimatedRow = animated(Row);
