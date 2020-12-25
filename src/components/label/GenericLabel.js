@@ -29,7 +29,8 @@ const isActive = useSelector( state => state.main.isActive)
 const StyledDiv = styled.div`
 position:relative;
 width:100%;
-opacity:${props => props.isActive ? 1 : 0.2}
+opacity:${props => props.isActive ? 1 : 0};
+transition: all 1s ease-out;
 `
 
 const StyledText = styled.p`
