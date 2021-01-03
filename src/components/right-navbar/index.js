@@ -90,7 +90,7 @@ export default function RightNavbar({ _electricSound }) {
                             } />}
 
                     <div style={{ width: "70%", marginTop: "50px" }}>
-                        <Logo isActive={isActive} />
+                        <Logo isActive={isActive} handleActive={handleActive} />
                     </div>
                     <div className="right-navbar-svg">
                         <SvgDashoffset

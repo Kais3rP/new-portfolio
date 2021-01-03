@@ -5,6 +5,9 @@ import styled from "styled-components"
 
 export default function Logo(props) {
 
+const handleActive = props.handleActive
+const isActive = props.isActive
+const height = window.innerHeight
 
     const springProps = useSpring({
         loop: { reverse: true },
@@ -19,6 +22,10 @@ export default function Logo(props) {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 185.78 200.51"
                 style={{ width: "80%" }}
+onPointerDown={()=>{
+    if(height < 500)
+        handleActive(!isActive)
+}}
             >             
                 <text x="170" y="200" fill="#ff6600">©</text>
                 <MyPath

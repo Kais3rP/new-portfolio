@@ -96,8 +96,7 @@
 
 @media Screen and (max-height:300px) {
     #nav-menu {
-        height: 0%;
-        font-size: 0;
+        display:none !important;
     }
     #nav-contacts {
         height: 100%;

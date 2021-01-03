@@ -23,8 +23,8 @@ top:0;
 z-index:10;
 transition: opacity 1.5s ease-in;
 opacity:${ props => props.isActive ? 0 : 1};
-touch-events: ${ props => props.isActive ? "none" : "auto" } !important;
-pointer-events: ${ props => props.isActive ? "none" : "auto" } !important;
+touch-events: ${ props => props.isActive ? "none" : "none" } !important;
+pointer-events: ${ props => props.isActive ? "none" : "none" } !important;
 `
 
 export default TurnedOffScreen
