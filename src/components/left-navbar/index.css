@@ -96,10 +96,11 @@
 
 @media Screen and (max-height:300px) {
     #nav-menu {
-        display:none !important;
+       /* display:none !important; */
+       margin-top: 0 !important;
     }
     #nav-contacts {
-        height: 100%;
+        
         font-size: 25px;
     }
     #here-img {

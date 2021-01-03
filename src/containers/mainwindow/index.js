@@ -53,7 +53,7 @@ const MainWindowsHoc = React.memo(function ({ children, text }) {
   }, [location])
 
   useEffect(() => {
-
+    if (window.innerWidth < 900) return;
     //Setting up PIXI canvas
     const windowWidth = window.innerWidth;
     const localRef = colRef.current;
@@ -80,7 +80,7 @@ const MainWindowsHoc = React.memo(function ({ children, text }) {
       setWordsIds(wordsIds)
     }
 
-    //if (window.innerWidth > 900)
+    
     const rect = setTvEffect(app, Container, 0.2, colRef, 5, 10, 0.5, 0, 0, 5)
 
 
